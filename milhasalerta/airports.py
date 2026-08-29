@@ -26,7 +26,22 @@ NOMES = {
     "CDG": "Paris", "ORY": "Paris", "LHR": "Londres", "LGW": "Londres",
     "FCO": "Roma", "MXP": "Milão", "FRA": "Frankfurt", "MUC": "Munique",
     "AMS": "Amsterdã", "ZRH": "Zurique", "IST": "Istambul", "DUB": "Dublin",
-    # Outros
+    # Europa — nomes em portugues
+    "VIE": "Viena", "GVA": "Genebra", "BRU": "Bruxelas", "CPH": "Copenhague",
+    "ARN": "Estocolmo", "HEL": "Helsinque", "PRG": "Praga", "BUD": "Budapeste",
+    "WAW": "Varsóvia", "ATH": "Atenas", "EDI": "Edimburgo", "VCE": "Veneza",
+    "NAP": "Nápoles", "FLR": "Florença", "SVQ": "Sevilha", "AGP": "Málaga",
+    "VLC": "Valência", "MAN": "Manchester", "NCE": "Nice", "LYS": "Lyon",
+    # Americas — o pacote devolve o suburbio do aeroporto, nao a cidade
+    "YUL": "Montreal",       # diria "Dorval"
+    "YVR": "Vancouver",      # diria "Richmond"
+    "SJD": "Los Cabos", "LPB": "La Paz", "CUN": "Cancún",
+    "AUA": "Aruba", "CUR": "Curaçao", "BGI": "Barbados",
+    "ASU": "Assunção", "SDQ": "Santo Domingo", "PUJ": "Punta Cana",
+    "HAV": "Havana", "SJO": "San José",
+    # Asia, Africa e Oceania
+    "ICN": "Seul", "SIN": "Singapura", "PEK": "Pequim", "PVG": "Xangai",
+    "DEL": "Nova Délhi", "BOM": "Mumbai", "ADD": "Adis Abeba", "AMM": "Amã",
     "DXB": "Dubai", "DOH": "Doha", "NRT": "Tóquio", "HND": "Tóquio",
     "JNB": "Joanesburgo", "CPT": "Cidade do Cabo", "SYD": "Sydney",
 }
