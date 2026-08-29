@@ -18,14 +18,19 @@ def get_sources(
     extrair: Callable[[Post], Optional[Deal]],
     ja_visto: Callable[[str], bool],
 ) -> list[DealSource]:
+    idade = config.get("max_idade_horas")
     sources: list[DealSource] = [
         TelegramChannelSource(
-            nome=c["nome"], canal=c["canal"], extrair=extrair, ja_visto=ja_visto
+            nome=c["nome"], canal=c["canal"], extrair=extrair,
+            ja_visto=ja_visto, max_idade_horas=idade,
         )
         for c in config.get("canais", [])
     ]
     sources += [
-        RssSource(nome=feed["nome"], url=feed["url"], extrair=extrair, ja_visto=ja_visto)
+        RssSource(
+            nome=feed["nome"], url=feed["url"], extrair=extrair,
+            ja_visto=ja_visto, max_idade_horas=idade,
+        )
         for feed in config.get("feeds", [])
     ]
     seats_key = os.environ.get("SEATS_API_KEY")

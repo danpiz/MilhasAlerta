@@ -4,19 +4,23 @@ HTML público, sem token nem autenticação. Rende mais sinal que o RSS dos mesm
 portais: o canal do Melhores Destinos é só deal, enquanto o feed deles é
 majoritariamente notícia de aeroporto e aviação.
 
-A dedup_key é o link do artigo, não a permalink da mensagem — assim o mesmo deal
-publicado em dois canais alerta uma vez só.
+A dedup_key é a permalink da mensagem; a url é o link do artigo, para clicar.
+
+Mensagem velha é descartada antes da extração: o canal expõe sempre as últimas
+20, então na primeira leitura o backlog inteiro parece novo, e promoção de
+ontem já expirou.
 """
 
 import html
 import re
 from dataclasses import dataclass
+from datetime import datetime, timedelta, timezone
 from typing import Callable, Optional
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 import requests
 
-from ..models import Deal
+from ..models import Deal, recente
 
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
 
@@ -25,6 +29,7 @@ BLOCO = re.compile(r'class="tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>', re
 # separado desalinharia na primeira mensagem sem texto (so foto).
 MENSAGEM = re.compile(r'data-post="([^"]+)"(.*?)(?=data-post="|\Z)', re.S)
 HREF = re.compile(r'href="(https?://[^"]+)"')
+QUANDO = re.compile(r'<time datetime="([^"]+)"')
 URL_NUA = re.compile(r'https?://[^\s<>"]+')
 LIMITE_RESUMO = 600
 IMAGENS = (".png", ".jpg", ".jpeg", ".webp", ".gif")
@@ -38,6 +43,7 @@ class Post:
     url: str
     fonte: str
     dedup_key: str
+    publicado: Optional[datetime] = None
 
 
 def _limpar(bruto: str) -> str:
@@ -75,11 +81,13 @@ class TelegramChannelSource:
         canal: str,
         extrair: Callable[[Post], Optional[Deal]],
         ja_visto: Callable[[str], bool],
+        max_idade_horas: Optional[float] = None,
     ):
         self.nome = nome
         self.canal = canal
         self._extrair = extrair
         self._ja_visto = ja_visto
+        self.max_idade_horas = max_idade_horas
 
     def _mensagens(self) -> list[Post]:
         resposta = requests.get(
@@ -98,6 +106,8 @@ class TelegramChannelSource:
             # Dedup pela permalink, nunca pelo link do artigo: promos diferentes
             # do mesmo canal compartilham landing page (12 urls para 20
             # mensagens), e deduplicar pelo link descartaria promo legitimo.
+            quando = QUANDO.search(corpo)
+            publicado = datetime.fromisoformat(quando.group(1)) if quando else None
             permalink = f"https://t.me/{post_id}"
             # Ja a url e o link de clique do alerta, entao prefere o artigo.
             links = HREF.findall(bloco.group(1)) or URL_NUA.findall(texto)
@@ -115,12 +125,16 @@ class TelegramChannelSource:
                     url=url,
                     fonte=self.nome,
                     dedup_key=permalink,
+                    publicado=publicado,
                 )
             )
         return posts
 
     def fetch(self) -> list[Deal]:
         # Filtrar antes de extrair: cada mensagem nova custa uma chamada ao Haiku.
-        novas = [p for p in self._mensagens() if not self._ja_visto(p.dedup_key)]
+        novas = [
+            p for p in self._mensagens()
+            if recente(p.publicado, self.max_idade_horas) and not self._ja_visto(p.dedup_key)
+        ]
         deals = [self._extrair(p) for p in novas]
         return [d for d in deals if d is not None]

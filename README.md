@@ -58,8 +58,29 @@ seu chat pessoal ou um canal (`@nomedocanal`).
 .venv/bin/python -m pytest tests/    # testes (os live pulam sem ANTHROPIC_API_KEY)
 ```
 
-Rode `--seed` antes da primeira execução real. Os feeds trazem ~60 posts de backlog, e sem isso
-todos viram alerta de uma vez (e todos custam uma chamada de API). O `--seed` não chama o modelo.
+Rode `--seed` antes da primeira execução real. As fontes trazem dezenas de posts de backlog, e sem
+isso todos viram alerta de uma vez (e todos custam uma chamada de API). O `--seed` não chama o modelo.
+
+## Formato do alerta
+
+Três linhas, sem card de preview — o preview do Telegram expande o link num bloco com foto que
+engole o alerta e torna difícil bater o olho e achar a oportunidade.
+
+```
+✈️ Rio de Janeiro 🇧🇷 → Buenos Aires 🇦🇷
+R$ 307 ou 12k LATAM Pass
+Passageiro de Primeira →
+```
+
+A origem só aparece quando o post declara — e aí importa: a regra de origem aceita origem ausente,
+então sem mostrar, um deal saindo do Rio pareceria de São Paulo. A cabine aparece só quando é
+executiva ou primeira.
+
+## Frescor
+
+`max_idade_horas` no [`config.yaml`](config.yaml) descarta post antigo **antes** da extração, então
+promoção vencida não vira alerta nem gasta chamada de API. O padrão é 24h. Sem isso o canal, que
+sempre expõe as últimas 20 mensagens, faria o backlog inteiro parecer novidade.
 
 ## Configuração
 

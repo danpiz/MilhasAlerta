@@ -1,3 +1,7 @@
+# So alerta o que foi publicado nas ultimas N horas. Promocao de ontem
+# costuma ter expirado, e sem isso o backlog do canal vira alerta.
+max_idade_horas: 24
+
 # Canais publicos do Telegram, lidos pela previa web em t.me/s/<canal>.
 # Rendem mais sinal que o RSS dos mesmos portais e nao exigem token.
 canais:

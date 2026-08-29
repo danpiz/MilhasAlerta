@@ -1,12 +1,13 @@
 import html
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Callable, Optional
 
 import feedparser
 import requests
 
-from ..models import Deal
+from ..models import Deal, recente
 
 # Os portais rejeitam user-agents de biblioteca com 403.
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
@@ -20,6 +21,12 @@ class Post:
     url: str
     fonte: str
     dedup_key: str
+    publicado: Optional[datetime] = None
+
+
+def _publicado(entrada) -> Optional[datetime]:
+    marca = entrada.get("published_parsed") or entrada.get("updated_parsed")
+    return datetime(*marca[:6], tzinfo=timezone.utc) if marca else None
 
 
 def _texto_limpo(bruto: str) -> str:
@@ -34,11 +41,13 @@ class RssSource:
         url: str,
         extrair: Callable[[Post], Optional[Deal]],
         ja_visto: Callable[[str], bool],
+        max_idade_horas: Optional[float] = None,
     ):
         self.nome = nome
         self.url = url
         self._extrair = extrair
         self._ja_visto = ja_visto
+        self.max_idade_horas = max_idade_horas
 
     def _posts(self) -> list[Post]:
         resposta = requests.get(self.url, headers={"User-Agent": UA}, timeout=30)
@@ -51,6 +60,7 @@ class RssSource:
                 url=entrada.get("link", ""),
                 fonte=self.nome,
                 dedup_key=entrada.get("link", ""),
+                publicado=_publicado(entrada),
             )
             for entrada in feed.entries
             if entrada.get("link")
@@ -58,6 +68,10 @@ class RssSource:
 
     def fetch(self) -> list[Deal]:
         # Filtrar antes de extrair: cada post novo custa uma chamada ao Haiku.
-        novos = [post for post in self._posts() if not self._ja_visto(post.dedup_key)]
+        novos = [
+            post for post in self._posts()
+            if recente(post.publicado, self.max_idade_horas)
+            and not self._ja_visto(post.dedup_key)
+        ]
         deals = [self._extrair(post) for post in novos]
         return [deal for deal in deals if deal is not None]
