@@ -21,9 +21,18 @@ load_dotenv(RAIZ / ".env")
 
 
 def _marcador(post) -> Deal:
-    """Deal mínimo só para carregar a dedup_key no modo --seed, sem gastar API."""
+    """Deal mínimo só para carregar a dedup_key no modo --seed, sem gastar API.
+
+    A chave TEM de sair de post.dedup_key, não de post.url: no Telegram elas são
+    diferentes (permalink vs link do artigo), e marcar a errada faz o --seed não
+    semear nada — o backlog inteiro reaparece como novo na execução seguinte.
+    """
     return Deal(
-        kind="voo", titulo=post.titulo, url=post.url, fonte=post.fonte, dedup_key=post.url
+        kind="voo",
+        titulo=post.titulo,
+        url=post.url,
+        fonte=post.fonte,
+        dedup_key=post.dedup_key,
     )
 
 
