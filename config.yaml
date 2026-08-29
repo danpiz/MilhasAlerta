@@ -1,0 +1,35 @@
+feeds:
+  - nome: Passageiro de Primeira — Passagens Aéreas
+    url: https://passageirodeprimeira.com/categorias/passagens-aereas/feed
+  - nome: Passageiro de Primeira — Promoções
+    url: https://passageirodeprimeira.com/categorias/promocoes/feed
+  - nome: Melhores Destinos — Promoção de Milhas
+    url: https://www.melhoresdestinos.com.br/category/promocao-de-milhas/feed
+
+# Campo ausente = sem filtro.
+# Entre campos diferentes o casamento é E; entre max_milhas e max_preco_brl é OU.
+alertas:
+  - nome: Executiva de SP para o exterior
+    kind: voo
+    origens: [GRU, VCP, CGH, SAO]
+    cabines: [executiva, primeira]
+    max_milhas: 120000
+    max_preco_brl: 6000
+    enabled: true
+
+  - nome: Passagem barata saindo de SP
+    kind: voo
+    origens: [GRU, VCP, CGH, SAO]
+    max_preco_brl: 1500
+    enabled: true
+
+  - nome: Firehose — tudo saindo de SP
+    kind: voo
+    origens: [GRU, VCP, CGH, SAO]
+    enabled: true
+
+  - nome: Bônus de transferência
+    kind: promo
+    programas: [Smiles, LATAM Pass, Azul Fidelidade, Livelo, Esfera]
+    min_bonus_pct: 80
+    enabled: true
