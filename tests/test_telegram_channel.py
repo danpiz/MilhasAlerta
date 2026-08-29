@@ -10,18 +10,20 @@ from milhasalerta.sources.telegram_channel import (
 # Trechos reais do HTML de t.me/s/, incluindo os dois casos que quebraram a v1:
 # a imagem do banner (Pontos pra Voar) e a palavra autolinkada (Passageiro de Primeira).
 PAGINA = """
-<a class="tgme_widget_message_date" href="https://t.me/canal/101"></a>
+<div class="tgme_widget_message" data-post="canal/101">
 <div class="tgme_widget_message_text js-message_text">Caribe na Mega Promo!<br/>
 Voos da Latam para Aruba por 34 mil milhas o trecho<br/>
-<a href="https://melhores.la/DiaVM1">melhores.la/DiaVM1</a></div>
-<a class="tgme_widget_message_date" href="https://t.me/canal/102"></a>
+<a href="https://melhores.la/DiaVM1">melhores.la/DiaVM1</a></div></div>
+<div class="tgme_widget_message" data-post="canal/102">
 <div class="tgme_widget_message_text js-message_text">Smiles com 355% de bônus<br/>
 <a href="https://pontospravoar.com/wp-content/uploads/2026/03/banner.png">img</a>
-<a href="https://pontospravoar.com/?p=138128">Leia mais</a></div>
-<a class="tgme_widget_message_date" href="https://t.me/canal/103"></a>
+<a href="https://pontospravoar.com/?p=138128">Leia mais</a></div></div>
+<div class="tgme_widget_message" data-post="canal/103">
+<div class="tgme_widget_message_photo">sem texto nenhum</div></div>
+<div class="tgme_widget_message" data-post="canal/104">
 <div class="tgme_widget_message_text js-message_text">Hotéis em Santiago com desconto<br/>
 <a href="http://Hoteis.com">Hoteis.com</a>
-<a href="https://passageirodeprimeira.com/hoteis-santiago">artigo</a></div>
+<a href="https://passageirodeprimeira.com/hoteis-santiago">artigo</a></div></div>
 """
 
 
@@ -35,8 +37,11 @@ def posts(monkeypatch):
     return s._mensagens()
 
 
-def test_extrai_uma_mensagem_por_bloco(posts):
+def test_pula_mensagem_sem_texto(posts):
+    # A mensagem 103 e so foto. Parear permalink por indice desalinharia daqui
+    # em diante, dando chave de dedup errada para todas as seguintes.
     assert len(posts) == 3
+    assert "canal/103" not in [p.dedup_key for p in posts]
 
 
 def test_primeira_linha_vira_titulo_e_resto_resumo(posts):
@@ -58,12 +63,17 @@ def test_ignora_palavra_autolinkada_sem_caminho(posts):
     assert posts[2].url == "https://passageirodeprimeira.com/hoteis-santiago"
 
 
+def test_permalink_vem_do_data_post_da_propria_mensagem(posts):
+    # Depois da mensagem so-foto, a 4a mensagem tem de manter a chave 104.
+    assert posts[2].dedup_key == "https://t.me/canal/104"
+
+
 def test_dedup_pela_permalink_nao_pelo_link(posts):
     # Promos distintos compartilham landing page; a permalink os mantém separados.
     assert [p.dedup_key for p in posts] == [
         "https://t.me/canal/101",
         "https://t.me/canal/102",
-        "https://t.me/canal/103",
+        "https://t.me/canal/104",
     ]
 
 

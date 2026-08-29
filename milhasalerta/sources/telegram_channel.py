@@ -21,7 +21,9 @@ from ..models import Deal
 UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
 
 BLOCO = re.compile(r'class="tgme_widget_message_text[^"]*"[^>]*>(.*?)</div>', re.S)
-PERMALINK = re.compile(r'class="tgme_widget_message_date"\s+href="([^"]+)"')
+# data-post vive no wrapper da propria mensagem. Parear por indice com um regex
+# separado desalinharia na primeira mensagem sem texto (so foto).
+MENSAGEM = re.compile(r'data-post="([^"]+)"(.*?)(?=data-post="|\Z)', re.S)
 HREF = re.compile(r'href="(https?://[^"]+)"')
 URL_NUA = re.compile(r'https?://[^\s<>"]+')
 LIMITE_RESUMO = 600
@@ -84,27 +86,26 @@ class TelegramChannelSource:
             f"https://t.me/s/{self.canal}", headers={"User-Agent": UA}, timeout=30
         )
         resposta.raise_for_status()
-        pagina = resposta.text
-        permalinks = PERMALINK.findall(pagina)
 
         posts = []
-        for indice, bloco in enumerate(BLOCO.findall(pagina)):
-            texto = _limpar(bloco)
+        for post_id, corpo in MENSAGEM.findall(resposta.text):
+            bloco = BLOCO.search(corpo)
+            if not bloco:
+                continue  # mensagem sem texto (so foto)
+            texto = _limpar(bloco.group(1))
             if not texto:
                 continue
-            # Preferir o link do artigo à permalink: é ele que dedupa entre canais.
-            links = HREF.findall(bloco) or URL_NUA.findall(texto)
+            # Dedup pela permalink, nunca pelo link do artigo: promos diferentes
+            # do mesmo canal compartilham landing page (12 urls para 20
+            # mensagens), e deduplicar pelo link descartaria promo legitimo.
+            permalink = f"https://t.me/{post_id}"
+            # Ja a url e o link de clique do alerta, entao prefere o artigo.
+            links = HREF.findall(bloco.group(1)) or URL_NUA.findall(texto)
             externos = [
                 u for u in links
                 if "t.me" not in urlsplit(u).netloc and _e_artigo(u)
             ]
-            permalink = permalinks[indice] if indice < len(permalinks) else None
             url = _normalizar(externos[0]) if externos else permalink
-            if not url:
-                continue
-            # Dedup pela permalink, nunca pelo link: promos diferentes do mesmo
-            # canal compartilham landing page (12 urls para 20 mensagens), e usar
-            # o link descartaria mensagem legítima como repetida.
 
             linhas = [l for l in texto.split("\n") if l.strip()]
             posts.append(
@@ -113,7 +114,7 @@ class TelegramChannelSource:
                     resumo=" ".join(linhas[1:])[:LIMITE_RESUMO],
                     url=url,
                     fonte=self.nome,
-                    dedup_key=permalink or url,
+                    dedup_key=permalink,
                 )
             )
         return posts
