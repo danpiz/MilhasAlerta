@@ -18,7 +18,10 @@ pytestmark = pytest.mark.skipif(
 
 
 def post(titulo: str, resumo: str = "") -> Post:
-    return Post(titulo=titulo, resumo=resumo, url="https://exemplo.com/x", fonte="teste")
+    return Post(
+        titulo=titulo, resumo=resumo, url="https://exemplo.com/x",
+        fonte="teste", dedup_key="https://exemplo.com/x",
+    )
 
 
 @pytest.fixture(scope="module")

@@ -19,6 +19,7 @@ class Post:
     resumo: str
     url: str
     fonte: str
+    dedup_key: str
 
 
 def _texto_limpo(bruto: str) -> str:
@@ -49,6 +50,7 @@ class RssSource:
                 resumo=_texto_limpo(entrada.get("summary", "")),
                 url=entrada.get("link", ""),
                 fonte=self.nome,
+                dedup_key=entrada.get("link", ""),
             )
             for entrada in feed.entries
             if entrada.get("link")
@@ -56,6 +58,6 @@ class RssSource:
 
     def fetch(self) -> list[Deal]:
         # Filtrar antes de extrair: cada post novo custa uma chamada ao Haiku.
-        novos = [post for post in self._posts() if not self._ja_visto(post.url)]
+        novos = [post for post in self._posts() if not self._ja_visto(post.dedup_key)]
         deals = [self._extrair(post) for post in novos]
         return [deal for deal in deals if deal is not None]

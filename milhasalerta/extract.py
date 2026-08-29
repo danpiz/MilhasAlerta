@@ -69,7 +69,7 @@ class Extractor:
             titulo=post.titulo,
             url=post.url,
             fonte=post.fonte,
-            dedup_key=post.url,
+            dedup_key=post.dedup_key,
             programa=extraido.programa,
             origem=extraido.origem,
             destino=extraido.destino,

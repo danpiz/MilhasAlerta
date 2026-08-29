@@ -1,17 +1,45 @@
 # MilhasAlerta
 
 Monitor de oportunidades de passagens aéreas no Brasil — **com milhas e em reais** — que alerta no
-Telegram. Lê os feeds RSS dos portais brasileiros, extrai os dados estruturados de cada post com
-Claude Haiku e dispara alerta para o que casa com as suas regras.
+Telegram. Lê os canais públicos dos portais brasileiros, extrai os dados estruturados de cada
+mensagem com Claude Haiku e dispara alerta para o que casa com as suas regras.
 
 ## Como funciona
 
 ```
-feeds RSS  ─▶  dedup (state/seen.json)  ─▶  Haiku extrai  ─▶  regras  ─▶  Telegram
+canais Telegram + RSS  ─▶  dedup (state/seen.json)  ─▶  Haiku extrai  ─▶  regras  ─▶  Telegram
 ```
 
 O dedup vem antes da extração de propósito: cada post novo custa uma chamada de API, e post repetido
 não pode custar de novo.
+
+## Fontes
+
+A fonte principal são os **canais públicos do Telegram**, lidos pela prévia web em `t.me/s/<canal>`
+— HTML público, sem token, sem autenticação e sem limite de requisição.
+
+Isso rende mais sinal que o RSS dos mesmos portais. Comparando o que cada um entregava no mesmo dia:
+
+| RSS do Melhores Destinos | Canal do Melhores Destinos |
+|---|---|
+| "Aeroporto de Campinas instala sistema de passaportes" | "Costa Rica 🇨🇷: 31 mil milhas o trecho" |
+| "Bienal do Livro de SP divulga programação" | "Caribe: Latam para Aruba por 34 mil milhas" |
+
+O feed deles é redação; o canal é deal. Os canais também recuperam o **Pontos pra Voar**, cujo RSS
+fica atrás do Cloudflare.
+
+Os canais foram escolhidos por medição, não por indicação de blog — vários canais recomendados por
+aí estão parados há anos:
+
+| Canal | Situação |
+|---|---|
+| `melhoresdestinos`, `passageirodeprimeira`, `canalpontospravoar` | ativos, alta densidade de deal ✅ |
+| `milhas_sem_segredo` | ativo, foco em acúmulo e transferência ✅ |
+| `promopassagens` | **agregador** — reposta os outros, só geraria duplicata ❌ |
+| `beconews` | parado há ~11 dias ❌ |
+| `decolandocmilhas`, `alertapassagens`, `milhaseviagens` | parados há mais de 2 anos ❌ |
+
+Para checar de novo: `curl -s "https://t.me/s/<canal>" | grep -c tgme_widget_message_text`.
 
 ## Setup
 
@@ -35,7 +63,11 @@ todos viram alerta de uma vez (e todos custam uma chamada de API). O `--seed` n�
 
 ## Configuração
 
-Tudo em [`config.yaml`](config.yaml): quais feeds ler e quais regras disparam alerta.
+Tudo em [`config.yaml`](config.yaml): quais canais e feeds ler, e quais regras disparam alerta.
+
+Adicionar um canal é uma linha em `canais:` — só o handle, sem token. O `dedup_key` de uma mensagem
+é a permalink dela (`t.me/canal/1234`), não o link do artigo: promos diferentes do mesmo canal
+compartilham landing page, e deduplicar pelo link descartaria mensagem legítima como repetida.
 
 **Todo filtro exige prova**: se o post não afirma o valor, a regra não casa. Sem isso, dado ausente
 vira curinga e `cabines: [executiva]` dispara numa econômica de R$ 150.
@@ -73,9 +105,14 @@ reagir ao que os portais publicam.
 
 ## Limites conhecidos
 
-- RSS entrega deal **publicado**, não monitoramento de rota. Para isso, Seats.aero.
+- As fontes entregam deal **publicado**, não monitoramento de rota. Para "avise se GRU→Tóquio cair
+  abaixo de 80k", só com o Seats.aero ligado.
 - Latência: os portais publicam minutos depois do deal aparecer, e o cron de 30 min soma a isso.
-- `pontospravoar.com` está atrás de Cloudflare e ficou de fora.
+  Trocar RSS por canal não muda isso — o gargalo é o cron, não a fonte.
+- `t.me/s/` é uma superfície HTML não documentada. É estável há anos e muito menos frágil que
+  raspar companhia aérea, mas quebra se o Telegram mudar a marcação.
+- Deal publicado em dois canais diferentes alerta duas vezes: o dedup é por mensagem, não por
+  conteúdo. Excluir o agregador `promopassagens` mantém isso raro.
 
 ## Créditos
 

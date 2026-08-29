@@ -14,6 +14,7 @@ POST = Post(
     resumo="bilhetes de ida e volta entre São Paulo (GRU) e Lima (LIM)",
     url="https://exemplo.com/lima",
     fonte="Passageiro de Primeira",
+    dedup_key="https://exemplo.com/lima",
 )
 
 
@@ -43,7 +44,7 @@ def test_voo_vira_deal_com_os_dois_precos():
     assert deal.kind == "voo"
     assert (deal.origem, deal.destino) == ("GRU", "LIM")
     assert (deal.milhas, deal.preco_brl) == (24000, 593)
-    assert deal.dedup_key == POST.url
+    assert deal.dedup_key == POST.dedup_key
     assert deal.titulo == POST.titulo
 
 

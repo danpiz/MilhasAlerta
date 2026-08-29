@@ -4,6 +4,7 @@ from typing import Callable, Optional, Protocol
 from ..models import Deal
 from .rss import Post, RssSource
 from .seats_aero import SeatsAeroSource
+from .telegram_channel import TelegramChannelSource
 
 
 class DealSource(Protocol):
@@ -18,8 +19,14 @@ def get_sources(
     ja_visto: Callable[[str], bool],
 ) -> list[DealSource]:
     sources: list[DealSource] = [
+        TelegramChannelSource(
+            nome=c["nome"], canal=c["canal"], extrair=extrair, ja_visto=ja_visto
+        )
+        for c in config.get("canais", [])
+    ]
+    sources += [
         RssSource(nome=feed["nome"], url=feed["url"], extrair=extrair, ja_visto=ja_visto)
-        for feed in config["feeds"]
+        for feed in config.get("feeds", [])
     ]
     seats_key = os.environ.get("SEATS_API_KEY")
     if seats_key:

@@ -38,8 +38,8 @@ def test_rss_nao_extrai_post_ja_visto():
         extrair=extrair, ja_visto=lambda url: url == "https://exemplo.com/velho",
     )
     source._posts = lambda: [
-        type("P", (), {"titulo": "novo", "resumo": "", "url": "https://exemplo.com/novo", "fonte": "F"})(),
-        type("P", (), {"titulo": "velho", "resumo": "", "url": "https://exemplo.com/velho", "fonte": "F"})(),
+        type("P", (), {"titulo": "novo", "resumo": "", "url": "https://exemplo.com/novo", "fonte": "F", "dedup_key": "https://exemplo.com/novo"})(),
+        type("P", (), {"titulo": "velho", "resumo": "", "url": "https://exemplo.com/velho", "fonte": "F", "dedup_key": "https://exemplo.com/velho"})(),
     ]
 
     deals = source.fetch()
@@ -52,7 +52,7 @@ def test_extracao_que_devolve_none_nao_vira_deal():
         nome="F", url="u", extrair=lambda p: None, ja_visto=lambda u: False
     )
     source._posts = lambda: [
-        type("P", (), {"titulo": "t", "resumo": "", "url": "https://exemplo.com/a", "fonte": "F"})()
+        type("P", (), {"titulo": "t", "resumo": "", "url": "https://exemplo.com/a", "fonte": "F", "dedup_key": "https://exemplo.com/a"})()
     ]
     assert source.fetch() == []
 

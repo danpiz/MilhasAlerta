@@ -1,8 +1,18 @@
+# Canais publicos do Telegram, lidos pela previa web em t.me/s/<canal>.
+# Rendem mais sinal que o RSS dos mesmos portais e nao exigem token.
+canais:
+  - nome: Melhores Destinos
+    canal: melhoresdestinos
+  - nome: Passageiro de Primeira
+    canal: passageirodeprimeira
+  - nome: Pontos pra Voar
+    canal: canalpontospravoar
+  - nome: Milhas sem Segredo
+    canal: milhas_sem_segredo
+
+# Mantido para o Melhores Destinos, cujo canal so traz a chamada curta:
+# o feed acrescenta o resumo do artigo, que ajuda a extracao.
 feeds:
-  - nome: Passageiro de Primeira — Passagens Aéreas
-    url: https://passageirodeprimeira.com/categorias/passagens-aereas/feed
-  - nome: Passageiro de Primeira — Promoções
-    url: https://passageirodeprimeira.com/categorias/promocoes/feed
   - nome: Melhores Destinos — Promoção de Milhas
     url: https://www.melhoresdestinos.com.br/category/promocao-de-milhas/feed
 
