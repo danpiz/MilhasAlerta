@@ -40,16 +40,30 @@ def formatar(deal: Deal, regras: list[str]) -> str:
     return "\n".join(linhas)
 
 
+class TelegramError(RuntimeError):
+    """Erro sem a URL da API — ela carrega o bot token embutido."""
+
+
 def enviar(texto: str) -> None:
     token = os.environ["TELEGRAM_BOT_TOKEN"]
-    resposta = requests.post(
-        f"https://api.telegram.org/bot{token}/sendMessage",
-        json={
-            "chat_id": os.environ["TELEGRAM_CHAT_ID"],
-            "text": texto,
-            "parse_mode": "HTML",
-            "disable_web_page_preview": True,
-        },
-        timeout=30,
-    )
-    resposta.raise_for_status()
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    try:
+        resposta = requests.post(
+            url,
+            json={
+                "chat_id": os.environ["TELEGRAM_CHAT_ID"],
+                "text": texto,
+                "parse_mode": "HTML",
+                "disable_web_page_preview": True,
+            },
+            timeout=30,
+        )
+        resposta.raise_for_status()
+    except requests.RequestException as erro:
+        # A API do Telegram poe o token no caminho da URL, e requests inclui a
+        # URL em toda mensagem de erro. Num repo publico o log do Actions e
+        # publico: deixar o traceback subir cru depende de o GitHub mascarar o
+        # segredo. Melhor nunca produzir a string.
+        status = getattr(erro.response, "status_code", None)
+        detalhe = f"HTTP {status}" if status else type(erro).__name__
+        raise TelegramError(f"falha ao enviar alerta ({detalhe})") from None

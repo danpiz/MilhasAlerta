@@ -75,3 +75,36 @@ def test_nao_repete_as_regras_no_alerta():
 
 def test_destino_desconhecido_nao_quebra():
     assert "Destino não identificado" in formatar(voo(preco_brl=500), ["R"])
+
+
+def test_erro_de_envio_nao_vaza_o_token(monkeypatch):
+    """A URL do Telegram carrega o token no caminho, e requests a inclui em
+    toda mensagem de erro. Log de Actions em repo publico e legivel por
+    qualquer um -- o token nao pode nem chegar a formar a string."""
+    import requests
+
+    from milhasalerta.telegram import TelegramError, enviar
+
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "0000000:TOKEN-FALSO-DE-TESTE")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "123")
+
+    class RespostaRuim:
+        status_code = 400
+
+        def raise_for_status(self):
+            raise requests.HTTPError(
+                "400 Client Error for url: "
+                "https://api.telegram.org/bot0000000:TOKEN-FALSO-DE-TESTE/sendMessage",
+                response=self,
+            )
+
+    monkeypatch.setattr(requests, "post", lambda *a, **k: RespostaRuim())
+
+    try:
+        enviar("oi")
+        raise AssertionError("deveria ter levantado")
+    except TelegramError as erro:
+        assert "SEGREDO-NAO-VAZAR" not in str(erro)
+        assert "api.telegram.org" not in str(erro)
+        assert "HTTP 400" in str(erro)
+        assert erro.__cause__ is None  # sem traceback encadeado com a URL

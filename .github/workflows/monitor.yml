@@ -2,7 +2,9 @@ name: Monitor
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # Minuto quebrado de proposito: a hora cheia e a meia hora sao as faixas
+    # mais disputadas do agendador do GitHub, e agendamento la e best-effort.
+    - cron: "7,37 * * * *"
   workflow_dispatch:
 
 permissions:
