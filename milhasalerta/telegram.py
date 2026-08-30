@@ -56,6 +56,10 @@ def formatar(deal: Deal, regras: list[str]) -> str:
         # rapido -- o mesmo trecho ida e volta custa quase o dobro.
         if deal.data:
             detalhe = f"{detalhe} · {_datas(deal.data, deal.data_volta)}"
+        elif deal.ida_e_volta is not None:
+            # Post de portal raramente traz data (medido: 5% de 60 posts), mas
+            # quando diz o tipo de viagem isso muda como se le o preco.
+            detalhe = f"{detalhe} · {'ida e volta' if deal.ida_e_volta else 'só ida'}"
         # Na linha do preco, nao no cabecalho: la sairia <b> dentro de <b>.
         if deal.queda_pct:
             detalhe = f"{detalhe} · {deal.queda_pct}% abaixo do normal"

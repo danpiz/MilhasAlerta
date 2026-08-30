@@ -123,3 +123,32 @@ def test_queda_aparece_na_linha_do_preco_sem_aninhar_negrito():
 
 def test_sem_queda_nao_polui_a_linha():
     assert "abaixo do normal" not in formatar(voo(destino="NRT", preco_brl=3200), ["R"])
+
+
+# --- tipo de viagem sem data --------------------------------------------------
+# Post de portal quase nunca traz data (medido: 5% de 60 posts), mas as vezes
+# diz "ida e volta". Omitir isso mostra um preco que pode ser metade da viagem.
+
+def _portal(**kw):
+    base = dict(kind="voo", titulo="t", url="u", fonte="Melhores Destinos",
+                dedup_key="k", destino="MXP", preco_brl=3849)
+    return Deal(**{**base, **kw})
+
+
+def test_ida_e_volta_aparece_mesmo_sem_data():
+    assert "ida e volta" in formatar(_portal(ida_e_volta=True), [])
+
+
+def test_so_ida_aparece_mesmo_sem_data():
+    assert "só ida" in formatar(_portal(ida_e_volta=False), [])
+
+
+def test_sem_tipo_declarado_nao_inventa():
+    texto = formatar(_portal(), [])
+    assert "ida e volta" not in texto and "só ida" not in texto
+
+
+def test_data_tem_prioridade_sobre_o_tipo():
+    """Quando ha data, _datas() ja diz o tipo e com mais precisao."""
+    texto = formatar(_portal(data="2026-12-20", data_volta="2027-01-01", ida_e_volta=True), [])
+    assert "20 dez a 1 jan" in texto and texto.count("ida e volta") == 0

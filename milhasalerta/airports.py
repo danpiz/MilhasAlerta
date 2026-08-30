@@ -8,8 +8,8 @@ import airportsdata
 # nome próprio aqui; o resto cai no pacote.
 NOMES = {
     # Brasil
-    "GRU": "São Paulo", "CGH": "São Paulo", "VCP": "Campinas", "SAO": "São Paulo",
-    "GIG": "Rio de Janeiro", "SDU": "Rio de Janeiro", "RIO": "Rio de Janeiro",
+    "GRU": "São Paulo", "CGH": "São Paulo", "VCP": "Campinas",
+    "GIG": "Rio de Janeiro", "SDU": "Rio de Janeiro",
     "BSB": "Brasília", "CNF": "Belo Horizonte", "SSA": "Salvador",
     "REC": "Recife", "FOR": "Fortaleza", "POA": "Porto Alegre",
     "CWB": "Curitiba", "FLN": "Florianópolis", "MCZ": "Maceió",
@@ -47,6 +47,19 @@ NOMES = {
 }
 
 
+# Código de metrópole não é aeroporto, então não existe no airportsdata — e o
+# describe() devolvia o código cru. Os portais usam muito ("voos para NYC"), e
+# SAO é a origem padrão do projeto. Nome e país aqui porque a bandeira vinha do
+# país do aeroporto, que estes não têm.
+METROPOLES = {
+    "SAO": ("São Paulo", "BR"), "RIO": ("Rio de Janeiro", "BR"),
+    "NYC": ("Nova York", "US"), "WAS": ("Washington", "US"), "CHI": ("Chicago", "US"),
+    "LON": ("Londres", "GB"), "PAR": ("Paris", "FR"), "MIL": ("Milão", "IT"),
+    "ROM": ("Roma", "IT"), "STO": ("Estocolmo", "SE"), "MOW": ("Moscou", "RU"),
+    "BUE": ("Buenos Aires", "AR"), "TYO": ("Tóquio", "JP"),
+}
+
+
 @functools.lru_cache(maxsize=1)
 def _by_iata() -> dict:
     return airportsdata.load("IATA")
@@ -61,6 +74,9 @@ def describe(iata: str) -> str:
     """'GRU' -> 'São Paulo 🇧🇷'. Código desconhecido volta como veio."""
     codigo = iata.upper()
     airport = _by_iata().get(codigo)
-    if not airport:
-        return codigo
-    return f"{NOMES.get(codigo, airport['city'])} {_flag(airport['country'])}".strip()
+    if airport:
+        return f"{NOMES.get(codigo, airport['city'])} {_flag(airport['country'])}".strip()
+    metropole = METROPOLES.get(codigo)
+    if metropole:
+        return f"{metropole[0]} {_flag(metropole[1])}"
+    return codigo

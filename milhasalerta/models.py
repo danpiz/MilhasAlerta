@@ -38,6 +38,9 @@ class Deal:
     # acionavel. data_volta preenchida significa que o preco e de ida e volta.
     data: Optional[str] = None
     data_volta: Optional[str] = None
+    # Post de portal quase nunca traz data, mas as vezes diz "ida e volta".
+    # Sem isso o alerta mostra um preco que pode ser metade da viagem.
+    ida_e_volta: Optional[bool] = None
     # Quanto abaixo do preco tipico da rota, quando ha historico suficiente.
     queda_pct: Optional[int] = None
     # kind="promo"

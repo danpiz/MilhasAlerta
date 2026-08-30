@@ -20,7 +20,11 @@ Responda com um destes kind:
 - "irrelevante": notícia, review de cartão, novidade de aeroporto, conteúdo institucional.
 
 Valores em milhas vêm como "24 mil"=24000 ou "3.391"=3391. preco_brl é inteiro em reais, sem centavos.
-Use o menor valor quando o post disser "a partir de". Deixe null o que o post não afirmar."""
+Use o menor valor quando o post disser "a partir de". Deixe null o que o post não afirmar.
+
+ida_e_volta: true se o post disser "ida e volta", false se disser "só ida"/"somente ida".
+Deixe null se o post não disser — não deduza pelo preço. É a diferença entre o preço da
+viagem e o de metade dela, então um palpite aqui engana mais do que o silêncio."""
 
 
 class DealExtraido(BaseModel):
@@ -32,6 +36,7 @@ class DealExtraido(BaseModel):
     milhas: Optional[int] = None
     preco_brl: Optional[int] = None
     bonus_pct: Optional[int] = None
+    ida_e_volta: Optional[bool] = None
 
 
 def _client() -> anthropic.Anthropic:
@@ -77,4 +82,5 @@ class Extractor:
             milhas=extraido.milhas,
             preco_brl=extraido.preco_brl,
             bonus_pct=extraido.bonus_pct,
+            ida_e_volta=extraido.ida_e_volta,
         )
