@@ -23,7 +23,14 @@ milheiro:
 # CUSTO: cada destino x data e uma consulta. Europa sao 14 aeroportos; com 6
 # datas amostradas da 84 consultas (~90s). Por isso a cadencia e menor que a
 # do resto e as datas sao amostradas, uma por mes.
-google_cadencia_horas: 6
+#
+# A cadencia tem de ficar ABAIXO do intervalo real entre execucoes, nao no
+# intervalo desejado. O cron pede 30 min mas o Actions entrega a cada 4-6h
+# (medido); com a porta em 6h, uma execucao que chega com 5h50 reprova e a
+# proxima chance so vem no cron seguinte -- o Google acabava rodando a cada
+# ~12h, o dobro do pretendido. Em 3h toda execucao entregue qualifica, e se o
+# Actions algum dia acelerar a porta ainda segura em 8 rodadas/dia.
+google_cadencia_horas: 3
 google_amostras_de_data: 6
 
 rotas:
