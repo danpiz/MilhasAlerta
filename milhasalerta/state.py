@@ -15,11 +15,17 @@ class State:
         self._seen: dict[str, str] = {}
         self.serie: dict[str, list] = {}
         self._marcos: dict[str, str] = {}
+        # Rotas criadas pelo /alerta no Telegram, e o offset do getUpdates --
+        # sem persistir o offset, a mesma mensagem viraria alerta duplicado.
+        self.alertas_usuario: list[dict] = []
+        self.ultimo_update: int | None = None
         if path.exists():
             bruto = json.loads(path.read_text(encoding="utf-8"))
             self._seen = bruto.get("seen", {})
             self.serie = bruto.get("serie", {})
             self._marcos = bruto.get("marcos", {})
+            self.alertas_usuario = bruto.get("alertas_usuario", [])
+            self.ultimo_update = bruto.get("ultimo_update")
 
     def is_new(self, dedup_key: str) -> bool:
         return dedup_key not in self._seen
@@ -49,7 +55,13 @@ class State:
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(
             json.dumps(
-                {"seen": vivos, "serie": podar(self.serie), "marcos": self._marcos},
+                {
+                    "seen": vivos,
+                    "serie": podar(self.serie),
+                    "marcos": self._marcos,
+                    "alertas_usuario": self.alertas_usuario,
+                    "ultimo_update": self.ultimo_update,
+                },
                 indent=2, sort_keys=True, ensure_ascii=False,
             ),
             encoding="utf-8",

@@ -43,6 +43,28 @@ aí estão parados há anos:
 
 Para checar de novo: `curl -s "https://t.me/s/<canal>" | grep -c tgme_widget_message_text`.
 
+## Criando alertas pelo Telegram
+
+Editar YAML e dar push para vigiar uma rota é atrito demais, então dá para falar com o bot:
+
+```
+/alerta voos pra Portugal em janeiro de 2027 ida e volta economica
+/alertas          → lista os ativos, numerados
+/remover 1        → apaga
+```
+
+O texto livre vira uma rota vigiada com a mesma estrutura do `config.yaml`, então o motor não
+precisa saber de onde ela veio. O que você não disser tem padrão: origem GRU, 12 dias de viagem,
+ida e volta, econômica.
+
+Sem teto de preço no pedido, o gatilho vira queda contra o histórico da rota — e isso **leva alguns
+dias para começar a valer**, porque antes disso ele ainda não sabe quanto a rota costuma custar.
+Para alerta imediato, dê um teto: `/alerta Portugal em janeiro ate 4000 reais`.
+
+> **A confirmação demora.** Sem um processo sempre ligado, o bot só lê suas mensagens quando o cron
+> roda — e o agendamento do GitHub entrega bem menos do que o cron pede. Medido neste repo:
+> ~1 execução a cada 4h, não a cada 30 min como configurado. Mande e esqueça; a confirmação chega.
+
 ## Rotas vigiadas
 
 As fontes acima **reagem** ao que os portais publicaram. O Google Flights é a única que **consulta**

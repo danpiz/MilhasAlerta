@@ -74,6 +74,29 @@ class TelegramError(RuntimeError):
     """Erro sem a URL da API — ela carrega o bot token embutido."""
 
 
+def receber(desde: Optional[int] = None) -> list[dict]:
+    """Mensagens novas para o bot.
+
+    Sem processo sempre ligado, o bot só lê quando o cron roda — e o
+    agendamento do GitHub entrega bem menos que o cron pede. Por isso `desde`
+    (o offset) tem de ser persistido: se a mesma mensagem for lida duas vezes,
+    o alerta é criado em duplicata.
+    """
+    token = os.environ["TELEGRAM_BOT_TOKEN"]
+    params = {"timeout": 0}
+    if desde is not None:
+        params["offset"] = desde
+    try:
+        resposta = requests.get(
+            f"https://api.telegram.org/bot{token}/getUpdates", params=params, timeout=30
+        )
+        resposta.raise_for_status()
+    except requests.RequestException as erro:
+        status = getattr(erro.response, "status_code", None)
+        raise TelegramError(f"falha ao ler mensagens ({status or type(erro).__name__})") from None
+    return resposta.json().get("result", [])
+
+
 def enviar(texto: str) -> None:
     token = os.environ["TELEGRAM_BOT_TOKEN"]
     url = f"https://api.telegram.org/bot{token}/sendMessage"

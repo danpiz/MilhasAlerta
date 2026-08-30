@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 from dotenv import load_dotenv
 
-from milhasalerta import telegram
+from milhasalerta import comandos, telegram
 from milhasalerta.extract import Extractor
 from milhasalerta import historico
 from milhasalerta.milheiro import custo_efetivo
@@ -49,6 +49,29 @@ def _listar(config, sources) -> int:
     return 0
 
 
+def _atender_comandos(state) -> None:
+    """Le e responde os comandos recebidos desde a ultima execucao."""
+    try:
+        updates = telegram.receber(desde=state.ultimo_update)
+    except Exception as erro:
+        print(f"[erro] comandos: {erro}", file=sys.stderr)
+        return
+
+    for update in updates:
+        # Avanca o offset mesmo em mensagem ignorada, senao ela volta sempre.
+        state.ultimo_update = update["update_id"] + 1
+        mensagem = update.get("message") or {}
+        alertas, resposta = comandos.processar(
+            mensagem.get("text", ""), state.alertas_usuario
+        )
+        state.alertas_usuario = alertas
+        if resposta:
+            try:
+                telegram.enviar(resposta)
+            except Exception as erro:
+                print(f"[erro] resposta: {erro}", file=sys.stderr)
+
+
 def run_once(dry_run: bool = False, seed: bool = False) -> int:
     config = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
     state = State(ESTADO)
@@ -57,9 +80,11 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
     # duplicar a logica de limite e faz o nome da rota aparecer no alerta.
     # Rota so existe para voo, entao o kind e implicito -- sem isso casa()
     # rejeita toda rota por kind divergente e nenhum alerta de rota sai.
-    todas_as_regras = config["alertas"] + [
-        {"kind": "voo", **rota} for rota in config.get("rotas", [])
-    ]
+    _atender_comandos(state)
+
+    # Rota do config e rota criada pelo /alerta sao a mesma coisa para o motor.
+    rotas = config.get("rotas", []) + state.alertas_usuario
+    todas_as_regras = config["alertas"] + [{"kind": "voo", **r} for r in rotas]
 
     # Nem dry-run nem seed chamam o modelo.
     extrair = _marcador if (seed or dry_run) else Extractor()
@@ -77,7 +102,7 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
         return queda
 
     sources = get_sources(
-        config,
+        {**config, "rotas": rotas},
         extrair=extrair,
         ja_visto=lambda url: not state.is_new(url),
         observar_preco=observar_preco,

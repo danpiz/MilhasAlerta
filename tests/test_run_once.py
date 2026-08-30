@@ -39,6 +39,9 @@ milheiro:
 
     enviados = []
     monkeypatch.setattr(main.telegram, "enviar", lambda texto: enviados.append(texto))
+    # Sem isto o teste consome mensagens reais do bot: getUpdates avanca o
+    # offset no servidor do Telegram e a mensagem some para valer.
+    monkeypatch.setattr(main.telegram, "receber", lambda desde=None: [])
     return tmp_path, enviados
 
 

@@ -1,3 +1,5 @@
+import pytest
+
 from milhasalerta.models import Deal
 from milhasalerta.telegram import formatar
 
@@ -77,6 +79,7 @@ def test_destino_desconhecido_nao_quebra():
     assert "Destino não identificado" in formatar(voo(preco_brl=500), ["R"])
 
 
+@pytest.mark.sem_guarda_telegram
 def test_erro_de_envio_nao_vaza_o_token(monkeypatch):
     """A URL do Telegram carrega o token no caminho, e requests a inclui em
     toda mensagem de erro. Log de Actions em repo publico e legivel por
