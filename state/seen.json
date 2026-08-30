@@ -4,24 +4,6 @@
       "a_partir_de": "2026-12-20",
       "cabine": "economica",
       "destinos": [
-        "BER",
-        "MUC",
-        "FRA"
-      ],
-      "dias_de_viagem": 12,
-      "enabled": true,
-      "ida_e_volta": true,
-      "max_preco_brl": 4000,
-      "min_queda_pct": 25,
-      "nome": "Alemanha depois de 20 de dezembro",
-      "origens": [
-        "GRU"
-      ]
-    },
-    {
-      "a_partir_de": "2026-12-20",
-      "cabine": "economica",
-      "destinos": [
         "europa"
       ],
       "dias_de_viagem": 15,
@@ -302,6 +284,7 @@
     "https://t.me/melhoresdestinos/19198": "2026-08-29T18:50:31.198242+00:00",
     "https://t.me/melhoresdestinos/19199": "2026-08-29T18:50:31.618475+00:00",
     "https://t.me/melhoresdestinos/19200": "2026-08-29T18:50:31.618500+00:00",
+    "https://t.me/melhoresdestinos/19201": "2026-08-30T13:16:22.780945+00:00",
     "https://t.me/milhas_sem_segredo/7583": "2026-08-29T19:29:01.745976+00:00",
     "https://t.me/milhas_sem_segredo/7584": "2026-08-29T19:29:01.745994+00:00",
     "https://t.me/milhas_sem_segredo/7585": "2026-08-29T19:29:01.745997+00:00",
@@ -342,6 +325,7 @@
     "https://t.me/passageirodeprimeira/28443": "2026-08-29T19:28:59.824940+00:00",
     "https://t.me/passageirodeprimeira/28444": "2026-08-29T19:28:59.824943+00:00",
     "https://t.me/passageirodeprimeira/28445": "2026-08-29T18:50:53.243822+00:00",
+    "https://t.me/passageirodeprimeira/28448": "2026-08-30T13:16:27.363356+00:00",
     "https://www.instagram.com/tuliocrfaria": "2026-08-29T18:17:16.210931+00:00",
     "https://www.livelo.com.br/product/LIVClubeLivelo": "2026-08-29T18:17:16.210939+00:00",
     "https://www.livelo.com.br/shopping/colecoes/via-all": "2026-08-29T18:17:16.210917+00:00",
@@ -2258,5 +2242,5 @@
       ]
     ]
   },
-  "ultimo_update": 857678019
+  "ultimo_update": 857678020
 }
