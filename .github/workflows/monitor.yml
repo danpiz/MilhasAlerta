@@ -48,4 +48,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add state/seen.json
           git commit -m "estado: deals vistos [skip ci]"
+          # concurrency ja impede duas execucoes disto ao mesmo tempo, mas nao
+          # impede um push de fora chegar antes -- e com gatilho externo a cada
+          # 15 min a janela para isso deixa de ser desprezivel. Sem o rebase, a
+          # execucao falha e o estado daquela rodada se perde: os deals ja foram
+          # alertados e voltariam como novos na rodada seguinte.
+          for tentativa in 1 2 3; do
+            git push && exit 0
+            echo "push recusado (tentativa $tentativa); rebasando"
+            git pull --rebase --autostash
+          done
           git push

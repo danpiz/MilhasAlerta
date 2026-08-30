@@ -18,7 +18,19 @@ MINIMO_OBSERVACOES = 5
 
 
 def chave(origem: str, destino: str, data: str) -> str:
-    return f"{origem}-{destino}-{data}"
+    """Agrupa por MÊS de partida, não pelo dia exato.
+
+    Uma rota sem janela fixa amostra `hoje + 30 dias`, então a data consultada
+    anda um dia a cada dia. Com a chave no dia, cada trecho era observado uma ou
+    duas vezes e abandonado para sempre: medido em 30/08/2026, dos 221 trechos
+    da série NENHUM tinha as 5 observações que `normal()` exige. O `min_queda_pct`
+    das rotas do config nunca disparou, e do jeito antigo nunca dispararia.
+
+    O mês é o agrupamento que faz a série acumular sem perder sentido: "quanto
+    custa GRU→LIS em dezembro" é uma referência real. O preço a pagar é misturar
+    início e fim do mês na mesma mediana.
+    """
+    return f"{origem}-{destino}-{data[:7]}"
 
 
 def registrar(serie: dict, k: str, preco: int, agora: Optional[datetime] = None) -> None:

@@ -74,8 +74,14 @@ canais:
     canal: passageirodeprimeira
   - nome: Pontos pra Voar
     canal: canalpontospravoar
-  - nome: Milhas sem Segredo
-    canal: milhas_sem_segredo
+  # Cartoes e bonus de transferencia. Medido em 30/08/2026: 7 posts nas ultimas
+  # 24h, o unico dos quatro candidatos avaliados que passou.
+  #   papodemilhas          -- existe, mas ultimo post 5 dias atras
+  #   altarendablog         -- sem previa web publica, ilegivel por t.me/s/
+  #   canalestevampelomundo -- idem
+  # milhas_sem_segredo saiu daqui pelo mesmo criterio: ultimo post 2 dias atras.
+  - nome: Melhores Cartões
+    canal: melhores_cartoes
 
 # Mantido para o Melhores Destinos, cujo canal so traz a chamada curta:
 # o feed acrescenta o resumo do artigo, que ajuda a extracao.
