@@ -1,0 +1,50 @@
+name: Teste Google Flights (descartavel)
+
+# Existe so para responder uma pergunta: o Google Flights responde a partir de
+# um IP de datacenter do Actions, ou bloqueia? Apagar depois de responder.
+on:
+  workflow_dispatch:
+
+jobs:
+  teste:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install fast-flights typing_extensions
+
+      - name: Consultar rotas reais
+        run: |
+          python - <<'PY'
+          from datetime import date, timedelta
+          from fast_flights import FlightQuery, Passengers, create_query, get_flights
+
+          rotas = [("GRU", "LIS"), ("GRU", "MIA"), ("GRU", "EZE")]
+          dia = (date.today() + timedelta(days=45)).isoformat()
+          ok = falhou = 0
+
+          for origem, destino in rotas:
+              try:
+                  q = create_query(
+                      flights=[FlightQuery(date=dia, from_airport=origem, to_airport=destino)],
+                      seat="economy", trip="one-way", passengers=Passengers(adults=1),
+                  )
+                  r = get_flights(q)
+                  if len(r):
+                      ok += 1
+                      melhor = min(int(v.price) for v in r if str(v.price).isdigit())
+                      print(f"OK       {origem}->{destino}  {len(r)} voos, menor R$ {melhor}")
+                  else:
+                      falhou += 1
+                      print(f"VAZIO    {origem}->{destino}  respondeu sem resultado")
+              except Exception as e:
+                  falhou += 1
+                  print(f"ERRO     {origem}->{destino}  {type(e).__name__}: {str(e)[:120]}")
+
+          print()
+          print(f"VEREDITO: {ok} rota(s) com dados, {falhou} sem.")
+          print("VIAVEL NO ACTIONS" if ok else "BLOQUEADO NO ACTIONS")
+          PY
