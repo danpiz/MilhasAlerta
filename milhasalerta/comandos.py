@@ -81,13 +81,71 @@ def _descrever(rota: dict) -> str:
     if rota.get("cabine") and rota["cabine"] != "economica":
         partes.append(rota["cabine"])
     if rota.get("max_preco_brl"):
-        partes.append(f"até R$ {rota['max_preco_brl']}")
+        partes.append(f"até {_reais(rota['max_preco_brl'])}")
     else:
         partes.append(f"queda de {rota.get('min_queda_pct', 25)}%")
     return " · ".join(partes)
 
 
-def processar(texto: str, alertas: list[dict], client=None) -> tuple[list[dict], Optional[str]]:
+def _reais(valor: int) -> str:
+    return f"R$ {valor:,}".replace(",", ".")
+
+
+def _sugerir(menor: int) -> int:
+    """Teto util fica ABAIXO do preco corrente -- e o que separa promocao de
+    preco normal. 10% abaixo do mais barato de hoje, arredondado."""
+    return int(round(menor * 0.9 / 50) * 50)
+
+
+def _cotacao(rota: dict, precos: dict[str, int]) -> str:
+    """Preco corrente da rota, e se o teto escolhido faz sentido contra ele.
+
+    Um teto sem referencia e um chute: "abaixo de R$ 4.000" nao diz nada a quem
+    nao sabe se o trecho custa 3.000 ou 10.000. Dizer isso na hora da criacao e
+    o que permite corrigir antes de o alerta ficar mudo ou virar enxurrada."""
+    # Rota sem teto depende do historico, que ainda nao existe. Dizer isso
+    # importa mais que a cotacao: sem o aviso, o silencio parece defeito.
+    sem_teto = (
+        f"\nSem teto de preço, aviso quando cair {rota.get('min_queda_pct', 25)}% abaixo do "
+        "normal da rota — isso leva alguns dias, até eu aprender quanto ela costuma custar."
+    )
+    if not precos:
+        if rota.get("max_preco_brl") is None:
+            return sem_teto
+        return "\nNão consegui cotar a rota agora — o teto fica sem referência por enquanto."
+
+    ordenados = sorted(precos.items(), key=lambda kv: kv[1])
+    menor = ordenados[0][1]
+    maior = ordenados[-1][1]
+    destino = "destino" if len(precos) == 1 else "destinos"
+    linhas = [f"\nPreço hoje (amostra de {len(precos)} {destino}):"]
+    linhas += [f"  {d}  {_reais(p)}" for d, p in ordenados[:3]]
+    if len(ordenados) > 3:
+        linhas.append(f"  mais caro na amostra: {_reais(maior)}")
+
+    teto = rota.get("max_preco_brl")
+    if teto is None:
+        linhas.append(sem_teto)
+    elif teto < menor:
+        linhas.append(
+            f"\n⚠️ Seu teto ({_reais(teto)}) está abaixo de tudo que achei agora. "
+            f"Ele vai ficar mudo até a rota cair {round((1 - teto / menor) * 100)}%."
+        )
+    elif teto > maior:
+        linhas.append(
+            f"\n⚠️ Seu teto ({_reais(teto)}) está acima do preço normal — ele alertaria "
+            f"a rota inteira, não promoção. Algo perto de {_reais(_sugerir(menor))} avisaria só o que é barato."
+        )
+    else:
+        linhas.append(f"\nSeu teto ({_reais(teto)}) está dentro da faixa atual.")
+    if teto is not None:
+        linhas.append("Para mudar: /remover e criar de novo com outro valor.")
+    return "\n".join(linhas)
+
+
+def processar(
+    texto: str, alertas: list[dict], client=None, cotar=None
+) -> tuple[list[dict], Optional[str]]:
     """Aplica um comando. Devolve (alertas atualizados, resposta ao usuário)."""
     texto = (texto or "").strip()
     if not texto.startswith("/"):
@@ -125,14 +183,15 @@ def processar(texto: str, alertas: list[dict], client=None) -> tuple[list[dict],
             rota = interpretar(resto, client=client)
         except Exception:
             return alertas, "Não entendi o pedido. Tente descrever com destino e período."
-        gatilho = (
-            "Aviso quando aparecer algo abaixo desse valor."
-            if rota.get("max_preco_brl")
-            else "Sem teto de preço, aviso quando cair bem abaixo do normal da rota — "
-            "isso leva alguns dias, até eu aprender quanto ela costuma custar."
-        )
+        # Cotar na criacao e o que torna o teto ajustavel: falha aqui nao pode
+        # perder o alerta que o usuario acabou de pedir.
+        try:
+            precos = cotar(rota) if cotar else {}
+        except Exception:
+            precos = {}
         return alertas + [rota], (
-            f"✅ Monitorando <b>{rota['nome']}</b>\n{_descrever(rota)}\n\n{gatilho}"
+            f"✅ Monitorando <b>{rota['nome']}</b>\n{_descrever(rota)}\n"
+            f"{_cotacao(rota, precos)}"
         )
 
     return alertas, (

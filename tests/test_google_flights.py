@@ -248,3 +248,60 @@ def test_nao_confunde_trechos_com_prefixo_parecido():
     s = fonte(ROTA_UM, {"AMS": [4900]}, amostras=1,
               vistos={f"gf:GRU-AMS-{dia}-2026-12-31:4000"})
     assert [d.preco_brl for d in s.fetch()] == [4900]
+
+
+# --- cotacao de uma rota na criacao do alerta ---------------------------------
+
+import milhasalerta.sources.google_flights as gf
+
+ROTA_COTAR = {
+    "origens": ["GRU"],
+    "destinos": ["LIS", "OPO", "MAD", "BCN", "CDG", "FCO", "LHR", "AMS"],
+    "ida_e_volta": True,
+    "dias_de_viagem": 12,
+}
+
+
+def falso_consultar(monkeypatch, tabela, registro=None):
+    def _c(origem, destino, dia, volta=None, cabine="economy"):
+        if registro is not None:
+            registro.append((destino, dia, volta))
+        valor = tabela.get(destino)
+        if valor is None:
+            raise RuntimeError("destino fora do ar")
+        return valor
+    monkeypatch.setattr(gf, "consultar", _c)
+
+
+def test_cotacao_limita_destinos_e_datas(monkeypatch):
+    chamadas = []
+    falso_consultar(monkeypatch, {d: [5000] for d in ROTA_COTAR["destinos"]}, chamadas)
+    precos = gf.cotar(ROTA_COTAR, max_destinos=6, max_datas=3)
+    assert len(precos) == 6
+    assert len(chamadas) == 18  # 6 destinos x 3 datas, nao as 84 da varredura
+
+
+def test_cotacao_devolve_o_menor_entre_as_datas(monkeypatch):
+    falso_consultar(monkeypatch, {"LIS": [5200, 4800]})
+    assert gf.cotar({**ROTA_COTAR, "destinos": ["LIS"]}, max_datas=2) == {"LIS": 4800}
+
+
+def test_destino_que_falha_sai_sem_derrubar_os_outros(monkeypatch):
+    falso_consultar(monkeypatch, {"LIS": [4200]})  # OPO e MAD levantam
+    precos = gf.cotar({**ROTA_COTAR, "destinos": ["LIS", "OPO", "MAD"]}, max_datas=1)
+    assert precos == {"LIS": 4200}
+
+
+def test_cotacao_de_ida_e_volta_consulta_a_volta(monkeypatch):
+    chamadas = []
+    falso_consultar(monkeypatch, {"LIS": [4200]}, chamadas)
+    gf.cotar({**ROTA_COTAR, "destinos": ["LIS"]}, max_datas=1)
+    _, ida, volta = chamadas[0]
+    assert volta == gf._somar_dias(ida, 12)
+
+
+def test_cotacao_de_so_ida_nao_tem_volta(monkeypatch):
+    chamadas = []
+    falso_consultar(monkeypatch, {"LIS": [2100]}, chamadas)
+    gf.cotar({**ROTA_COTAR, "destinos": ["LIS"], "ida_e_volta": False}, max_datas=1)
+    assert chamadas[0][2] is None

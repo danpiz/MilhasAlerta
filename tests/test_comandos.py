@@ -126,3 +126,58 @@ def test_comando_desconhecido_mostra_ajuda():
 def test_aceita_comando_com_mencao_ao_bot():
     _, resposta = processar("/alertas@AlertaMilhaxBot", [])
     assert "Nenhum alerta ativo" in resposta
+
+
+# --- cotacao na criacao do alerta ---------------------------------------------
+# Um teto sem referencia e um chute: "abaixo de R$ 4.000" nao diz nada a quem
+# nao sabe se o trecho custa 3.000 ou 10.000. Os dois erros de 30/08/2026 --
+# teto acima do mercado (87 alertas) e teto abaixo do piso (alerta mudo) --
+# seriam visiveis na hora se a confirmacao trouxesse o preco corrente.
+
+MERCADO = {"LIS": 4200, "MAD": 4093, "FRA": 4457, "CDG": 5500}
+
+
+def criar(texto="/alerta Europa", cotacao=MERCADO, **rota):
+    return processar(
+        texto, [], client=cliente(rota_pedida(**rota)), cotar=lambda r: cotacao
+    )[1]
+
+
+def test_confirmacao_mostra_o_preco_corrente():
+    r = criar(max_preco_brl=4500)
+    assert "4.093" in r and "MAD" in r
+
+
+def test_avisa_quando_o_teto_esta_acima_do_mercado():
+    """O caso que rendeu 87 mensagens: teto de 6.000 num trecho de ~4.100."""
+    r = criar(max_preco_brl=6000)
+    assert "acima do preço normal" in r
+    assert "3.700" in r  # 10% abaixo do mais barato, arredondado
+
+
+def test_avisa_quando_o_teto_e_inalcancavel():
+    r = criar(max_preco_brl=2000)
+    assert "abaixo de tudo que achei" in r
+    assert "51%" in r  # 2000 exige cair 51% dos 4.093 atuais
+
+
+def test_teto_no_meio_da_faixa_nao_reclama():
+    r = criar(max_preco_brl=4300)
+    assert "dentro da faixa atual" in r
+    assert "⚠️" not in r
+
+
+def test_cotacao_indisponivel_nao_perde_o_alerta():
+    def explode(rota):
+        raise RuntimeError("Google fora do ar")
+
+    alertas, r = processar(
+        "/alerta Europa", [], client=cliente(rota_pedida(max_preco_brl=4500)), cotar=explode
+    )
+    assert len(alertas) == 1
+    assert "sem referência" in r
+
+
+def test_sem_teto_explica_a_espera_mesmo_com_cotacao():
+    r = criar(cotacao=MERCADO)
+    assert "leva alguns dias" in r

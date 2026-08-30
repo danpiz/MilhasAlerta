@@ -11,6 +11,7 @@ from milhasalerta import historico
 from milhasalerta.milheiro import custo_efetivo
 from milhasalerta.models import Deal
 from milhasalerta.rules import regras_que_casam
+from milhasalerta.sources import google_flights
 from milhasalerta.sources.base import get_sources
 from milhasalerta.state import State
 
@@ -62,7 +63,7 @@ def _atender_comandos(state) -> None:
         state.ultimo_update = update["update_id"] + 1
         mensagem = update.get("message") or {}
         alertas, resposta = comandos.processar(
-            mensagem.get("text", ""), state.alertas_usuario
+            mensagem.get("text", ""), state.alertas_usuario, cotar=google_flights.cotar
         )
         state.alertas_usuario = alertas
         if resposta:
@@ -80,7 +81,11 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
     # duplicar a logica de limite e faz o nome da rota aparecer no alerta.
     # Rota so existe para voo, entao o kind e implicito -- sem isso casa()
     # rejeita toda rota por kind divergente e nenhum alerta de rota sai.
-    _atender_comandos(state)
+    # --dry-run promete nao chamar rede, e --seed nao pode responder ninguem.
+    # Atender comandos aqui consumiria o offset do getUpdates (a mensagem some
+    # do servidor), cotaria rotas no Google e mandaria resposta de verdade.
+    if not (dry_run or seed):
+        _atender_comandos(state)
 
     # Rota do config e rota criada pelo /alerta sao a mesma coisa para o motor.
     rotas = config.get("rotas", []) + state.alertas_usuario

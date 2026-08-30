@@ -175,3 +175,18 @@ def test_run_once_monta_a_fonte_do_google(ambiente, monkeypatch):
     )
     main.run_once()
     assert GoogleFlightsSource in montadas
+
+
+@pytest.mark.parametrize("modo", ["dry_run", "seed"])
+def test_dry_run_e_seed_nao_consomem_comandos(ambiente, monkeypatch, modo):
+    """getUpdates avanca o offset no servidor: a mensagem some para valer.
+
+    --dry-run ainda promete nao chamar rede, e --seed so marca backlog. Atender
+    comandos em qualquer um dos dois consumiria mensagens de verdade, cotaria
+    rotas no Google e responderia ao usuario.
+    """
+    def barrado(desde=None):
+        raise AssertionError("leu comandos do Telegram")
+
+    monkeypatch.setattr(main.telegram, "receber", barrado)
+    main.run_once(**{modo: True})

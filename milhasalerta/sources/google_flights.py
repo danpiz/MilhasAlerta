@@ -49,6 +49,51 @@ def _url_google(origem: str, destino: str, dia: str, volta: Optional[str]) -> st
     return f"{base}%20through%20{volta}" if volta else f"{base}%20oneway"
 
 
+def consultar(
+    origem: str, destino: str, dia: str, volta: Optional[str] = None, cabine: str = "economy"
+) -> list[int]:
+    from fast_flights import FlightQuery, Passengers, create_query, get_flights
+
+    pernas = [FlightQuery(date=dia, from_airport=origem, to_airport=destino)]
+    if volta:
+        pernas.append(FlightQuery(date=volta, from_airport=destino, to_airport=origem))
+    q = create_query(
+        flights=pernas,
+        seat=cabine,
+        trip="round-trip" if volta else "one-way",
+        passengers=Passengers(adults=1),
+        currency=CURRENCY,
+    )
+    return [int(v.price) for v in get_flights(q) if str(v.price).isdigit() and int(v.price) > 0]
+
+
+def cotar(rota: dict, max_destinos: int = 6, max_datas: int = 3) -> dict[str, int]:
+    """Menor preco atual por destino, numa amostra pequena da rota.
+
+    Serve para calibrar o teto de um alerta na hora em que ele e criado. Sem
+    isso o teto e um chute: "abaixo de R$ 4.000" nao diz nada se o trecho custa
+    10.000 (o alerta nunca dispara) nem se custa 3.000 (dispara com o preco
+    normal, e foi o que encheu o Telegram com 87 mensagens em 30/08/2026).
+
+    E amostra, nao varredura: a rota inteira da Europa sao 84 consultas e uns
+    90s. Destino que falhar fica de fora em vez de derrubar a cotacao."""
+    destinos = expandir(rota.get("destinos"))[:max_destinos]
+    dias = rota.get("dias_de_viagem") if rota.get("ida_e_volta") else None
+    origem = (rota.get("origens") or ["GRU"])[0]
+    precos: dict[str, int] = {}
+    for destino in destinos:
+        achados = []
+        for dia in datas_amostradas(max_datas, inicio=rota.get("a_partir_de")):
+            volta = _somar_dias(dia, dias) if dias else None
+            try:
+                achados += consultar(origem, destino, dia, volta, "economy")
+            except Exception:
+                continue
+        if achados:
+            precos[destino] = min(achados)
+    return precos
+
+
 class GoogleFlightsSource:
     nome = "Google Flights"
 
@@ -75,21 +120,7 @@ class GoogleFlightsSource:
     def _consultar(
         self, origem: str, destino: str, dia: str, volta: Optional[str] = None
     ) -> list[int]:
-        from fast_flights import FlightQuery, Passengers, create_query, get_flights
-
-        pernas = [FlightQuery(date=dia, from_airport=origem, to_airport=destino)]
-        if volta:
-            pernas.append(FlightQuery(date=volta, from_airport=destino, to_airport=origem))
-        q = create_query(
-            flights=pernas,
-            seat=self.cabine,
-            trip="round-trip" if volta else "one-way",
-            passengers=Passengers(adults=1),
-            currency=CURRENCY,
-        )
-        return [
-            int(v.price) for v in get_flights(q) if str(v.price).isdigit() and int(v.price) > 0
-        ]
+        return consultar(origem, destino, dia, volta, self.cabine)
 
     def fetch(self) -> list[Deal]:
         deals: list[Deal] = []
