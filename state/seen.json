@@ -1,4 +1,23 @@
 {
+  "alertas_usuario": [
+    {
+      "a_partir_de": "2026-12-20",
+      "cabine": "economica",
+      "destinos": [
+        "BER",
+        "MUC",
+        "FRA"
+      ],
+      "dias_de_viagem": 12,
+      "enabled": true,
+      "ida_e_volta": true,
+      "max_preco_brl": 6000,
+      "nome": "Alemanha depois de 20 de dezembro",
+      "origens": [
+        "GRU"
+      ]
+    }
+  ],
   "marcos": {
     "google_flights": "2026-08-30T01:30:36.374164+00:00"
   },
@@ -1020,5 +1039,6 @@
         4608
       ]
     ]
-  }
+  },
+  "ultimo_update": 857678018
 }
