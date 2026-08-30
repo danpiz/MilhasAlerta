@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 from milhasalerta import telegram
 from milhasalerta.extract import Extractor
+from milhasalerta import historico
 from milhasalerta.milheiro import custo_efetivo
 from milhasalerta.models import Deal
 from milhasalerta.rules import regras_que_casam
@@ -54,7 +55,26 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
 
     # Nem dry-run nem seed chamam o modelo.
     extrair = _marcador if (seed or dry_run) else Extractor()
-    sources = get_sources(config, extrair=extrair, ja_visto=lambda url: not state.is_new(url))
+
+    # Cada destino x data e uma consulta ao Google; varrer a cada 30 min viraria
+    # bloqueio. A fonte roda numa cadencia propria, sem workflow separado --
+    # dois workflows commitando o mesmo estado brigariam pelo push.
+    cadencia = config.get("google_cadencia_horas", 6)
+    google_liberado = state.passou("google_flights", cadencia)
+
+    def observar_preco(origem, destino, dia, preco):
+        k = historico.chave(origem, destino, dia)
+        queda = historico.queda_pct(state.serie, k, preco)
+        historico.registrar(state.serie, k, preco)
+        return queda
+
+    sources = get_sources(
+        config,
+        extrair=extrair,
+        ja_visto=lambda url: not state.is_new(url),
+        observar_preco=observar_preco,
+        google_liberado=google_liberado and not (seed or dry_run),
+    )
 
     if dry_run:
         return _listar(config, sources)
@@ -87,13 +107,15 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
             marcados += 1
             if seed:
                 continue
-            regras = regras_que_casam(config["alertas"], deal)
+            regras = regras_que_casam(todas_as_regras, deal)
             if not regras:
                 continue
             telegram.enviar(telegram.formatar(deal, regras))
             enviados += 1
             print(f"[alerta] {deal.titulo}")
 
+    if google_liberado and not dry_run:
+        state.marcar_execucao("google_flights")
     state.save()
     if seed:
         print(f"{marcados} post(s) marcado(s). A próxima execução só alerta o que for novo.")

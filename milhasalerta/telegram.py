@@ -35,6 +35,9 @@ def formatar(deal: Deal, regras: list[str]) -> str:
                 lado = f"{lado} (≈R$ {convertido})"
             precos.append(lado)
         detalhe = " ou ".join(precos)
+        # Na linha do preco, nao no cabecalho: la sairia <b> dentro de <b>.
+        if deal.queda_pct:
+            detalhe = f"{detalhe} · {deal.queda_pct}% abaixo do normal"
     else:
         cabecalho = f"🎁 <b>{deal.programa or 'Promoção'}</b>"
         detalhe = f"{deal.bonus_pct}% de bônus" if deal.bonus_pct is not None else deal.titulo

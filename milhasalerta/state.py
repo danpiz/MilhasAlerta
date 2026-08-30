@@ -2,6 +2,8 @@ import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+from .historico import podar
+
 RETENCAO = timedelta(days=30)
 
 
@@ -11,14 +13,31 @@ class State:
     def __init__(self, path: Path):
         self.path = path
         self._seen: dict[str, str] = {}
+        self.serie: dict[str, list] = {}
+        self._marcos: dict[str, str] = {}
         if path.exists():
-            self._seen = json.loads(path.read_text(encoding="utf-8")).get("seen", {})
+            bruto = json.loads(path.read_text(encoding="utf-8"))
+            self._seen = bruto.get("seen", {})
+            self.serie = bruto.get("serie", {})
+            self._marcos = bruto.get("marcos", {})
 
     def is_new(self, dedup_key: str) -> bool:
         return dedup_key not in self._seen
 
     def mark(self, dedup_key: str) -> None:
         self._seen[dedup_key] = datetime.now(timezone.utc).isoformat()
+
+    def passou(self, nome: str, horas: float) -> bool:
+        """Estrangula uma fonte cara sem precisar de workflow separado --
+        dois workflows commitando o mesmo estado brigariam pelo push."""
+        marco = self._marcos.get(nome)
+        if not marco:
+            return True
+        idade = datetime.now(timezone.utc) - datetime.fromisoformat(marco)
+        return idade >= timedelta(hours=horas)
+
+    def marcar_execucao(self, nome: str) -> None:
+        self._marcos[nome] = datetime.now(timezone.utc).isoformat()
 
     def save(self) -> None:
         limite = datetime.now(timezone.utc) - RETENCAO
@@ -29,6 +48,9 @@ class State:
         }
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.path.write_text(
-            json.dumps({"seen": vivos}, indent=2, sort_keys=True, ensure_ascii=False),
+            json.dumps(
+                {"seen": vivos, "serie": podar(self.serie), "marcos": self._marcos},
+                indent=2, sort_keys=True, ensure_ascii=False,
+            ),
             encoding="utf-8",
         )

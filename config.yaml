@@ -14,6 +14,39 @@ milheiro:
   Livelo: 30.00
   Esfera: 30.00
 
+# Rotas vigiadas no Google Flights (preco em dinheiro). Esta e a unica fonte
+# que CONSULTA uma rota; as demais so reagem ao que os portais publicaram.
+#
+# destinos aceita codigo IATA, atalho de regiao, ou os dois misturados.
+# Atalhos: europa, america_do_norte, america_do_sul, asia, africa, oceania.
+#
+# CUSTO: cada destino x data e uma consulta. Europa sao 14 aeroportos; com 6
+# datas amostradas da 84 consultas (~90s). Por isso a cadencia e menor que a
+# do resto e as datas sao amostradas, uma por mes.
+google_cadencia_horas: 6
+google_amostras_de_data: 6
+
+rotas:
+  - nome: Europa a partir de SP
+    origens: [GRU]
+    destinos: europa
+    max_preco_brl: 2500
+    min_queda_pct: 30
+    enabled: true
+
+  - nome: Vizinhos baratos
+    origens: [GRU]
+    destinos: america_do_sul
+    max_preco_brl: 900
+    enabled: true
+
+  # Rota especifica: so listar os IATA.
+  - nome: Tokyo
+    origens: [GRU]
+    destinos: [NRT, HND]
+    min_queda_pct: 25
+    enabled: false
+
 # Canais publicos do Telegram, lidos pela previa web em t.me/s/<canal>.
 # Rendem mais sinal que o RSS dos mesmos portais e nao exigem token.
 canais:

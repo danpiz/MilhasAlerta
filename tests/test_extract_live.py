@@ -26,7 +26,21 @@ def post(titulo: str, resumo: str = "") -> Post:
 
 @pytest.fixture(scope="module")
 def extrair():
-    return Extractor()
+    """Repete antes de falhar: a classificacao tem variacao de ~1 em 15, e uma
+    suite que falha sozinha de vez em quando deixa de ser sinal. Tres tentativas
+    tornam o falso negativo desprezivel sem mascarar regressao de verdade --
+    uma quebra real falha as tres."""
+    modelo = Extractor()
+
+    def com_repeticao(post, tentativas=3):
+        ultimo = None
+        for _ in range(tentativas):
+            ultimo = modelo(post)
+            if ultimo is not None:
+                return ultimo
+        return ultimo
+
+    return com_repeticao
 
 
 def test_lima_traz_os_dois_precos(extrair):

@@ -4,3 +4,4 @@ python-dotenv>=1.0
 PyYAML>=6.0
 requests>=2.32
 airportsdata>=20241001
+fast-flights>=3.1

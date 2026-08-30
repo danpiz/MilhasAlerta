@@ -15,11 +15,19 @@ faz funcionar "R$ 593 ou 24 mil milhas". Entre campos diferentes é E.
 cotação do milheiro — um limite só que funciona seja como for que o post
 anunciou o preço.
 
+`min_queda_pct` é a outra barra: quanto abaixo do preço típico daquela rota.
+Pega a oportunidade que você não saberia pedir, mas só existe depois que o
+histórico tem amostra — antes disso a regra não dispara, por exigir prova.
+
+As `rotas` do config são regras também: mesma semântica, e é por isso que o
+nome da rota aparece no alerta que ela gerou.
+
 Como o dedup é por deal, e não por regra, o alerta sai uma vez só listando todas as
 regras que casaram.
 """
 
 from .models import Deal
+from .regioes import expandir
 
 
 def _lista_ok(valor, permitidos, ausente_passa: bool = False) -> bool:
@@ -56,9 +64,16 @@ def casa(regra: dict, deal: Deal) -> bool:
         return False
 
     if deal.kind == "voo":
+        # destinos aceita atalho de regiao ("europa"), entao expande antes.
+        destinos = expandir(regra["destinos"]) if regra.get("destinos") else None
+        minimo_queda = regra.get("min_queda_pct")
+        queda_ok = minimo_queda is None or (
+            deal.queda_pct is not None and deal.queda_pct >= minimo_queda
+        )
         return (
-            _lista_ok(deal.origem, regra.get("origens"), ausente_passa=True)
-            and _lista_ok(deal.destino, regra.get("destinos"))
+            queda_ok
+            and _lista_ok(deal.origem, regra.get("origens"), ausente_passa=True)
+            and _lista_ok(deal.destino, destinos)
             and _lista_ok(deal.cabine, regra.get("cabines"))
             and _preco_ok(regra, deal)
         )

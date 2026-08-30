@@ -34,5 +34,7 @@ class Deal:
     # Milhas convertidas em reais pela cotacao do milheiro. Preenchido depois da
     # extracao, em main, para regras e alerta lerem sem conhecer o config.
     custo_efetivo_brl: Optional[int] = None
+    # Quanto abaixo do preco tipico da rota, quando ha historico suficiente.
+    queda_pct: Optional[int] = None
     # kind="promo"
     bonus_pct: Optional[int] = None

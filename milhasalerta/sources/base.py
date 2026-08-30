@@ -4,6 +4,7 @@ from typing import Callable, Optional, Protocol
 from ..models import Deal
 from .rss import Post, RssSource
 from .seats_aero import SeatsAeroSource
+from .google_flights import GoogleFlightsSource
 from .telegram_channel import TelegramChannelSource
 
 
@@ -17,6 +18,8 @@ def get_sources(
     config: dict,
     extrair: Callable[[Post], Optional[Deal]],
     ja_visto: Callable[[str], bool],
+    observar_preco: Optional[Callable[[str, str, str, int], Optional[int]]] = None,
+    google_liberado: bool = True,
 ) -> list[DealSource]:
     idade = config.get("max_idade_horas")
     sources: list[DealSource] = [
@@ -33,6 +36,16 @@ def get_sources(
         )
         for feed in config.get("feeds", [])
     ]
+    rotas = config.get("rotas")
+    if rotas and observar_preco is not None and google_liberado:
+        sources.append(
+            GoogleFlightsSource(
+                rotas=rotas,
+                ja_visto=ja_visto,
+                observar=observar_preco,
+                amostras=config.get("google_amostras_de_data", 6),
+            )
+        )
     seats_key = os.environ.get("SEATS_API_KEY")
     if seats_key:
         sources.append(

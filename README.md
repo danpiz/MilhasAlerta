@@ -7,7 +7,9 @@ mensagem com Claude Haiku e dispara alerta para o que casa com as suas regras.
 ## Como funciona
 
 ```
-canais Telegram + RSS  ─▶  dedup (state/seen.json)  ─▶  Haiku extrai  ─▶  regras  ─▶  Telegram
+canais Telegram + RSS  ─▶  dedup  ─▶  Haiku extrai  ─┐
+                                                     ├─▶  regras  ─▶  Telegram
+Google Flights (rotas vigiadas)  ─▶  histórico  ─────┘
 ```
 
 O dedup vem antes da extração de propósito: cada post novo custa uma chamada de API, e post repetido
@@ -40,6 +42,44 @@ aí estão parados há anos:
 | `decolandocmilhas`, `alertapassagens`, `milhaseviagens` | parados há mais de 2 anos ❌ |
 
 Para checar de novo: `curl -s "https://t.me/s/<canal>" | grep -c tgme_widget_message_text`.
+
+## Rotas vigiadas
+
+As fontes acima **reagem** ao que os portais publicaram. O Google Flights é a única que **consulta**
+uma rota — responde "avise se Europa cair abaixo de R$ 2.500", que os canais não conseguem.
+
+```yaml
+rotas:
+  - nome: Europa a partir de SP
+    origens: [GRU]
+    destinos: europa        # ou lista: [LIS, CDG]
+    max_preco_brl: 2500     # teto que você define
+    min_queda_pct: 30       # ou queda contra o preço típico da rota
+```
+
+`destinos` aceita código IATA, atalho de região, ou os dois misturados. Atalhos disponíveis em
+[`regioes.py`](milhasalerta/regioes.py): `europa`, `america_do_norte`, `america_do_sul`, `asia`,
+`africa`, `oceania`.
+
+Os dois gatilhos são complementares: `max_preco_brl` pega o que você já sabe que quer;
+`min_queda_pct` pega o que você não saberia pedir. A queda só passa a disparar depois de algumas
+observações — a série vive em `state/seen.json` e usa mediana, porque uma tarifa absurda distorceria
+a média e criaria um "normal" que nunca existiu.
+
+**O custo são as datas, não os destinos.** Cada destino × data é uma consulta. Europa são 14
+aeroportos; com 6 datas amostradas dá 84 consultas (~90s). Por isso as datas são amostradas — uma
+por mês — e a fonte roda a cada `google_cadencia_horas` (padrão 6), não a cada 30 min como o resto.
+Ela se estrangula sozinha pelo estado, sem workflow separado: dois workflows commitando o mesmo
+`seen.json` brigariam pelo push.
+
+> **É scraping.** Contra os termos do Google, que não oferece API a nenhum preço (a QPX Express
+> fechou em 2018), e quebra quando eles mudarem o formato. É a única dependência frágil do projeto;
+> tudo mais é feed público ou API documentada. Se o Google bloquear, a fonte falha sozinha e o
+> monitor segue pelos canais.
+>
+> `currency="BRL"` é obrigatório e está fixo no código. O parâmetro é vazio por padrão e o Google
+> decide pelo IP — o runner do Actions fica nos EUA e devolvia dólar. Medido: GRU→MIA veio `335` sem
+> forçar e `R$ 1.736` com BRL.
 
 ## Setup
 

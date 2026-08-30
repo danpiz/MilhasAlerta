@@ -108,3 +108,15 @@ def test_erro_de_envio_nao_vaza_o_token(monkeypatch):
         assert "api.telegram.org" not in str(erro)
         assert "HTTP 400" in str(erro)
         assert erro.__cause__ is None  # sem traceback encadeado com a URL
+
+
+def test_queda_aparece_na_linha_do_preco_sem_aninhar_negrito():
+    """No cabecalho sairia <b> dentro de <b>, que e HTML invalido."""
+    texto = formatar(voo(destino="NRT", preco_brl=3200, queda_pct=42), ["R"])
+    assert "42% abaixo do normal" in texto
+    assert "<b><b>" not in texto and "</b></b>" not in texto
+    assert texto.count("<b>") == texto.count("</b>") == 1
+
+
+def test_sem_queda_nao_polui_a_linha():
+    assert "abaixo do normal" not in formatar(voo(destino="NRT", preco_brl=3200), ["R"])
