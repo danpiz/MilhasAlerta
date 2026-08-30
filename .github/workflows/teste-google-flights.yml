@@ -31,6 +31,7 @@ jobs:
                   q = create_query(
                       flights=[FlightQuery(date=dia, from_airport=origem, to_airport=destino)],
                       seat="economy", trip="one-way", passengers=Passengers(adults=1),
+                      currency="BRL",
                   )
                   r = get_flights(q)
                   if len(r):
