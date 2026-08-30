@@ -59,6 +59,7 @@ class GoogleFlightsSource:
         observar: Callable[[str, str, str, int], Optional[int]],
         amostras: int = 6,
         cabine: str = "economy",
+        limite_por_rota: int = 3,
     ):
         self.rotas = rotas or []
         self._ja_visto = ja_visto
@@ -67,6 +68,7 @@ class GoogleFlightsSource:
         self._observar = observar
         self.amostras = amostras
         self.cabine = cabine
+        self.limite_por_rota = limite_por_rota
         self.consultas = self.falhas = 0
 
     def _consultar(
@@ -98,13 +100,22 @@ class GoogleFlightsSource:
             # Ida e volta e o que a maioria quer; o preco de so-ida engana quem
             # le rapido. dias_de_viagem define a volta a partir da ida.
             dias = rota.get("dias_de_viagem") if rota.get("ida_e_volta") else None
+            da_rota: list[Deal] = []
             for origem in rota.get("origens", []):
                 for destino in destinos:
                     for dia in datas_amostradas(self.amostras, inicio=rota.get("a_partir_de")):
                         volta = _somar_dias(dia, dias) if dias else None
                         deal = self._melhor(rota, origem, destino, dia, volta)
                         if deal:
-                            deals.append(deal)
+                            da_rota.append(deal)
+            # So as mais baratas da rota. O teto e um filtro, nao um criterio de
+            # relevancia: se ele estiver acima do preco normal do trecho -- "Europa
+            # ate R$ 6.000", quando Europa custa 4.200-5.700 -- TODAS as 14x6
+            # combinacoes passam e viram alerta. Aconteceu: 87 mensagens de uma vez.
+            # Ordenar por preco privilegia sempre os mesmos destinos baratos; e o
+            # preco a pagar por um corte que nao depende de historico.
+            da_rota.sort(key=lambda d: d.preco_brl)
+            deals.extend(da_rota[: self.limite_por_rota])
         if self.falhas:
             # Scraper que emudece parece "nenhum deal hoje". Sem esta linha o
             # bloqueio do Google passaria semanas despercebido.

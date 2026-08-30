@@ -162,3 +162,43 @@ def test_conta_falhas_para_bloqueio_nao_passar_por_silencio(capsys):
     assert s.fetch() == []
     assert (s.falhas, s.consultas) == (2, 2)
     assert "2/2 consultas falharam" in capsys.readouterr().err
+
+
+# --- teto acima do preco normal: a rota inteira vira alerta -------------------
+# Reproduz o incidente de 30/08/2026: "/alerta Europa ... ate R$ 6.000" com o
+# trecho custando 4.200-5.700 fez as 14x6 combinacoes passarem no filtro e
+# render 87 mensagens de uma vez.
+
+ROTA_LARGA = [
+    {
+        "nome": "Europa dezembro",
+        "origens": ["GRU"],
+        "destinos": ["LIS", "CDG", "FRA", "MAD", "BCN"],
+        "max_preco_brl": 6000,
+    }
+]
+MERCADO = {"LIS": [4200], "CDG": [5500], "FRA": [4900], "MAD": [4400], "BCN": [5100]}
+
+
+def test_teto_generoso_nao_alerta_a_rota_inteira():
+    s = fonte(ROTA_LARGA, MERCADO, amostras=6, limite_por_rota=3)
+    assert len(s.fetch()) == 3
+
+
+def test_corta_pelas_mais_baratas():
+    s = fonte(ROTA_LARGA, MERCADO, amostras=1, limite_por_rota=2)
+    assert [d.destino for d in s.fetch()] == ["LIS", "MAD"]
+
+
+def test_limite_vale_por_rota_e_nao_no_total():
+    duas = ROTA_LARGA + [
+        {"nome": "Vizinhos", "origens": ["GRU"], "destinos": ["SCL"], "max_preco_brl": 900}
+    ]
+    s = fonte(duas, {**MERCADO, "SCL": [745]}, amostras=1, limite_por_rota=2)
+    # A rota barata nao pode ser engolida pelo corte da rota cara.
+    assert [d.destino for d in s.fetch()] == ["LIS", "MAD", "SCL"]
+
+
+def test_rota_bem_calibrada_nao_e_afetada():
+    s = fonte(ROTA_TETO, {"LIS": [2000], "CDG": [4000]}, amostras=1, limite_por_rota=3)
+    assert [d.destino for d in s.fetch()] == ["LIS"]

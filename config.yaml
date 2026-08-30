@@ -33,6 +33,12 @@ milheiro:
 google_cadencia_horas: 3
 google_amostras_de_data: 6
 
+# Teto de alertas por rota, por rodada. Uma rota so diz "abaixo de X"; ela nao
+# sabe se X esta abaixo do preco normal do trecho. Com um teto generoso, as
+# 14 x 6 combinacoes da Europa passam todas e viram 84 mensagens de uma vez --
+# ja aconteceu. Este limite e a rede de seguranca contra o teto mal calibrado.
+google_max_alertas_por_rota: 3
+
 rotas:
   - nome: Europa ida e volta
     origens: [GRU]
