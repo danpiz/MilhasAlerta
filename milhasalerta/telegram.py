@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 import requests
 
@@ -6,8 +7,24 @@ from .airports import describe
 from .models import Deal
 
 
+MESES = "jan fev mar abr mai jun jul ago set out nov dez".split()
+
+
 def _milhas_curtas(milhas: int) -> str:
     return f"{milhas // 1000}k" if milhas >= 1000 else str(milhas)
+
+
+def _dia_curto(iso: str) -> str:
+    ano, mes, dia = iso.split("-")
+    return f"{int(dia)} {MESES[int(mes) - 1]}"
+
+
+def _datas(ida: str, volta: Optional[str]) -> str:
+    """Sempre diz se e so ida: o mesmo trecho ida e volta custa quase o dobro,
+    e um alerta que omite isso passa por barato o que nao e."""
+    if volta:
+        return f"{_dia_curto(ida)} a {_dia_curto(volta)}"
+    return f"{_dia_curto(ida)}, só ida"
 
 
 def formatar(deal: Deal, regras: list[str]) -> str:
@@ -35,6 +52,10 @@ def formatar(deal: Deal, regras: list[str]) -> str:
                 lado = f"{lado} (≈R$ {convertido})"
             precos.append(lado)
         detalhe = " ou ".join(precos)
+        # Preco sem data nao e acionavel, e so-ida sem dizer engana quem le
+        # rapido -- o mesmo trecho ida e volta custa quase o dobro.
+        if deal.data:
+            detalhe = f"{detalhe} · {_datas(deal.data, deal.data_volta)}"
         # Na linha do preco, nao no cabecalho: la sairia <b> dentro de <b>.
         if deal.queda_pct:
             detalhe = f"{detalhe} · {deal.queda_pct}% abaixo do normal"

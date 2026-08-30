@@ -13,7 +13,7 @@ def fonte(rotas, precos, historico=None, **kw):
         observar=lambda o, d, dia, p: (historico or {}).get(d),
         **kw,
     )
-    s._consultar = lambda o, d, dia: precos.get(d, [])
+    s._consultar = lambda o, d, dia, volta=None: precos.get(d, [])
     return s
 
 
@@ -74,7 +74,7 @@ def test_observa_o_preco_mesmo_sem_alertar():
         rotas=ROTA_TETO, ja_visto=lambda k: False,
         observar=lambda o, d, dia, p: observados.append((d, p)), amostras=1,
     )
-    s._consultar = lambda o, d, dia: [9000]
+    s._consultar = lambda o, d, dia, volta=None: [9000]
     s.fetch()
     assert observados == [("LIS", 9000), ("CDG", 9000)]
 
@@ -83,13 +83,13 @@ def test_rota_desabilitada_nao_consulta():
     rota = [{**ROTA_TETO[0], "enabled": False}]
     consultas = []
     s = fonte(rota, {}, amostras=1)
-    s._consultar = lambda o, d, dia: consultas.append(d) or []
+    s._consultar = lambda o, d, dia, volta=None: consultas.append(d) or []
     s.fetch()
     assert consultas == []
 
 
 def test_falha_numa_rota_nao_derruba_as_outras():
-    def consultar(o, d, dia):
+    def consultar(o, d, dia, volta=None):
         if d == "LIS":
             raise RuntimeError("google bloqueou")
         return [2000]
@@ -103,10 +103,62 @@ def test_mesmo_preco_nao_realerta(monkeypatch):
     monkeypatch.setattr(
         "milhasalerta.sources.google_flights.datas_amostradas", lambda n, **k: ["X"]
     )
-    ja_alertado = {"gf:GRU-LIS-X:2000"}
+    ja_alertado = {"gf:GRU-LIS-X-:2000"}
     s = fonte(ROTA_TETO, {"LIS": [2000]}, amostras=1, vistos=ja_alertado)
     assert s.fetch() == []
 
     # Mas uma queda adicional e noticia nova.
     s2 = fonte(ROTA_TETO, {"LIS": [1800]}, amostras=1, vistos=ja_alertado)
     assert [d.preco_brl for d in s2.fetch()] == [1800]
+
+
+def test_ida_e_volta_consulta_as_duas_pernas():
+    rota = [{"nome": "Europa", "origens": ["GRU"], "destinos": ["LIS"],
+             "ida_e_volta": True, "dias_de_viagem": 12, "max_preco_brl": 9999}]
+    chamadas = []
+    s = fonte(rota, {}, amostras=1)
+    s._consultar = lambda o, d, dia, volta=None: chamadas.append((dia, volta)) or [4000]
+    deals = s.fetch()
+    (ida, volta), = chamadas
+    from datetime import date
+    assert (date.fromisoformat(volta) - date.fromisoformat(ida)).days == 12
+    assert deals[0].data == ida and deals[0].data_volta == volta
+
+
+def test_so_ida_nao_manda_perna_de_volta():
+    chamadas = []
+    s = fonte(ROTA_TETO, {}, amostras=1)
+    s._consultar = lambda o, d, dia, volta=None: chamadas.append(volta) or [2000]
+    s.fetch()
+    assert set(chamadas) == {None}
+
+
+def test_a_partir_de_fixa_a_janela():
+    from milhasalerta.sources.google_flights import datas_amostradas
+    datas = datas_amostradas(3, inicio="2027-01-05")
+    assert datas[0] == "2027-01-05"
+    assert len(datas) == 3
+
+
+def test_ida_e_volta_tem_chave_distinta_da_so_ida():
+    """Senao o preco de ida e volta suprimiria o alerta de so-ida, ou vice-versa."""
+    rota_iv = [{"nome": "R", "origens": ["GRU"], "destinos": ["LIS"],
+                "ida_e_volta": True, "dias_de_viagem": 12, "max_preco_brl": 9999}]
+    s1 = fonte(rota_iv, {}, amostras=1)
+    s1._consultar = lambda o, d, dia, volta=None: [4000]
+    s2 = fonte([{**rota_iv[0], "ida_e_volta": False}], {}, amostras=1)
+    s2._consultar = lambda o, d, dia, volta=None: [4000]
+    assert s1.fetch()[0].dedup_key != s2.fetch()[0].dedup_key
+
+
+def test_conta_falhas_para_bloqueio_nao_passar_por_silencio(capsys):
+    """Scraper que emudece parece 'nenhum deal hoje'. A contagem e o unico
+    sinal de que o Google bloqueou."""
+    def consultar(o, d, dia, volta=None):
+        raise RuntimeError("bloqueado")
+
+    s = fonte(ROTA_TETO, {}, amostras=1)
+    s._consultar = consultar
+    assert s.fetch() == []
+    assert (s.falhas, s.consultas) == (2, 2)
+    assert "2/2 consultas falharam" in capsys.readouterr().err

@@ -17,6 +17,7 @@ DUAS COISAS QUE PARECEM DETALHE E NÃO SÃO:
 Falha aqui não derruba as outras fontes.
 """
 
+import sys
 from datetime import date, timedelta
 from typing import Callable, Optional
 
@@ -26,13 +27,26 @@ from ..regioes import expandir
 CURRENCY = "BRL"
 
 
-def datas_amostradas(quantidade: int, passo_dias: int = 30, offset_dias: int = 30) -> list[str]:
-    """Uma data por mês. Panorama do ano sem varrer o calendário inteiro."""
-    hoje = date.today()
-    return [
-        (hoje + timedelta(days=offset_dias + i * passo_dias)).isoformat()
-        for i in range(quantidade)
-    ]
+def _somar_dias(dia: str, n: int) -> str:
+    return (date.fromisoformat(dia) + timedelta(days=n)).isoformat()
+
+
+def datas_amostradas(
+    quantidade: int,
+    passo_dias: int = 30,
+    offset_dias: int = 30,
+    inicio: Optional[str] = None,
+) -> list[str]:
+    """Uma data por mês. Panorama do ano sem varrer o calendário inteiro.
+
+    `inicio` fixa o ponto de partida para quem já sabe quando quer viajar."""
+    base = date.fromisoformat(inicio) if inicio else date.today() + timedelta(days=offset_dias)
+    return [(base + timedelta(days=i * passo_dias)).isoformat() for i in range(quantidade)]
+
+
+def _url_google(origem: str, destino: str, dia: str, volta: Optional[str]) -> str:
+    base = f"https://www.google.com/travel/flights?q=Flights%20to%20{destino}%20from%20{origem}%20on%20{dia}"
+    return f"{base}%20through%20{volta}" if volta else f"{base}%20oneway"
 
 
 class GoogleFlightsSource:
@@ -53,14 +67,20 @@ class GoogleFlightsSource:
         self._observar = observar
         self.amostras = amostras
         self.cabine = cabine
+        self.consultas = self.falhas = 0
 
-    def _consultar(self, origem: str, destino: str, dia: str) -> list[int]:
+    def _consultar(
+        self, origem: str, destino: str, dia: str, volta: Optional[str] = None
+    ) -> list[int]:
         from fast_flights import FlightQuery, Passengers, create_query, get_flights
 
+        pernas = [FlightQuery(date=dia, from_airport=origem, to_airport=destino)]
+        if volta:
+            pernas.append(FlightQuery(date=volta, from_airport=destino, to_airport=origem))
         q = create_query(
-            flights=[FlightQuery(date=dia, from_airport=origem, to_airport=destino)],
+            flights=pernas,
             seat=self.cabine,
-            trip="one-way",
+            trip="round-trip" if volta else "one-way",
             passengers=Passengers(adults=1),
             currency=CURRENCY,
         )
@@ -70,23 +90,40 @@ class GoogleFlightsSource:
 
     def fetch(self) -> list[Deal]:
         deals: list[Deal] = []
+        self.consultas = self.falhas = 0
         for rota in self.rotas:
             if not rota.get("enabled", True):
                 continue
             destinos = expandir(rota.get("destinos"))
+            # Ida e volta e o que a maioria quer; o preco de so-ida engana quem
+            # le rapido. dias_de_viagem define a volta a partir da ida.
+            dias = rota.get("dias_de_viagem") if rota.get("ida_e_volta") else None
             for origem in rota.get("origens", []):
                 for destino in destinos:
-                    for dia in datas_amostradas(self.amostras):
-                        deal = self._melhor(rota, origem, destino, dia)
+                    for dia in datas_amostradas(self.amostras, inicio=rota.get("a_partir_de")):
+                        volta = _somar_dias(dia, dias) if dias else None
+                        deal = self._melhor(rota, origem, destino, dia, volta)
                         if deal:
                             deals.append(deal)
+        if self.falhas:
+            # Scraper que emudece parece "nenhum deal hoje". Sem esta linha o
+            # bloqueio do Google passaria semanas despercebido.
+            print(
+                f"[{self.nome}] {self.falhas}/{self.consultas} consultas falharam",
+                file=sys.stderr,
+            )
         return deals
 
-    def _melhor(self, rota: dict, origem: str, destino: str, dia: str) -> Optional[Deal]:
+    def _melhor(
+        self, rota: dict, origem: str, destino: str, dia: str, volta: Optional[str] = None
+    ) -> Optional[Deal]:
+        self.consultas += 1
         try:
-            precos = self._consultar(origem, destino, dia)
+            precos = self._consultar(origem, destino, dia, volta)
         except Exception:
-            # Uma rota fora do ar nao pode abortar as outras 83.
+            # Uma rota fora do ar nao pode abortar as outras 83, mas a falha
+            # precisa aparecer em algum lugar -- ver o resumo em fetch().
+            self.falhas += 1
             return None
         if not precos:
             return None
@@ -107,25 +144,25 @@ class GoogleFlightsSource:
 
         # O preco entra na chave: o mesmo valor nao realerta, mas uma queda
         # adicional e noticia nova.
-        chave = f"gf:{origem}-{destino}-{dia}:{preco}"
+        chave = f"gf:{origem}-{destino}-{dia}-{volta or ''}:{preco}"
         if self._ja_visto(chave):
             return None
 
-        titulo = f"{origem}→{destino} em {dia} por R$ {preco}"
+        trecho = f"{dia} a {volta}" if volta else dia
+        titulo = f"{origem}→{destino} em {trecho} por R$ {preco}"
         if queda:
             titulo = f"{titulo} ({queda}% abaixo do normal)"
         return Deal(
             kind="voo",
             titulo=titulo,
-            url=(
-                "https://www.google.com/travel/flights?q="
-                f"Flights%20to%20{destino}%20from%20{origem}%20on%20{dia}%20oneway"
-            ),
+            url=_url_google(origem, destino, dia, volta),
             fonte=self.nome,
             dedup_key=chave,
             origem=origem,
             destino=destino,
             cabine="economica" if self.cabine == "economy" else self.cabine,
             preco_brl=preco,
+            data=dia,
+            data_volta=volta,
             queda_pct=queda,
         )

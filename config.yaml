@@ -27,24 +27,29 @@ google_cadencia_horas: 6
 google_amostras_de_data: 6
 
 rotas:
-  - nome: Europa a partir de SP
+  - nome: Europa ida e volta
     origens: [GRU]
     destinos: europa
-    max_preco_brl: 2500
+    ida_e_volta: true
+    dias_de_viagem: 12      # a volta e calculada a partir da ida
+    max_preco_brl: 4500     # teto de IDA E VOLTA; so-ida custa quase metade
     min_queda_pct: 30
     enabled: true
 
-  - nome: Vizinhos baratos
+  - nome: Vizinhos baratos (so ida)
     origens: [GRU]
     destinos: america_do_sul
     max_preco_brl: 900
     enabled: true
 
-  # Rota especifica: so listar os IATA.
-  - nome: Tokyo
+  # Janela especifica: quem ja sabe quando quer viajar fixa o inicio.
+  - nome: Portugal em janeiro
     origens: [GRU]
-    destinos: [NRT, HND]
-    min_queda_pct: 25
+    destinos: [LIS, OPO]
+    ida_e_volta: true
+    dias_de_viagem: 14
+    a_partir_de: "2027-01-05"
+    max_preco_brl: 4000
     enabled: false
 
 # Canais publicos do Telegram, lidos pela previa web em t.me/s/<canal>.
