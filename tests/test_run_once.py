@@ -150,3 +150,28 @@ def test_dry_run_nao_envia(ambiente, monkeypatch):
     com_fonte(monkeypatch, [voo(destino="LIS", preco_brl=2000)])
     assert main.run_once(dry_run=True) == 0
     assert enviados == []
+
+
+def test_run_once_monta_a_fonte_do_google(ambiente, monkeypatch):
+    """A fonte de rota some em silencio se run_once nao passar tudo que ela exige.
+
+    get_sources ignora o Google quando falta qualquer dependencia -- sem erro,
+    sem log. O sintoma seria "nenhum alerta de rota", que e indistinguivel de
+    "nao achei nada barato". Este teste e o que faz o esquecimento doer aqui.
+    """
+    from milhasalerta.sources.google_flights import GoogleFlightsSource
+
+    montadas = []
+    original = main.get_sources
+
+    def espiar(config, **kw):
+        sources = original(config, **kw)
+        montadas.extend(type(s) for s in sources)
+        return sources
+
+    monkeypatch.setattr(main, "get_sources", espiar)
+    monkeypatch.setattr(
+        GoogleFlightsSource, "_consultar", lambda self, o, d, dia, volta=None: []
+    )
+    main.run_once()
+    assert GoogleFlightsSource in montadas

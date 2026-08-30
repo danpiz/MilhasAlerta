@@ -11,7 +11,8 @@
       "dias_de_viagem": 12,
       "enabled": true,
       "ida_e_volta": true,
-      "max_preco_brl": 6000,
+      "max_preco_brl": 4000,
+      "min_queda_pct": 25,
       "nome": "Alemanha depois de 20 de dezembro",
       "origens": [
         "GRU"
@@ -26,7 +27,8 @@
       "dias_de_viagem": 15,
       "enabled": true,
       "ida_e_volta": true,
-      "max_preco_brl": 6000,
+      "max_preco_brl": 4000,
+      "min_queda_pct": 25,
       "nome": "Europa dezembro 2026 a janeiro 2027",
       "origens": [
         "GRU"

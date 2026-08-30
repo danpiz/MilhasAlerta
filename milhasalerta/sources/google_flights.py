@@ -55,14 +55,15 @@ class GoogleFlightsSource:
     def __init__(
         self,
         rotas: list[dict],
-        ja_visto: Callable[[str], bool],
+        vistas: Callable[[str], list[str]],
         observar: Callable[[str, str, str, int], Optional[int]],
         amostras: int = 6,
         cabine: str = "economy",
         limite_por_rota: int = 3,
     ):
         self.rotas = rotas or []
-        self._ja_visto = ja_visto
+        # Recebe um prefixo de chave e devolve as chaves ja alertadas.
+        self._vistas = vistas
         # Recebe (origem, destino, data, preco) e devolve a queda % contra o
         # historico, se houver. Mantem a serie fora da fonte.
         self._observar = observar
@@ -153,11 +154,20 @@ class GoogleFlightsSource:
         if not (bom_por_preco or bom_por_queda):
             return None
 
-        # O preco entra na chave: o mesmo valor nao realerta, mas uma queda
-        # adicional e noticia nova.
-        chave = f"gf:{origem}-{destino}-{dia}-{volta or ''}:{preco}"
-        if self._ja_visto(chave):
+        # So alerta se for mais barato do que ja alertei para este trecho.
+        # O preco entra na chave, entao a checagem "ja vi esta chave" tratava
+        # QUALQUER preco diferente como novidade -- inclusive uma alta. Medido:
+        # GRU-AMS 29/10 alertado a R$ 4330 e realertado a R$ 4450 dez horas
+        # depois. Preco igual tambem nao repete: nao e menor.
+        trecho = f"gf:{origem}-{destino}-{dia}-{volta or ''}"
+        alertados = [
+            int(sufixo)
+            for chave in self._vistas(f"{trecho}:")
+            if (sufixo := chave.rsplit(":", 1)[-1]).isdigit()
+        ]
+        if alertados and preco >= min(alertados):
             return None
+        chave = f"{trecho}:{preco}"
 
         trecho = f"{dia} a {volta}" if volta else dia
         titulo = f"{origem}→{destino} em {trecho} por R$ {preco}"

@@ -20,6 +20,7 @@ def get_sources(
     ja_visto: Callable[[str], bool],
     observar_preco: Optional[Callable[[str, str, str, int], Optional[int]]] = None,
     google_liberado: bool = True,
+    chaves_vistas: Optional[Callable[[str], list[str]]] = None,
 ) -> list[DealSource]:
     idade = config.get("max_idade_horas")
     sources: list[DealSource] = [
@@ -37,11 +38,11 @@ def get_sources(
         for feed in config.get("feeds", [])
     ]
     rotas = config.get("rotas")
-    if rotas and observar_preco is not None and google_liberado:
+    if rotas and observar_preco is not None and chaves_vistas is not None and google_liberado:
         sources.append(
             GoogleFlightsSource(
                 rotas=rotas,
-                ja_visto=ja_visto,
+                vistas=chaves_vistas,
                 observar=observar_preco,
                 amostras=config.get("google_amostras_de_data", 6),
                 limite_por_rota=config.get("google_max_alertas_por_rota", 3),

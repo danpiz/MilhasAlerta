@@ -30,6 +30,15 @@ class State:
     def is_new(self, dedup_key: str) -> bool:
         return dedup_key not in self._seen
 
+    def chaves_vistas(self, prefixo: str) -> list[str]:
+        """Chaves ja alertadas que comecam com o prefixo.
+
+        O Google Flights poe o preco na chave, entao so "ja vi esta chave" nao
+        basta: precisa saber por QUAL preco ja alertou aquele trecho, senao uma
+        alta de preco vira chave nova e realerta mais caro. A leitura da chave
+        fica na fonte; aqui so o prefixo."""
+        return [k for k in self._seen if k.startswith(prefixo)]
+
     def mark(self, dedup_key: str) -> None:
         self._seen[dedup_key] = datetime.now(timezone.utc).isoformat()
 

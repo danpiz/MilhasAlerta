@@ -106,6 +106,7 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
         extrair=extrair,
         ja_visto=lambda url: not state.is_new(url),
         observar_preco=observar_preco,
+        chaves_vistas=state.chaves_vistas,
         google_liberado=google_liberado and not (seed or dry_run),
     )
 

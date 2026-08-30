@@ -9,7 +9,7 @@ def fonte(rotas, precos, historico=None, **kw):
     vistos = kw.pop("vistos", set())
     s = GoogleFlightsSource(
         rotas=rotas,
-        ja_visto=lambda k: k in vistos,
+        vistas=lambda prefixo: [k for k in vistos if k.startswith(prefixo)],
         observar=lambda o, d, dia, p: (historico or {}).get(d),
         **kw,
     )
@@ -71,7 +71,7 @@ def test_observa_o_preco_mesmo_sem_alertar():
     """Sem observar preco comum o historico nunca aprende o que e normal."""
     observados = []
     s = GoogleFlightsSource(
-        rotas=ROTA_TETO, ja_visto=lambda k: False,
+        rotas=ROTA_TETO, vistas=lambda prefixo: [],
         observar=lambda o, d, dia, p: observados.append((d, p)), amostras=1,
     )
     s._consultar = lambda o, d, dia, volta=None: [9000]
@@ -202,3 +202,49 @@ def test_limite_vale_por_rota_e_nao_no_total():
 def test_rota_bem_calibrada_nao_e_afetada():
     s = fonte(ROTA_TETO, {"LIS": [2000], "CDG": [4000]}, amostras=1, limite_por_rota=3)
     assert [d.destino for d in s.fetch()] == ["LIS"]
+
+
+# --- realerta so quando fica mais barato --------------------------------------
+# Reproduz o segundo defeito de 30/08/2026: o preco entra na chave, entao uma
+# ALTA virava chave nova e realertava. Medido: GRU-AMS 29/10 a R$ 4330 e, dez
+# horas depois, o mesmo trecho a R$ 4450.
+
+ROTA_UM = [{"nome": "Um", "origens": ["GRU"], "destinos": ["AMS"], "max_preco_brl": 5000}]
+
+
+def alertado(preco: int) -> set:
+    return {f"gf:GRU-AMS-{datas_amostradas(1)[0]}-:{preco}"}
+
+
+def test_nao_realerta_quando_o_preco_sobe():
+    s = fonte(ROTA_UM, {"AMS": [4450]}, amostras=1, vistos=alertado(4330))
+    assert s.fetch() == []
+
+
+def test_nao_realerta_o_mesmo_preco():
+    s = fonte(ROTA_UM, {"AMS": [4330]}, amostras=1, vistos=alertado(4330))
+    assert s.fetch() == []
+
+
+def test_realerta_quando_fica_mais_barato():
+    s = fonte(ROTA_UM, {"AMS": [4100]}, amostras=1, vistos=alertado(4330))
+    assert [d.preco_brl for d in s.fetch()] == [4100]
+
+
+def test_compara_com_o_menor_ja_alertado_nao_com_o_ultimo():
+    """Alertei 4330 e depois 4100; 4200 e alta em relacao ao menor."""
+    s = fonte(ROTA_UM, {"AMS": [4200]}, amostras=1, vistos=alertado(4330) | alertado(4100))
+    assert s.fetch() == []
+
+
+def test_trecho_nunca_alertado_passa():
+    s = fonte(ROTA_UM, {"AMS": [4900]}, amostras=1, vistos=alertado(4330) - alertado(4330))
+    assert [d.preco_brl for d in s.fetch()] == [4900]
+
+
+def test_nao_confunde_trechos_com_prefixo_parecido():
+    """AMS-2026-01-01 nao pode herdar o piso de AMS-2026-01-01x."""
+    dia = datas_amostradas(1)[0]
+    s = fonte(ROTA_UM, {"AMS": [4900]}, amostras=1,
+              vistos={f"gf:GRU-AMS-{dia}-2026-12-31:4000"})
+    assert [d.preco_brl for d in s.fetch()] == [4900]
