@@ -110,6 +110,9 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
         {**config, "rotas": rotas},
         extrair=extrair,
         ja_visto=lambda url: not state.is_new(url),
+        # Marca tambem o que o extrator rejeitou: sem isso o post volta a
+        # custar Haiku em toda rodada ate sair da janela de 24h.
+        marcar=state.mark,
         observar_preco=observar_preco,
         chaves_vistas=state.chaves_vistas,
         google_liberado=google_liberado and not (seed or dry_run),

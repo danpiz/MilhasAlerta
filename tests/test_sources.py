@@ -67,3 +67,53 @@ def test_extracao_que_devolve_none_nao_vira_deal():
 )
 def test_limpeza_de_html(bruto, esperado):
     assert _texto_limpo(bruto) == esperado
+
+
+# --- post rejeitado tem de ser marcado ----------------------------------------
+# Medido em 30/08/2026: 22 posts frescos estavam sem marcacao. Sem marcar o
+# descarte, cada um volta a custar uma chamada ao Haiku em TODA rodada ate sair
+# da janela de 24h -- ~5 vezes hoje, ~96 se o gatilho externo for a cada 15 min.
+
+def _post(url):
+    return type("P", (), {"titulo": "t", "resumo": "", "url": url, "fonte": "F",
+                          "dedup_key": url, "publicado": None})()
+
+
+def fonte_rss(extrair, marcados, urls):
+    s = RssSource(nome="F", url="u", extrair=extrair, ja_visto=lambda u: False,
+                  marcar=marcados.append)
+    s._posts = lambda: [_post(u) for u in urls]
+    return s
+
+
+def test_post_rejeitado_e_marcado():
+    marcados = []
+    fonte_rss(lambda p: None, marcados, ["https://ex.com/a", "https://ex.com/b"]).fetch()
+    assert marcados == ["https://ex.com/a", "https://ex.com/b"]
+
+
+def test_post_aproveitado_nao_e_marcado_pela_fonte():
+    """Quem vira deal e marcado pelo run_once depois de casar as regras."""
+    marcados = []
+    def extrair(p):
+        return Deal(kind="voo", titulo="t", url=p.url, fonte="F",
+                    dedup_key=p.dedup_key, preco_brl=100)
+    deals = fonte_rss(extrair, marcados, ["https://ex.com/a"]).fetch()
+    assert marcados == [] and len(deals) == 1
+
+
+def test_marca_so_o_rejeitado_quando_ha_mistura():
+    marcados = []
+    def extrair(p):
+        if p.url.endswith("bom"):
+            return Deal(kind="voo", titulo="t", url=p.url, fonte="F",
+                        dedup_key=p.dedup_key, preco_brl=100)
+        return None
+    fonte_rss(extrair, marcados, ["https://ex.com/bom", "https://ex.com/ruim"]).fetch()
+    assert marcados == ["https://ex.com/ruim"]
+
+
+def test_sem_callback_de_marcar_nao_quebra():
+    s = RssSource(nome="F", url="u", extrair=lambda p: None, ja_visto=lambda u: False)
+    s._posts = lambda: [_post("https://ex.com/a")]
+    assert s.fetch() == []

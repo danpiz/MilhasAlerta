@@ -18,6 +18,7 @@ def get_sources(
     config: dict,
     extrair: Callable[[Post], Optional[Deal]],
     ja_visto: Callable[[str], bool],
+    marcar: Optional[Callable[[str], None]] = None,
     observar_preco: Optional[Callable[[str, str, str, int], Optional[int]]] = None,
     google_liberado: bool = True,
     chaves_vistas: Optional[Callable[[str], list[str]]] = None,
@@ -26,14 +27,14 @@ def get_sources(
     sources: list[DealSource] = [
         TelegramChannelSource(
             nome=c["nome"], canal=c["canal"], extrair=extrair,
-            ja_visto=ja_visto, max_idade_horas=idade,
+            ja_visto=ja_visto, marcar=marcar, max_idade_horas=idade,
         )
         for c in config.get("canais", [])
     ]
     sources += [
         RssSource(
             nome=feed["nome"], url=feed["url"], extrair=extrair,
-            ja_visto=ja_visto, max_idade_horas=idade,
+            ja_visto=ja_visto, marcar=marcar, max_idade_horas=idade,
         )
         for feed in config.get("feeds", [])
     ]

@@ -190,3 +190,25 @@ def test_dry_run_e_seed_nao_consomem_comandos(ambiente, monkeypatch, modo):
 
     monkeypatch.setattr(main.telegram, "receber", barrado)
     main.run_once(**{modo: True})
+
+
+def test_post_rejeitado_fica_marcado_no_estado(ambiente, monkeypatch):
+    """Sem isto, o post que o extrator descarta e re-extraido em toda rodada.
+
+    Custa uma chamada ao Haiku por rodada, por post, ate ele sair da janela de
+    24h -- ~5 hoje, ~96 se o gatilho externo passar a 15 min. O run_once tem de
+    entregar `marcar` ao get_sources, e o que a fonte marcar tem de sobreviver
+    ao save() daquela mesma rodada.
+    """
+    tmp, _ = ambiente
+
+    def espiar(config, **kw):
+        assert "marcar" in kw, "run_once nao passou marcar ao get_sources"
+        kw["marcar"]("post-descartado")   # e o que a fonte faz ao rejeitar
+        return []
+
+    monkeypatch.setattr(main, "get_sources", espiar)
+    main.run_once()
+
+    estado = json.loads((tmp / "seen.json").read_text(encoding="utf-8"))
+    assert "post-descartado" in estado["seen"]

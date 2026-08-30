@@ -41,12 +41,14 @@ class RssSource:
         url: str,
         extrair: Callable[[Post], Optional[Deal]],
         ja_visto: Callable[[str], bool],
+        marcar: Optional[Callable[[str], None]] = None,
         max_idade_horas: Optional[float] = None,
     ):
         self.nome = nome
         self.url = url
         self._extrair = extrair
         self._ja_visto = ja_visto
+        self._marcar = marcar
         self.max_idade_horas = max_idade_horas
 
     def _posts(self) -> list[Post]:
@@ -74,4 +76,12 @@ class RssSource:
             and not self._ja_visto(post.dedup_key)
         ]
         deals = [self._extrair(post) for post in novos]
+        # Post que o extrator rejeita tem de ser marcado tambem, senao volta a
+        # custar uma chamada ao Haiku em TODA rodada ate sair da janela de 24h.
+        # A 15 min isso e ~96 chamadas por post rejeitado, em vez de ~5.
+        # `None` aqui so significa "nao e deal": erro de API sobe como excecao.
+        if self._marcar:
+            for post, deal in zip(novos, deals):
+                if deal is None:
+                    self._marcar(post.dedup_key)
         return [deal for deal in deals if deal is not None]

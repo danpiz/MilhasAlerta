@@ -81,12 +81,14 @@ class TelegramChannelSource:
         canal: str,
         extrair: Callable[[Post], Optional[Deal]],
         ja_visto: Callable[[str], bool],
+        marcar: Optional[Callable[[str], None]] = None,
         max_idade_horas: Optional[float] = None,
     ):
         self.nome = nome
         self.canal = canal
         self._extrair = extrair
         self._ja_visto = ja_visto
+        self._marcar = marcar
         self.max_idade_horas = max_idade_horas
 
     def _mensagens(self) -> list[Post]:
@@ -137,4 +139,12 @@ class TelegramChannelSource:
             if recente(p.publicado, self.max_idade_horas) and not self._ja_visto(p.dedup_key)
         ]
         deals = [self._extrair(p) for p in novas]
+        # Post que o extrator rejeita tem de ser marcado tambem, senao volta a
+        # custar uma chamada ao Haiku em TODA rodada ate sair da janela de 24h.
+        # A 15 min isso e ~96 chamadas por post rejeitado, em vez de ~5.
+        # `None` aqui so significa "nao e deal": erro de API sobe como excecao.
+        if self._marcar:
+            for p, deal in zip(novas, deals):
+                if deal is None:
+                    self._marcar(p.dedup_key)
         return [d for d in deals if d is not None]
