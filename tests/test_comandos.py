@@ -181,3 +181,22 @@ def test_cotacao_indisponivel_nao_perde_o_alerta():
 def test_sem_teto_explica_a_espera_mesmo_com_cotacao():
     r = criar(cotacao=MERCADO)
     assert "leva alguns dias" in r
+
+
+def test_confirmacao_mostra_a_janela_fechada():
+    r = criar(a_partir_de="2026-12-20", ate="2027-01-31", max_preco_brl=4500)
+    assert "2026-12-20 a 2027-01-31" in r
+
+
+def test_janela_aberta_continua_dizendo_a_partir_de():
+    r = criar(a_partir_de="2026-12-20", ate=None, max_preco_brl=4500)
+    assert "a partir de 2026-12-20" in r
+
+
+def test_a_janela_chega_na_rota_vigiada():
+    alertas, _ = processar(
+        "/alerta Alemanha em dezembro", [],
+        client=cliente(rota_pedida(a_partir_de="2026-12-20", ate="2027-01-31")),
+        cotar=lambda r: MERCADO,
+    )
+    assert alertas[0]["ate"] == "2027-01-31"

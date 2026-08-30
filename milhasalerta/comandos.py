@@ -30,6 +30,12 @@ Hoje é {{hoje}}. Regiões conhecidas: {", ".join(REGIOES)}.
 - origens: IATA. Se não disser de onde sai, use GRU.
 - a_partir_de: primeiro dia da janela desejada, em AAAA-MM-DD. "janeiro de
   2027" vira 2027-01-05. Se não houver menção a data, deixe null.
+- ate: último dia da janela, em AAAA-MM-DD. Feche a janela sempre que o pedido
+  sugerir um período: "em janeiro" vira 2027-01-31; "dezembro a janeiro" vira
+  2027-01-31; "depois de 20 de dezembro" vira 2027-01-31 (um mês e pouco
+  adiante). Só deixe null se a data for de fato aberta ("quando estiver
+  barato"). Sem `ate` a busca caminha meses à frente e mistura alta com baixa
+  temporada, e aí um teto de preço só não serve para as duas pontas.
 - ida_e_volta: true a menos que peçam só ida.
 - dias_de_viagem: duração pedida; 12 se não disserem.
 - max_preco_brl: só se citarem um teto em reais.
@@ -44,6 +50,7 @@ class RotaPedida(BaseModel):
     ida_e_volta: bool = True
     dias_de_viagem: int = 12
     a_partir_de: Optional[str] = None
+    ate: Optional[str] = None
     max_preco_brl: Optional[int] = None
     cabine: Literal["economica", "executiva", "primeira"] = "economica"
 
@@ -75,7 +82,9 @@ def interpretar(texto: str, client=None) -> dict:
 
 def _descrever(rota: dict) -> str:
     partes = [", ".join(rota["destinos"])]
-    if rota.get("a_partir_de"):
+    if rota.get("a_partir_de") and rota.get("ate"):
+        partes.append(f"{rota['a_partir_de']} a {rota['ate']}")
+    elif rota.get("a_partir_de"):
         partes.append(f"a partir de {rota['a_partir_de']}")
     partes.append("ida e volta" if rota.get("ida_e_volta") else "só ida")
     if rota.get("cabine") and rota["cabine"] != "economica":

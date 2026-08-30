@@ -36,12 +36,26 @@ def datas_amostradas(
     passo_dias: int = 30,
     offset_dias: int = 30,
     inicio: Optional[str] = None,
+    fim: Optional[str] = None,
 ) -> list[str]:
-    """Uma data por mês. Panorama do ano sem varrer o calendário inteiro.
+    """Datas de ida a consultar.
 
-    `inicio` fixa o ponto de partida para quem já sabe quando quer viajar."""
+    Sem `fim`, uma por mês: panorama do ano sem varrer o calendário inteiro.
+
+    Com `fim`, as mesmas `quantidade` datas se espalham DENTRO da janela. A
+    diferença não é cosmética: "a partir de 20/dez" sem fim caminhava até maio,
+    misturando alta e baixa temporada na mesma rota — e aí um teto só não serve
+    para as duas pontas (medido: Alemanha a R$ 5.961 em dez e R$ 4.457 em fev).
+    """
     base = date.fromisoformat(inicio) if inicio else date.today() + timedelta(days=offset_dias)
-    return [(base + timedelta(days=i * passo_dias)).isoformat() for i in range(quantidade)]
+    if not fim:
+        return [(base + timedelta(days=i * passo_dias)).isoformat() for i in range(quantidade)]
+
+    vao = (date.fromisoformat(fim) - base).days
+    if vao <= 0 or quantidade <= 1:
+        return [base.isoformat()]
+    passo = vao / (quantidade - 1)
+    return [(base + timedelta(days=round(i * passo))).isoformat() for i in range(quantidade)]
 
 
 def _url_google(origem: str, destino: str, dia: str, volta: Optional[str]) -> str:
@@ -83,7 +97,10 @@ def cotar(rota: dict, max_destinos: int = 6, max_datas: int = 3) -> dict[str, in
     precos: dict[str, int] = {}
     for destino in destinos:
         achados = []
-        for dia in datas_amostradas(max_datas, inicio=rota.get("a_partir_de")):
+        datas = datas_amostradas(
+            max_datas, inicio=rota.get("a_partir_de"), fim=rota.get("ate")
+        )
+        for dia in datas:
             volta = _somar_dias(dia, dias) if dias else None
             try:
                 achados += consultar(origem, destino, dia, volta, "economy")
@@ -135,7 +152,9 @@ class GoogleFlightsSource:
             da_rota: list[Deal] = []
             for origem in rota.get("origens", []):
                 for destino in destinos:
-                    for dia in datas_amostradas(self.amostras, inicio=rota.get("a_partir_de")):
+                    for dia in datas_amostradas(
+                        self.amostras, inicio=rota.get("a_partir_de"), fim=rota.get("ate")
+                    ):
                         volta = _somar_dias(dia, dias) if dias else None
                         deal = self._melhor(rota, origem, destino, dia, volta)
                         if deal:

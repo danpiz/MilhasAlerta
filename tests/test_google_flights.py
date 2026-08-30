@@ -305,3 +305,47 @@ def test_cotacao_de_so_ida_nao_tem_volta(monkeypatch):
     falso_consultar(monkeypatch, {"LIS": [2100]}, chamadas)
     gf.cotar({**ROTA_COTAR, "destinos": ["LIS"], "ida_e_volta": False}, max_datas=1)
     assert chamadas[0][2] is None
+
+
+# --- janela de datas ----------------------------------------------------------
+# Sem fim, "a partir de 20/dez" caminhava ate maio e misturava alta com baixa
+# temporada na mesma rota -- e um teto so nao serve para as duas pontas.
+
+def test_sem_fim_caminha_um_mes_por_vez():
+    d = datas_amostradas(6, inicio="2026-12-20")
+    assert d[0] == "2026-12-20" and d[-1] == "2027-05-19"
+
+
+def test_janela_mantem_as_datas_dentro_dela():
+    d = datas_amostradas(6, inicio="2026-12-20", fim="2027-01-31")
+    assert d[0] == "2026-12-20" and d[-1] == "2027-01-31"
+    assert all("2026-12-20" <= x <= "2027-01-31" for x in d)
+
+
+def test_janela_espalha_sem_repetir():
+    d = datas_amostradas(6, inicio="2026-12-20", fim="2027-01-31")
+    assert len(set(d)) == 6
+
+
+def test_janela_de_um_dia_nao_quebra():
+    assert datas_amostradas(6, inicio="2026-12-20", fim="2026-12-20") == ["2026-12-20"]
+
+
+def test_fim_antes_do_inicio_nao_quebra():
+    assert datas_amostradas(6, inicio="2026-12-20", fim="2026-11-01") == ["2026-12-20"]
+
+
+def test_janela_menor_que_a_quantidade_pedida():
+    """3 dias de janela para 6 datas: repete, mas nao estoura nem sai da janela."""
+    d = datas_amostradas(6, inicio="2026-12-20", fim="2026-12-23")
+    assert all("2026-12-20" <= x <= "2026-12-23" for x in d)
+
+
+def test_fetch_respeita_a_janela(monkeypatch):
+    consultadas = []
+    rota = [{"nome": "Ale", "origens": ["GRU"], "destinos": ["BER"],
+             "a_partir_de": "2026-12-20", "ate": "2027-01-31", "max_preco_brl": 9999}]
+    s = fonte(rota, {"BER": [5000]}, amostras=4)
+    s._consultar = lambda o, d, dia, volta=None: (consultadas.append(dia), [5000])[1]
+    s.fetch()
+    assert all("2026-12-20" <= x <= "2027-01-31" for x in consultadas)
