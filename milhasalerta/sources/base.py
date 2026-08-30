@@ -35,5 +35,11 @@ def get_sources(
     ]
     seats_key = os.environ.get("SEATS_API_KEY")
     if seats_key:
-        sources.append(SeatsAeroSource(api_key=seats_key, alertas=config["alertas"]))
+        sources.append(
+            SeatsAeroSource(
+                api_key=seats_key,
+                alertas=config["alertas"],
+                max_staleness_horas=config.get("seats_max_staleness_horas", 5),
+            )
+        )
     return sources

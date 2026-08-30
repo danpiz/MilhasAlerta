@@ -5,7 +5,7 @@ requisição e resposta segue a documentação e o cliente de eduard0vieira/mile
 Validar contra o retorno real antes de confiar nos alertas que sair daqui.
 """
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 import requests
 
@@ -45,10 +45,17 @@ CAMPO_CUSTO = {
 class SeatsAeroSource:
     nome = "seats.aero"
 
-    def __init__(self, api_key: str, alertas: list[dict], janela_dias: int = 60):
+    def __init__(
+        self,
+        api_key: str,
+        alertas: list[dict],
+        janela_dias: int = 60,
+        max_staleness_horas: float = 5,
+    ):
         self.api_key = api_key
         self.alertas = alertas
         self.janela_dias = janela_dias
+        self.max_staleness_horas = max_staleness_horas
 
     def _buscar(self, origem: str, destino: str, cabine: str) -> list[dict]:
         inicio = date.today()
@@ -81,12 +88,36 @@ class SeatsAeroSource:
                         deals.extend(self._para_deals(origem, destino, cabine))
         return deals
 
+    def _fresco(self, voo: dict) -> bool:
+        """O Seats.aero cacheia, e disponibilidade award evapora em horas.
+
+        Sem este filtro o provider alerta assento que ja nao existe. A propria
+        comunidade recomenda so confiar no que foi revisto nas ultimas horas,
+        e a diferenca aparece na pratica: um mesmo voo cotado 89k no cache
+        estava 81,5k no site do programa.
+
+        Registro sem marca de tempo passa: nao rejeitamos por dado ausente.
+        """
+        marca = voo.get("LastSeen") or voo.get("UpdatedAt") or voo.get("CreatedAt")
+        if not marca or self.max_staleness_horas is None:
+            return True
+        try:
+            visto = datetime.fromisoformat(str(marca).replace("Z", "+00:00"))
+        except ValueError:
+            return True
+        if visto.tzinfo is None:
+            visto = visto.replace(tzinfo=timezone.utc)
+        idade = (datetime.now(timezone.utc) - visto).total_seconds() / 3600
+        return idade <= self.max_staleness_horas
+
     def _para_deals(self, origem: str, destino: str, cabine: str) -> list[Deal]:
         campo = CAMPO_CUSTO.get(cabine)
         if not campo:
             return []
         deals = []
         for voo in self._buscar(origem, destino, cabine):
+            if not self._fresco(voo):
+                continue
             milhas = int(voo.get(campo) or 0)
             if not milhas:
                 continue

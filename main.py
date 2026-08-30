@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 from milhasalerta import telegram
 from milhasalerta.extract import Extractor
+from milhasalerta.milheiro import custo_efetivo
 from milhasalerta.models import Deal
 from milhasalerta.rules import regras_que_casam
 from milhasalerta.sources.base import get_sources
@@ -79,6 +80,9 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
         for deal in deals:
             if not state.is_new(deal.dedup_key):
                 continue
+            deal.custo_efetivo_brl = custo_efetivo(
+                deal.milhas, deal.programa, config.get("milheiro", {})
+            )
             state.mark(deal.dedup_key)
             marcados += 1
             if seed:

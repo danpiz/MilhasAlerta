@@ -27,7 +27,13 @@ def formatar(deal: Deal, regras: list[str]) -> str:
             precos.append(f"R$ {deal.preco_brl:,}".replace(",", "."))
         if deal.milhas is not None:
             milhas = _milhas_curtas(deal.milhas)
-            precos.append(f"{milhas} {deal.programa}" if deal.programa else f"{milhas} milhas")
+            lado = f"{milhas} {deal.programa}" if deal.programa else f"{milhas} milhas"
+            # A conversao e o que torna os dois lados comparaveis de bate-pronto.
+            # "~" porque a cotacao do milheiro e estimativa, nao preco de mercado.
+            if deal.custo_efetivo_brl is not None:
+                convertido = f"{deal.custo_efetivo_brl:,}".replace(",", ".")
+                lado = f"{lado} (≈R$ {convertido})"
+            precos.append(lado)
         detalhe = " ou ".join(precos)
     else:
         cabecalho = f"🎁 <b>{deal.programa or 'Promoção'}</b>"

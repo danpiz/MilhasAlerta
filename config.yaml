@@ -2,6 +2,18 @@
 # costuma ter expirado, e sem isso o backlog do canal vira alerta.
 max_idade_horas: 24
 
+# Cotacao do milheiro: R$ por 1.000 milhas. Serve para converter milhas em
+# reais e poder comparar os dois precos de bate-pronto no alerta.
+# E estimativa, nao preco de mercado -- ajuste conforme as promocoes de compra
+# de pontos. Programa sem entrada propria usa "padrao".
+milheiro:
+  padrao: 18.00
+  Smiles: 16.50
+  LATAM Pass: 19.00
+  Azul Fidelidade: 18.00
+  Livelo: 30.00
+  Esfera: 30.00
+
 # Canais publicos do Telegram, lidos pela previa web em t.me/s/<canal>.
 # Rendem mais sinal que o RSS dos mesmos portais e nao exigem token.
 canais:

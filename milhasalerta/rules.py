@@ -8,8 +8,12 @@ A única exceção é `origens`, que tolera origem ausente: os portais brasileir
 omitem a origem por convenção ("Voe para Lima a partir de R$ 593" quase sempre é
 de São Paulo), e exigir prova ali deixaria o monitor mudo.
 
-Entre `max_milhas` e `max_preco_brl` a relação é OU: basta um lado estar bom, que é
-o que faz funcionar "R$ 593 ou 24 mil milhas". Entre campos diferentes é E.
+Entre os limites de preço a relação é OU: basta um lado estar bom, que é o que
+faz funcionar "R$ 593 ou 24 mil milhas". Entre campos diferentes é E.
+
+`max_custo_brl` compara contra o dinheiro E contra as milhas convertidas pela
+cotação do milheiro — um limite só que funciona seja como for que o post
+anunciou o preço.
 
 Como o dedup é por deal, e não por regra, o alerta sai uma vez só listando todas as
 regras que casaram.
@@ -34,6 +38,11 @@ def _preco_ok(regra: dict, deal: Deal) -> bool:
         limites.append((deal.milhas, regra["max_milhas"]))
     if regra.get("max_preco_brl") is not None:
         limites.append((deal.preco_brl, regra["max_preco_brl"]))
+    if regra.get("max_custo_brl") is not None:
+        # Vale tanto para dinheiro quanto para milhas convertidas: um limite so
+        # que funciona independente de como o post anunciou o preco.
+        limites.append((deal.preco_brl, regra["max_custo_brl"]))
+        limites.append((deal.custo_efetivo_brl, regra["max_custo_brl"]))
     if not limites:
         return True
     # Sem nenhum valor afirmado não há prova de que o deal é bom.

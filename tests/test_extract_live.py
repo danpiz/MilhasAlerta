@@ -36,6 +36,7 @@ def test_lima_traz_os_dois_precos(extrair):
             "bilhetes de ida e volta entre São Paulo (GRU) e Lima (LIM)",
         )
     )
+    assert deal is not None, "classificado como irrelevante"
     assert deal.kind == "voo"
     assert deal.destino == "LIM"
     assert deal.milhas == 24000
@@ -47,6 +48,7 @@ def test_mega_promo_com_milhas_nao_redondas(extrair):
     deal = extrair(
         post("Mega Promo LATAM! Trechos para diversos destinos a partir de R$ 150 ou 3.391 milhas + taxas")
     )
+    assert deal is not None, "classificado como irrelevante"
     assert deal.kind == "voo"
     assert deal.milhas == 3391
     assert deal.preco_brl == 150
@@ -56,6 +58,7 @@ def test_bonus_de_transferencia_vira_promo(extrair):
     deal = extrair(
         post("Prorrogado! Até 100% de bônus na transferência de pontos Livelo para o Azul Fidelidade")
     )
+    assert deal is not None, "classificado como irrelevante"
     assert deal.kind == "promo"
     assert deal.bonus_pct == 100
 

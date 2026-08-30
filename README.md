@@ -67,10 +67,15 @@ Três linhas, sem card de preview — o preview do Telegram expande o link num b
 engole o alerta e torna difícil bater o olho e achar a oportunidade.
 
 ```
-✈️ Rio de Janeiro 🇧🇷 → Buenos Aires 🇦🇷
-R$ 307 ou 12k LATAM Pass
+✈️ São Paulo 🇧🇷 → Lima 🇵🇪
+R$ 593 ou 24k LATAM Pass (≈R$ 456)
 Passageiro de Primeira →
 ```
+
+O `(≈R$ 456)` é a conversão das milhas pela cotação do milheiro. Sem ela os dois preços são números
+incomparáveis e você faz a conta de cabeça; com ela, 456 < 593 diz na hora que compensa emitir com
+milhas. A tabela `milheiro:` fica no [`config.yaml`](config.yaml) — é estimativa, não preço de
+mercado, por isso o `≈`, e vale reajustar quando aparecer promoção de compra de pontos.
 
 A origem só aparece quando o post declara — e aí importa: a regra de origem aceita origem ausente,
 então sem mostrar, um deal saindo do Rio pareceria de São Paulo. A cabine aparece só quando é
@@ -97,9 +102,11 @@ A única exceção é **`origens`**, que aceita origem ausente — os portais br
 por convenção (*"Voe para Lima a partir de R$ 593"* quase sempre sai de São Paulo), e exigir prova
 ali deixaria o monitor mudo.
 
-Entre `max_milhas` e `max_preco_brl` a relação é **OU** — basta um lado estar bom. É o que faz
-funcionar um post como *"Lima a partir de R$ 593 ou 24 mil milhas LATAM Pass"*. Entre campos
-diferentes é **E**.
+Entre os limites de preço a relação é **OU** — basta um lado estar bom. É o que faz funcionar um post
+como *"Lima a partir de R$ 593 ou 24 mil milhas LATAM Pass"*. Entre campos diferentes é **E**.
+
+`max_custo_brl` é o limite mais prático: compara contra o dinheiro **e** contra as milhas
+convertidas, então funciona seja como for que o post anunciou o preço.
 
 Uma regra sem nenhum filtro casa com tudo: é assim que o "firehose" e uma rota específica saem do
 mesmo motor, sem código separado.
@@ -121,6 +128,10 @@ O provider em [`milhasalerta/sources/seats_aero.py`](milhasalerta/sources/seats_
 desligado até existir `SEATS_API_KEY` — exige conta Pro (US$ 9,99/mês). Ele habilita o que o RSS não
 faz: monitorar uma rota proativamente ("avise se GRU→Tóquio cair abaixo de 80k") em vez de só
 reagir ao que os portais publicam.
+
+`seats_max_staleness_horas` (padrão 5) descarta registro que o Seats.aero não revê há horas.
+Disponibilidade award evapora rápido e o cache deles não — sem o filtro, o provider alerta assento
+que já não existe.
 
 > **Não foi exercitado contra a API real.** Valide o retorno antes de confiar nos alertas dele.
 
