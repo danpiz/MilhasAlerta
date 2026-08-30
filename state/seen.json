@@ -2,6 +2,7 @@
   "alertas_usuario": [
     {
       "a_partir_de": "2026-12-20",
+      "ate": "2027-01-31",
       "cabine": "economica",
       "destinos": [
         "europa"
@@ -12,6 +13,25 @@
       "max_preco_brl": 4000,
       "min_queda_pct": 25,
       "nome": "Europa dezembro 2026 a janeiro 2027",
+      "origens": [
+        "GRU"
+      ]
+    },
+    {
+      "a_partir_de": "2026-12-20",
+      "ate": "2027-01-31",
+      "cabine": "economica",
+      "destinos": [
+        "BER",
+        "MUC",
+        "FRA"
+      ],
+      "dias_de_viagem": 12,
+      "enabled": true,
+      "ida_e_volta": true,
+      "max_preco_brl": 5400,
+      "min_queda_pct": 25,
+      "nome": "Alemanha 20/dez a 31/jan",
       "origens": [
         "GRU"
       ]
