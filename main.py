@@ -53,6 +53,14 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
     config = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
     state = State(ESTADO)
 
+    # Uma rota vigiada e uma regra com limiares proprios; unificar evita
+    # duplicar a logica de limite e faz o nome da rota aparecer no alerta.
+    # Rota so existe para voo, entao o kind e implicito -- sem isso casa()
+    # rejeita toda rota por kind divergente e nenhum alerta de rota sai.
+    todas_as_regras = config["alertas"] + [
+        {"kind": "voo", **rota} for rota in config.get("rotas", [])
+    ]
+
     # Nem dry-run nem seed chamam o modelo.
     extrair = _marcador if (seed or dry_run) else Extractor()
 
