@@ -101,14 +101,18 @@ def receber(desde: Optional[int] = None) -> list[dict]:
     return resposta.json().get("result", [])
 
 
-def enviar(texto: str) -> None:
+def enviar(texto: str, chat_id: Optional[int] = None) -> None:
+    """Sem `chat_id`, vai para o destino configurado (o canal dos alertas).
+
+    Resposta de comando passa o chat de origem: quem digita `/alertas` num
+    grupo espera a resposta ali, não no privado de outra pessoa."""
     token = os.environ["TELEGRAM_BOT_TOKEN"]
     url = f"https://api.telegram.org/bot{token}/sendMessage"
     try:
         resposta = requests.post(
             url,
             json={
-                "chat_id": os.environ["TELEGRAM_CHAT_ID"],
+                "chat_id": chat_id if chat_id is not None else os.environ["TELEGRAM_CHAT_ID"],
                 "text": texto,
                 "parse_mode": "HTML",
                 "disable_web_page_preview": True,

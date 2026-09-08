@@ -62,13 +62,16 @@ def _atender_comandos(state) -> None:
         # Avanca o offset mesmo em mensagem ignorada, senao ela volta sempre.
         state.ultimo_update = update["update_id"] + 1
         mensagem = update.get("message") or {}
+        origem = (mensagem.get("chat") or {}).get("id")
         alertas, resposta = comandos.processar(
-            mensagem.get("text", ""), state.alertas_usuario, cotar=google_flights.cotar
+            mensagem.get("text", ""), state.alertas_usuario,
+            cotar=google_flights.cotar, chat_id=origem,
         )
         state.alertas_usuario = alertas
         if resposta:
             try:
-                telegram.enviar(resposta)
+                # Responde onde o comando foi dado, nao no destino dos alertas.
+                telegram.enviar(resposta, chat_id=origem)
             except Exception as erro:
                 print(f"[erro] resposta: {erro}", file=sys.stderr)
 
@@ -88,7 +91,12 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
         _atender_comandos(state)
 
     # Rota do config e rota criada pelo /alerta sao a mesma coisa para o motor.
-    rotas = config.get("rotas", []) + state.alertas_usuario
+    # do_usuario separa as duas origens: rota do config e vigilancia de fundo e
+    # so fala em queda contra o historico; rota criada no /alerta respeita o
+    # teto que o usuario escolheu vendo a cotacao na hora da criacao.
+    rotas = config.get("rotas", []) + [
+        {**r, "do_usuario": True} for r in state.alertas_usuario
+    ]
     todas_as_regras = config["alertas"] + [{"kind": "voo", **r} for r in rotas]
 
     # Nem dry-run nem seed chamam o modelo.

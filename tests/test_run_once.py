@@ -212,3 +212,21 @@ def test_post_rejeitado_fica_marcado_no_estado(ambiente, monkeypatch):
 
     estado = json.loads((tmp / "seen.json").read_text(encoding="utf-8"))
     assert "post-descartado" in estado["seen"]
+
+
+def test_resposta_de_comando_volta_para_o_chat_de_origem(ambiente, monkeypatch):
+    """Comando dado num grupo tem de ser respondido no grupo.
+
+    enviar() sem chat_id vai para TELEGRAM_CHAT_ID -- o destino dos alertas.
+    Sem passar a origem, quem digitasse /alertas no grupo receberia a resposta
+    no privado de outra pessoa.
+    """
+    enviados = []
+    monkeypatch.setattr(main.telegram, "enviar",
+                        lambda texto, chat_id=None: enviados.append(chat_id))
+    monkeypatch.setattr(main.telegram, "receber", lambda desde=None: [
+        {"update_id": 1, "message": {"text": "/alertas", "chat": {"id": -1009999}}}
+    ])
+    monkeypatch.setattr(main, "get_sources", lambda *a, **k: [])
+    main.run_once()
+    assert enviados == [-1009999]

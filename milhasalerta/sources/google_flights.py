@@ -122,6 +122,7 @@ class GoogleFlightsSource:
         amostras: int = 6,
         cabine: str = "economy",
         limite_por_rota: int = 3,
+        min_queda_padrao: Optional[int] = None,
     ):
         self.rotas = rotas or []
         # Recebe um prefixo de chave e devolve as chaves ja alertadas.
@@ -132,6 +133,7 @@ class GoogleFlightsSource:
         self.amostras = amostras
         self.cabine = cabine
         self.limite_por_rota = limite_por_rota
+        self.min_queda_padrao = min_queda_padrao
         self.consultas = self.falhas = 0
 
     def _consultar(
@@ -197,11 +199,24 @@ class GoogleFlightsSource:
 
         # Filtra aqui, nao so nas regras: sem isso cada varredura empurraria 84
         # precos comuns para o estado, que so guarda o que vale a pena rever.
+        # Rota do config e vigilancia de fundo: a QUEDA contra o historico e
+        # obrigatoria. So o teto nao serve porque a rota sem janela amostra
+        # "hoje + 30 dias" -- a meia-noite UTC a data anda, a chave de dedup
+        # nasce nova, e o mesmo preco de sempre realertava todo dia.
+        #
+        # Rota criada no /alerta mantem o OU: ali o teto foi escolhido contra a
+        # cotacao que a confirmacao mostrou, entao ele ja significa "barato".
+        do_usuario = bool(rota.get("do_usuario"))
         teto = rota.get("max_preco_brl")
-        minimo_queda = rota.get("min_queda_pct")
-        bom_por_preco = teto is not None and preco <= teto
-        bom_por_queda = minimo_queda is not None and queda is not None and queda >= minimo_queda
-        if not (bom_por_preco or bom_por_queda):
+        exigencia = rota.get("min_queda_pct")
+        if exigencia is None and not do_usuario:
+            exigencia = self.min_queda_padrao
+        dentro_do_teto = teto is None or preco <= teto
+        caiu = exigencia is not None and queda is not None and queda >= exigencia
+        if do_usuario:
+            if not ((teto is not None and preco <= teto) or caiu):
+                return None
+        elif not (caiu and dentro_do_teto):
             return None
 
         # So alerta se for mais barato do que ja alertei para este trecho.

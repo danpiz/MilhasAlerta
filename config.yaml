@@ -39,6 +39,14 @@ google_amostras_de_data: 6
 # ja aconteceu. Este limite e a rede de seguranca contra o teto mal calibrado.
 google_max_alertas_por_rota: 3
 
+# Queda minima contra a mediana historica, exigida das rotas DESTE arquivo.
+# Elas sao vigilancia de fundo: sem janela de datas, amostram "hoje + 30 dias",
+# entao a meia-noite UTC a data anda, a chave de dedup nasce nova e o mesmo
+# preco de sempre realertava todo dia. Exigir queda mata a repeticao.
+# Rota criada pelo /alerta NAO passa por aqui: la o teto foi escolhido contra a
+# cotacao mostrada na criacao, entao ele ja significa "barato".
+google_min_queda_pct: 15
+
 rotas:
   - nome: Europa ida e volta
     origens: [GRU]
@@ -46,7 +54,6 @@ rotas:
     ida_e_volta: true
     dias_de_viagem: 12      # a volta e calculada a partir da ida
     max_preco_brl: 4500     # teto de IDA E VOLTA; so-ida custa quase metade
-    min_queda_pct: 30
     enabled: true
 
   - nome: Vizinhos baratos (so ida)

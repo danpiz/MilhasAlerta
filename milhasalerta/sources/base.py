@@ -47,6 +47,7 @@ def get_sources(
                 observar=observar_preco,
                 amostras=config.get("google_amostras_de_data", 6),
                 limite_por_rota=config.get("google_max_alertas_por_rota", 3),
+                min_queda_padrao=config.get("google_min_queda_pct"),
             )
         )
     seats_key = os.environ.get("SEATS_API_KEY")

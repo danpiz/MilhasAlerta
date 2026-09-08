@@ -153,7 +153,7 @@ def _cotacao(rota: dict, precos: dict[str, int]) -> str:
 
 
 def processar(
-    texto: str, alertas: list[dict], client=None, cotar=None
+    texto: str, alertas: list[dict], client=None, cotar=None, chat_id=None
 ) -> tuple[list[dict], Optional[str]]:
     """Aplica um comando. Devolve (alertas atualizados, resposta ao usuário)."""
     texto = (texto or "").strip()
@@ -163,6 +163,16 @@ def processar(
     comando, _, resto = texto.partition(" ")
     comando = comando.split("@")[0].lower()
     resto = resto.strip()
+
+    if comando == "/id":
+        # Grupo tem id negativo; supergrupo comeca com -100. Sem um jeito de
+        # descobrir isso de dentro do Telegram, mudar o destino dos alertas
+        # viraria adivinhacao.
+        return alertas, (
+            f"Chat: <code>{chat_id}</code>\n\n"
+            "Para os alertas virem parar aqui, ponha esse valor no secret "
+            "<code>TELEGRAM_CHAT_ID</code> do repositório."
+        )
 
     if comando == "/alertas":
         if not alertas:
@@ -207,5 +217,6 @@ def processar(
         "Comandos:\n"
         "<code>/alerta &lt;viagem&gt;</code> — vigiar uma rota\n"
         "<code>/alertas</code> — listar\n"
-        "<code>/remover &lt;n&gt;</code> — apagar"
+        "<code>/remover &lt;n&gt;</code> — apagar\n"
+        "<code>/id</code> — id deste chat"
     )

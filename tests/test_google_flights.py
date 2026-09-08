@@ -5,8 +5,14 @@ from milhasalerta.sources.google_flights import GoogleFlightsSource, datas_amost
 
 
 def fonte(rotas, precos, historico=None, **kw):
-    """Fonte com a consulta ao Google trocada por uma tabela fixa."""
+    """Fonte com a consulta ao Google trocada por uma tabela fixa.
+
+    Rotas viram do_usuario por padrao: e a semantica em que o teto vale sozinho,
+    que e o que a maioria destes testes exercita. Passe do_usuario=False para
+    testar a rota do config, onde a queda e obrigatoria."""
     vistos = kw.pop("vistos", set())
+    do_usuario = kw.pop("do_usuario", True)
+    rotas = [{**r, "do_usuario": do_usuario} for r in rotas]
     s = GoogleFlightsSource(
         rotas=rotas,
         vistas=lambda prefixo: [k for k in vistos if k.startswith(prefixo)],
@@ -349,3 +355,49 @@ def test_fetch_respeita_a_janela(monkeypatch):
     s._consultar = lambda o, d, dia, volta=None: (consultadas.append(dia), [5000])[1]
     s.fetch()
     assert all("2026-12-20" <= x <= "2027-01-31" for x in consultadas)
+
+
+# --- queda obrigatoria para rota do config ------------------------------------
+# Rota do config nao tem janela: amostra "hoje + 30 dias", entao a meia-noite
+# UTC a data anda, a chave de dedup nasce nova e o mesmo preco realertava todo
+# dia. Medido em 31/08/2026: 6 alertas repetindo os trechos da vespera.
+
+ROTA_CFG = [{"nome": "Europa", "origens": ["GRU"], "destinos": ["LIS"], "max_preco_brl": 4500}]
+
+
+def test_config_nao_alerta_so_por_estar_abaixo_do_teto():
+    """R$ 4.000 cabe no teto de 4.500, mas sem queda nao e noticia."""
+    s = fonte(ROTA_CFG, {"LIS": [4000]}, amostras=1, do_usuario=False, min_queda_padrao=15)
+    assert s.fetch() == []
+
+
+def test_config_alerta_quando_cai_o_bastante():
+    s = fonte(ROTA_CFG, {"LIS": [4000]}, historico={"LIS": 20}, amostras=1,
+              do_usuario=False, min_queda_padrao=15)
+    assert [d.preco_brl for d in s.fetch()] == [4000]
+
+
+def test_config_ignora_queda_pequena():
+    s = fonte(ROTA_CFG, {"LIS": [4000]}, historico={"LIS": 10}, amostras=1,
+              do_usuario=False, min_queda_padrao=15)
+    assert s.fetch() == []
+
+
+def test_config_exige_queda_E_teto():
+    """Caiu 20%, mas continua acima do teto: nao interessa."""
+    s = fonte(ROTA_CFG, {"LIS": [9000]}, historico={"LIS": 20}, amostras=1,
+              do_usuario=False, min_queda_padrao=15)
+    assert s.fetch() == []
+
+
+def test_rota_do_usuario_nao_exige_queda():
+    """O teto do /alerta foi escolhido contra a cotacao mostrada na criacao."""
+    s = fonte(ROTA_CFG, {"LIS": [4000]}, amostras=1, do_usuario=True, min_queda_padrao=15)
+    assert [d.preco_brl for d in s.fetch()] == [4000]
+
+
+def test_min_queda_da_rota_tem_prioridade_sobre_o_padrao():
+    rota = [{**ROTA_CFG[0], "min_queda_pct": 40}]
+    s = fonte(rota, {"LIS": [4000]}, historico={"LIS": 20}, amostras=1,
+              do_usuario=False, min_queda_padrao=15)
+    assert s.fetch() == []

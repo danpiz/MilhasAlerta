@@ -200,3 +200,13 @@ def test_a_janela_chega_na_rota_vigiada():
         cotar=lambda r: MERCADO,
     )
     assert alertas[0]["ate"] == "2027-01-31"
+
+
+def test_id_devolve_o_chat_para_configurar_o_destino():
+    _, r = processar("/id", [], chat_id=-1001234567890)
+    assert "-1001234567890" in r and "TELEGRAM_CHAT_ID" in r
+
+
+def test_ajuda_cita_o_id():
+    _, r = processar("/qualquercoisa", [])
+    assert "/id" in r
