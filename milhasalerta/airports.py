@@ -25,6 +25,7 @@ NOMES = {
     "LIS": "Lisboa", "OPO": "Porto", "MAD": "Madri", "BCN": "Barcelona",
     "CDG": "Paris", "ORY": "Paris", "LHR": "Londres", "LGW": "Londres",
     "FCO": "Roma", "MXP": "Milão", "FRA": "Frankfurt", "MUC": "Munique",
+    "BER": "Berlim",  # o pacote diz "Berlin"; chegou assim num alerta real
     "AMS": "Amsterdã", "ZRH": "Zurique", "IST": "Istambul", "DUB": "Dublin",
     # Europa — nomes em portugues
     "VIE": "Viena", "GVA": "Genebra", "BRU": "Bruxelas", "CPH": "Copenhague",

@@ -71,3 +71,8 @@ def test_aeroporto_de_verdade_tem_prioridade_sobre_metropole():
 
 def test_codigo_desconhecido_ainda_volta_como_veio():
     assert describe("ZZZ") == "ZZZ"
+
+
+def test_berlim_em_portugues():
+    """O pacote devolve "Berlin"; chegou assim num alerta real."""
+    assert describe("BER") == "Berlim 🇩🇪"
