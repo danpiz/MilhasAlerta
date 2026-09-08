@@ -234,3 +234,38 @@ def test_teto_inalcancavel_nao_e_mais_descrito_como_mudo():
     r = criar(max_preco_brl=2000)
     assert "precisa cair" in r
     assert "também aviso em queda" in r
+
+
+# --- comandos vindos de grupo -------------------------------------------------
+# Em grupo o Telegram so entrega ao bot mensagens que comecam com "/", e quem
+# digita costuma usar o autocomplete, que anexa "@nome_do_bot" ao comando. Com
+# argumento junto, o "@" fica grudado no comando e nao no texto do pedido.
+
+@pytest.mark.parametrize("entrada", [
+    "/alerta@AlertaMilhaxBot Portugal em janeiro ate 4000",
+    "/ALERTA@AlertaMilhaxBot Portugal em janeiro ate 4000",
+])
+def test_alerta_com_mencao_e_argumento(entrada):
+    alertas, resposta = processar(
+        entrada, [], client=cliente(rota_pedida(max_preco_brl=4000)), cotar=lambda r: {}
+    )
+    assert len(alertas) == 1
+    assert "Monitorando" in resposta
+
+
+def test_a_mencao_nao_vaza_para_o_texto_do_pedido():
+    """O @bot nao pode chegar ao modelo: vira ruido no pedido de viagem."""
+    visto = {}
+
+    def espiao(**kw):
+        visto["texto"] = kw["messages"][0]["content"]
+        return SimpleNamespace(parsed_output=rota_pedida())
+
+    c = SimpleNamespace(messages=SimpleNamespace(parse=espiao))
+    processar("/alerta@AlertaMilhaxBot Portugal", [], client=c, cotar=lambda r: {})
+    assert visto["texto"] == "Portugal"
+
+
+def test_remover_e_alertas_tambem_aceitam_mencao():
+    _, r = processar("/remover@AlertaMilhaxBot 1", [PORTUGAL])
+    assert "Removido" in r
