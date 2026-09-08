@@ -11,7 +11,7 @@
       "enabled": true,
       "ida_e_volta": true,
       "max_preco_brl": 4000,
-      "min_queda_pct": 25,
+      "min_queda_pct": 10,
       "nome": "Europa dezembro 2026 a janeiro 2027",
       "origens": [
         "GRU"
@@ -30,7 +30,7 @@
       "enabled": true,
       "ida_e_volta": true,
       "max_preco_brl": 5400,
-      "min_queda_pct": 25,
+      "min_queda_pct": 10,
       "nome": "Alemanha 20/dez a 31/jan",
       "origens": [
         "GRU"

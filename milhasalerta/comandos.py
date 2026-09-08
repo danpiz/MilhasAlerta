@@ -19,6 +19,9 @@ from pydantic import BaseModel
 from .regioes import REGIOES
 
 MODELO = "claude-haiku-4-5"
+# Queda que conta como oportunidade. Fica junto do google_min_queda_pct do
+# config; main.py passa o valor de la para nao existirem dois numeros.
+QUEDA_PADRAO = 10
 LIMITE_ALERTAS = 20
 
 INSTRUCOES = f"""Converta o pedido de viagem em uma rota vigiada.
@@ -55,7 +58,7 @@ class RotaPedida(BaseModel):
     cabine: Literal["economica", "executiva", "primeira"] = "economica"
 
 
-def interpretar(texto: str, client=None) -> dict:
+def interpretar(texto: str, client=None, queda_padrao: int = QUEDA_PADRAO) -> dict:
     """Texto livre -> rota vigiada, no mesmo formato do config.yaml."""
     import anthropic
 
@@ -72,10 +75,11 @@ def interpretar(texto: str, client=None) -> dict:
         output_format=RotaPedida,
     )
     rota = resposta.parsed_output.model_dump()
-    # Sem teto declarado, o gatilho passa a ser queda contra o historico --
-    # senao a rota seria vigiada e nunca alertaria nada.
-    if rota.get("max_preco_brl") is None:
-        rota["min_queda_pct"] = 25
+    # A queda entra SEMPRE, tenha teto ou nao. Sem teto ela e o unico gatilho,
+    # senao a rota seria vigiada e nunca alertaria nada. Com teto ela e um
+    # segundo gatilho: o teto pega "cabe no meu bolso", a queda pega "esta
+    # barato para esta rota" -- coisas diferentes, e a de baixo dos dois vale.
+    rota["min_queda_pct"] = queda_padrao
     rota["enabled"] = True
     return rota
 
@@ -91,8 +95,8 @@ def _descrever(rota: dict) -> str:
         partes.append(rota["cabine"])
     if rota.get("max_preco_brl"):
         partes.append(f"até {_reais(rota['max_preco_brl'])}")
-    else:
-        partes.append(f"queda de {rota.get('min_queda_pct', 25)}%")
+    if rota.get("min_queda_pct"):
+        partes.append(f"queda de {rota['min_queda_pct']}%")
     return " · ".join(partes)
 
 
@@ -115,7 +119,7 @@ def _cotacao(rota: dict, precos: dict[str, int]) -> str:
     # Rota sem teto depende do historico, que ainda nao existe. Dizer isso
     # importa mais que a cotacao: sem o aviso, o silencio parece defeito.
     sem_teto = (
-        f"\nSem teto de preço, aviso quando cair {rota.get('min_queda_pct', 25)}% abaixo do "
+        f"\nSem teto de preço, aviso quando cair {rota.get('min_queda_pct', QUEDA_PADRAO)}% abaixo do "
         "normal da rota — isso leva alguns dias, até eu aprender quanto ela costuma custar."
     )
     if not precos:
@@ -137,8 +141,8 @@ def _cotacao(rota: dict, precos: dict[str, int]) -> str:
         linhas.append(sem_teto)
     elif teto < menor:
         linhas.append(
-            f"\n⚠️ Seu teto ({_reais(teto)}) está abaixo de tudo que achei agora. "
-            f"Ele vai ficar mudo até a rota cair {round((1 - teto / menor) * 100)}%."
+            f"\n⚠️ Seu teto ({_reais(teto)}) está abaixo de tudo que achei agora — "
+            f"a rota precisa cair {round((1 - teto / menor) * 100)}% para ele valer."
         )
     elif teto > maior:
         linhas.append(
@@ -148,12 +152,22 @@ def _cotacao(rota: dict, precos: dict[str, int]) -> str:
     else:
         linhas.append(f"\nSeu teto ({_reais(teto)}) está dentro da faixa atual.")
     if teto is not None:
+        # Os dois gatilhos medem coisas diferentes: o teto e "cabe no meu
+        # bolso", a queda e "esta barato para esta rota". Um teto inalcancavel
+        # nao deixa o alerta mudo enquanto a queda existir -- e dizer isso
+        # evita que o silencio do teto pareca defeito.
+        if rota.get("min_queda_pct"):
+            linhas.append(
+                f"Independente do teto, também aviso em queda de "
+                f"{rota['min_queda_pct']}% contra o normal da rota."
+            )
         linhas.append("Para mudar: /remover e criar de novo com outro valor.")
     return "\n".join(linhas)
 
 
 def processar(
-    texto: str, alertas: list[dict], client=None, cotar=None, chat_id=None
+    texto: str, alertas: list[dict], client=None, cotar=None, chat_id=None,
+    queda_padrao: int = QUEDA_PADRAO,
 ) -> tuple[list[dict], Optional[str]]:
     """Aplica um comando. Devolve (alertas atualizados, resposta ao usuário)."""
     texto = (texto or "").strip()
@@ -199,7 +213,7 @@ def processar(
         if len(alertas) >= LIMITE_ALERTAS:
             return alertas, f"Limite de {LIMITE_ALERTAS} alertas. Remova um com /remover."
         try:
-            rota = interpretar(resto, client=client)
+            rota = interpretar(resto, client=client, queda_padrao=queda_padrao)
         except Exception:
             return alertas, "Não entendi o pedido. Tente descrever com destino e período."
         # Cotar na criacao e o que torna o teto ajustavel: falha aqui nao pode

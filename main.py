@@ -50,7 +50,7 @@ def _listar(config, sources) -> int:
     return 0
 
 
-def _atender_comandos(state) -> None:
+def _atender_comandos(state, config: dict) -> None:
     """Le e responde os comandos recebidos desde a ultima execucao."""
     try:
         updates = telegram.receber(desde=state.ultimo_update)
@@ -66,6 +66,9 @@ def _atender_comandos(state) -> None:
         alertas, resposta = comandos.processar(
             mensagem.get("text", ""), state.alertas_usuario,
             cotar=google_flights.cotar, chat_id=origem,
+            # Mesmo numero do config: o que conta como oportunidade nao muda
+            # por a rota ter vindo do YAML ou do /alerta.
+            queda_padrao=config.get("google_min_queda_pct", comandos.QUEDA_PADRAO),
         )
         state.alertas_usuario = alertas
         if resposta:
@@ -88,7 +91,7 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
     # Atender comandos aqui consumiria o offset do getUpdates (a mensagem some
     # do servidor), cotaria rotas no Google e mandaria resposta de verdade.
     if not (dry_run or seed):
-        _atender_comandos(state)
+        _atender_comandos(state, config)
 
     # Rota do config e rota criada pelo /alerta sao a mesma coisa para o motor.
     # do_usuario separa as duas origens: rota do config e vigilancia de fundo e

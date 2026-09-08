@@ -2,7 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from milhasalerta.comandos import LIMITE_ALERTAS, RotaPedida, processar
+from milhasalerta.comandos import LIMITE_ALERTAS, QUEDA_PADRAO, RotaPedida, processar
 
 PORTUGAL = {
     "nome": "Portugal em janeiro de 2027",
@@ -53,17 +53,29 @@ def test_cria_alerta_a_partir_de_texto_livre():
 def test_sem_teto_o_gatilho_vira_queda_relativa():
     """Rota sem teto e sem queda seria vigiada e nunca alertaria nada."""
     alertas, resposta = processar("/alerta Portugal", [], client=cliente(rota_pedida()))
-    assert alertas[0]["min_queda_pct"] == 25
+    assert alertas[0]["min_queda_pct"] == QUEDA_PADRAO
     assert "leva alguns dias" in resposta
 
 
-def test_com_teto_nao_inventa_queda():
+def test_com_teto_a_queda_entra_como_segundo_gatilho():
+    """Teto e queda medem coisas diferentes e valem juntos.
+
+    O teto e "cabe no meu bolso"; a queda e "esta barato para esta rota". Um
+    teto mal calibrado deixava o alerta mudo -- com a queda junto, ele ainda
+    avisa quando o preco desaba, mesmo sem bater o teto."""
     alertas, _ = processar(
         "/alerta Portugal ate 4000 reais", [],
         client=cliente(rota_pedida(max_preco_brl=4000)),
     )
     assert alertas[0]["max_preco_brl"] == 4000
-    assert "min_queda_pct" not in alertas[0]
+    assert alertas[0]["min_queda_pct"] == QUEDA_PADRAO
+
+
+def test_queda_padrao_vem_do_config():
+    alertas, _ = processar(
+        "/alerta Portugal", [], client=cliente(rota_pedida()), queda_padrao=18,
+    )
+    assert alertas[0]["min_queda_pct"] == 18
 
 
 def test_alerta_sem_texto_explica_como_usar():
@@ -210,3 +222,15 @@ def test_id_devolve_o_chat_para_configurar_o_destino():
 def test_ajuda_cita_o_id():
     _, r = processar("/qualquercoisa", [])
     assert "/id" in r
+
+
+def test_confirmacao_anuncia_os_dois_gatilhos():
+    r = criar(max_preco_brl=4500)
+    assert "4.500" in r and "queda de 10%" in r
+
+
+def test_teto_inalcancavel_nao_e_mais_descrito_como_mudo():
+    """Com a queda junto, teto fora de alcance nao significa alerta morto."""
+    r = criar(max_preco_brl=2000)
+    assert "precisa cair" in r
+    assert "também aviso em queda" in r
