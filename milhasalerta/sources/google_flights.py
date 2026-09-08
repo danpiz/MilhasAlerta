@@ -58,6 +58,26 @@ def datas_amostradas(
     return [(base + timedelta(days=round(i * passo))).isoformat() for i in range(quantidade)]
 
 
+def janela_vencida(rota: dict, hoje: Optional[date] = None) -> bool:
+    """Rota cuja janela de datas ficou inteiramente no passado.
+
+    Nao e so desperdicio. Consultar data passada nao devolve preco: levanta
+    FlightsNotFound, que a fonte conta como FALHA. Uma rota vencida gera falha
+    em toda consulta, para sempre -- e o contador de falhas e o unico sinal de
+    que o Google nos bloqueou.
+
+    Medido em 08/09/2026: os dois alertas do usuario somam 102 das 234
+    consultas por rodada. Vencidos, ancorariam o aviso em "102/234 falharam" e
+    um bloqueio de verdade ficaria escondido no ruido.
+
+    Rota sem `ate` nunca vence: a janela e aberta de proposito.
+    """
+    ate = rota.get("ate")
+    if not ate:
+        return False
+    return date.fromisoformat(ate) < (hoje or date.today())
+
+
 def _url_google(origem: str, destino: str, dia: str, volta: Optional[str]) -> str:
     base = f"https://www.google.com/travel/flights?q=Flights%20to%20{destino}%20from%20{origem}%20on%20{dia}"
     return f"{base}%20through%20{volta}" if volta else f"{base}%20oneway"
@@ -145,7 +165,9 @@ class GoogleFlightsSource:
         deals: list[Deal] = []
         self.consultas = self.falhas = 0
         for rota in self.rotas:
-            if not rota.get("enabled", True):
+            # Vencida tambem aqui, nao so na limpeza do run_once: rota do
+            # config pode ganhar `ate` e nunca passa pela remocao de alertas.
+            if not rota.get("enabled", True) or janela_vencida(rota):
                 continue
             destinos = expandir(rota.get("destinos"))
             # Ida e volta e o que a maioria quer; o preco de so-ida engana quem

@@ -401,3 +401,47 @@ def test_min_queda_da_rota_tem_prioridade_sobre_o_padrao():
     s = fonte(rota, {"LIS": [4000]}, historico={"LIS": 20}, amostras=1,
               do_usuario=False, min_queda_padrao=15)
     assert s.fetch() == []
+
+
+# --- janela vencida -----------------------------------------------------------
+# Consultar data passada levanta FlightsNotFound, que a fonte conta como FALHA.
+# Rota vencida geraria falha em toda consulta para sempre, e o contador de
+# falhas e o unico sinal de que o Google nos bloqueou.
+
+from datetime import date as _date
+
+from milhasalerta.sources.google_flights import janela_vencida
+
+HOJE = _date(2026, 9, 8)
+
+
+@pytest.mark.parametrize("ate,esperado", [
+    ("2026-09-07", True),    # ontem
+    ("2026-09-08", False),   # hoje: o ultimo dia ainda vale
+    ("2026-09-09", False),   # amanha
+    (None, False),           # janela aberta de proposito nunca vence
+])
+def test_janela_vencida(ate, esperado):
+    assert janela_vencida({"ate": ate}, hoje=HOJE) is esperado
+
+
+def test_rota_sem_campo_ate_nunca_vence():
+    assert janela_vencida({"destinos": ["LIS"]}, hoje=HOJE) is False
+
+
+def test_fetch_nao_consulta_rota_vencida():
+    consultadas = []
+    rota = [{"nome": "Velha", "origens": ["GRU"], "destinos": ["LIS"],
+             "a_partir_de": "2026-06-01", "ate": "2026-07-15", "max_preco_brl": 9999}]
+    s = fonte(rota, {"LIS": [1000]}, amostras=6)
+    s._consultar = lambda o, d, dia, volta=None: (consultadas.append(dia), [1000])[1]
+    assert s.fetch() == []
+    assert consultadas == [], "rota vencida nao pode gastar consulta nem gerar falha"
+
+
+def test_rota_vencida_nao_conta_falha():
+    rota = [{"nome": "Velha", "origens": ["GRU"], "destinos": ["LIS"],
+             "a_partir_de": "2026-06-01", "ate": "2026-07-15"}]
+    s = fonte(rota, {}, amostras=6)
+    s.fetch()
+    assert s.falhas == 0 and s.consultas == 0

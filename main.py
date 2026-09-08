@@ -79,6 +79,29 @@ def _atender_comandos(state, config: dict) -> None:
                 print(f"[erro] resposta: {erro}", file=sys.stderr)
 
 
+def _limpar_vencidos(state) -> None:
+    """Remove alertas cuja janela de datas já passou, avisando quem os criou.
+
+    Deixá-los custa mais do que espaço: consulta a data passada levanta
+    FlightsNotFound, que conta como falha, e o contador de falhas é o único
+    sinal de que o Google nos bloqueou."""
+    vivos, vencidos = [], []
+    for alerta in state.alertas_usuario:
+        (vencidos if google_flights.janela_vencida(alerta) else vivos).append(alerta)
+    if not vencidos:
+        return
+    state.alertas_usuario = vivos
+    for alerta in vencidos:
+        print(f"[vencido] {alerta['nome']}", file=sys.stderr)
+        try:
+            telegram.enviar(
+                f"🗓 O alerta <b>{alerta['nome']}</b> venceu em {alerta['ate']} "
+                "e foi removido.\nPara vigiar outro período, crie de novo com /alerta."
+            )
+        except Exception as erro:
+            print(f"[erro] aviso de vencimento: {erro}", file=sys.stderr)
+
+
 def run_once(dry_run: bool = False, seed: bool = False) -> int:
     config = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
     state = State(ESTADO)
@@ -92,6 +115,9 @@ def run_once(dry_run: bool = False, seed: bool = False) -> int:
     # do servidor), cotaria rotas no Google e mandaria resposta de verdade.
     if not (dry_run or seed):
         _atender_comandos(state, config)
+        # Depois de atender comandos: um /alerta criado agora nao pode ser
+        # varrido pela limpeza da mesma rodada.
+        _limpar_vencidos(state)
 
     # Rota do config e rota criada pelo /alerta sao a mesma coisa para o motor.
     # do_usuario separa as duas origens: rota do config e vigilancia de fundo e

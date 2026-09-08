@@ -230,3 +230,52 @@ def test_resposta_de_comando_volta_para_o_chat_de_origem(ambiente, monkeypatch):
     monkeypatch.setattr(main, "get_sources", lambda *a, **k: [])
     main.run_once()
     assert enviados == [-1009999]
+
+
+def _alerta(nome, ate):
+    return {"nome": nome, "origens": ["GRU"], "destinos": ["LIS"], "ate": ate,
+            "a_partir_de": "2026-01-01", "max_preco_brl": 4000, "enabled": True}
+
+
+def test_alerta_vencido_e_removido_e_avisado(ambiente, monkeypatch):
+    tmp, enviados = ambiente
+    estado = tmp / "seen.json"
+    estado.write_text(json.dumps({
+        "seen": {}, "serie": {}, "marcos": {},
+        "alertas_usuario": [_alerta("Velho", "2020-01-31"), _alerta("Vivo", "2099-12-31")],
+        "ultimo_update": None,
+    }), encoding="utf-8")
+    monkeypatch.setattr(main, "get_sources", lambda *a, **k: [])
+    main.run_once()
+
+    salvo = json.loads(estado.read_text(encoding="utf-8"))
+    assert [a["nome"] for a in salvo["alertas_usuario"]] == ["Vivo"]
+    assert len(enviados) == 1 and "Velho" in enviados[0] and "2020-01-31" in enviados[0]
+
+
+def test_alerta_sem_ate_sobrevive(ambiente, monkeypatch):
+    tmp, enviados = ambiente
+    sem_fim = _alerta("Aberto", None)
+    (tmp / "seen.json").write_text(json.dumps({
+        "seen": {}, "serie": {}, "marcos": {},
+        "alertas_usuario": [sem_fim], "ultimo_update": None,
+    }), encoding="utf-8")
+    monkeypatch.setattr(main, "get_sources", lambda *a, **k: [])
+    main.run_once()
+    salvo = json.loads((tmp / "seen.json").read_text(encoding="utf-8"))
+    assert [a["nome"] for a in salvo["alertas_usuario"]] == ["Aberto"]
+    assert enviados == []
+
+
+def test_alerta_criado_agora_nao_e_varrido_na_mesma_rodada(ambiente, monkeypatch):
+    """A limpeza roda depois dos comandos; ordem invertida apagaria o novo."""
+    from milhasalerta import comandos
+    monkeypatch.setattr(main.telegram, "receber", lambda desde=None: [
+        {"update_id": 1, "message": {"text": "/alerta Lisboa", "chat": {"id": 1}}}
+    ])
+    monkeypatch.setattr(comandos, "interpretar",
+                        lambda texto, client=None, queda_padrao=10: _alerta("Novo", "2099-01-01"))
+    monkeypatch.setattr(main, "get_sources", lambda *a, **k: [])
+    main.run_once()
+    salvo = json.loads((ambiente[0] / "seen.json").read_text(encoding="utf-8"))
+    assert [a["nome"] for a in salvo["alertas_usuario"]] == ["Novo"]
