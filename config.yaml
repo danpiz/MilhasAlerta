@@ -45,7 +45,7 @@ google_max_alertas_por_rota: 3
 # preco de sempre realertava todo dia. Exigir queda mata a repeticao.
 # Rota criada pelo /alerta NAO passa por aqui: la o teto foi escolhido contra a
 # cotacao mostrada na criacao, entao ele ja significa "barato".
-google_min_queda_pct: 15
+google_min_queda_pct: 10
 
 rotas:
   - nome: Europa ida e volta
