@@ -38,7 +38,7 @@
     }
   ],
   "marcos": {
-    "google_flights": "2026-09-28T08:40:25.547199+00:00"
+    "google_flights": "2026-09-28T17:40:30.662359+00:00"
   },
   "seen": {
     "gf:GRU-AEP-2026-09-29-:620": "2026-08-30T17:47:21.998052+00:00",
@@ -283,6 +283,7 @@
     "gf:GRU-FCO-2026-10-24-2026-11-05:4147": "2026-09-24T12:11:56.401854+00:00",
     "gf:GRU-FCO-2026-10-26-2026-11-07:4190": "2026-09-26T06:37:29.830454+00:00",
     "gf:GRU-FCO-2026-10-27-2026-11-08:4190": "2026-09-27T00:52:35.894040+00:00",
+    "gf:GRU-FCO-2026-10-28-2026-11-09:4190": "2026-09-28T17:40:28.995275+00:00",
     "gf:GRU-FCO-2026-10-29-2026-11-10:4336": "2026-08-30T11:07:52.780329+00:00",
     "gf:GRU-FCO-2026-10-30-2026-11-11:4255": "2026-08-31T01:37:07.264673+00:00",
     "gf:GRU-FCO-2026-11-02-2026-11-14:3918": "2026-09-03T11:09:55.768316+00:00",
@@ -298,6 +299,7 @@
     "gf:GRU-FCO-2027-01-23-2027-02-07:4729": "2026-09-10T10:03:10.746248+00:00",
     "gf:GRU-FCO-2027-01-23-2027-02-07:4731": "2026-09-09T16:56:01.577516+00:00",
     "gf:GRU-FCO-2027-01-23-2027-02-07:4750": "2026-09-08T13:37:30.273041+00:00",
+    "gf:GRU-FCO-2027-01-26-2027-02-07:4243": "2026-09-28T17:40:30.118275+00:00",
     "gf:GRU-FCO-2027-01-28-2027-02-09:4336": "2026-08-31T07:41:15.788693+00:00",
     "gf:GRU-FCO-2027-01-31-2027-02-15:4214": "2026-09-18T21:52:25.978017+00:00",
     "gf:GRU-FCO-2027-01-31-2027-02-15:4756": "2026-09-10T14:26:06.406683+00:00",
@@ -448,6 +450,7 @@
     "gf:GRU-LIS-2027-01-23-2027-02-07:4737": "2026-09-12T09:16:35.777501+00:00",
     "gf:GRU-LIS-2027-01-23-2027-02-07:4887": "2026-09-09T06:40:52.342478+00:00",
     "gf:GRU-LIS-2027-01-23-2027-02-07:4905": "2026-09-08T17:32:36.094139+00:00",
+    "gf:GRU-LIS-2027-01-26-2027-02-07:4192": "2026-09-28T17:40:29.566619+00:00",
     "gf:GRU-LIS-2027-01-29-2027-02-10:4243": "2026-09-01T00:49:39.255439+00:00",
     "gf:GRU-LIS-2027-01-31-2027-02-12:4397": "2026-09-03T18:54:12.579006+00:00",
     "gf:GRU-LIS-2027-01-31-2027-02-15:4208": "2026-09-10T17:53:31.815452+00:00",
@@ -746,81 +749,30 @@
     "https://melhores.la/iM0Ro5": "2026-08-29T18:17:13.650527+00:00",
     "https://melhores.la/iio1JJ": "2026-08-29T18:17:13.650550+00:00",
     "https://melhores.la/xAQR4n": "2026-08-29T18:17:13.650545+00:00",
-    "https://melhorescartoes.com.br/passagens-milhas-smiles-latam-2024.html": "2026-08-29T14:50:36.615873+00:00",
     "https://meli.la/1ouySAk": "2026-08-29T18:17:15.195835+00:00",
     "https://milhassemsegredo.com/m7d-tl": "2026-08-29T18:17:16.210926+00:00",
     "https://milhassemsegredo.com/m7d-tl-ss": "2026-08-29T18:17:16.210922+00:00",
     "https://milhassemsegredo.com/ss-tl-geral": "2026-08-29T18:17:16.210909+00:00",
-    "https://passageirodeprimeira.com/5-sugestoes-de-trechos-com-a-azul-a-partir-de-3-900-pontos-taxas-3/": "2026-08-29T14:50:36.165234+00:00",
-    "https://passageirodeprimeira.com/5-sugestoes-de-voos-em-classe-executiva-a-partir-de-93-mil-milhas-smiles/": "2026-08-29T14:50:36.165226+00:00",
-    "https://passageirodeprimeira.com/5-sugestoes-de-voos-internacionais-a-partir-de-28-mil-milhas-smiles/": "2026-08-29T14:50:36.165219+00:00",
     "https://passageirodeprimeira.com/5-sugestoes-de-voos-partir-de-11-200-milhas-smiles": "2026-08-29T18:17:14.406511+00:00",
-    "https://passageirodeprimeira.com/5-sugestoes-de-voos-partir-de-11-200-milhas-smiles/": "2026-08-29T17:34:32.911928+00:00",
-    "https://passageirodeprimeira.com/5-sugestoes-de-voos-partir-de-12-100-milhas-smiles/": "2026-08-29T14:50:36.165238+00:00",
-    "https://passageirodeprimeira.com/abra-sua-conta-global-revolut-com-ate-r-200-de-cashback-e-junte-pontos-que-podem-virar-avios/": "2026-08-29T14:50:36.536852+00:00",
     "https://passageirodeprimeira.com/acumular-pontos-azul": "2026-08-29T18:17:14.406502+00:00",
     "https://passageirodeprimeira.com/aeroporto-caracas-venezuela-terremotos": "2026-08-29T18:17:14.406484+00:00",
     "https://passageirodeprimeira.com/astropay-infinite": "2026-08-29T18:17:14.406496+00:00",
-    "https://passageirodeprimeira.com/ate-amanha-ganhe-status-gold-ao-transferir-pontos-para-o-all-accor/": "2026-08-29T14:50:36.536853+00:00",
-    "https://passageirodeprimeira.com/azul-cupom-ate-30-desconto-passagens-nacionais-internacionais/": "2026-08-29T14:50:36.165241+00:00",
-    "https://passageirodeprimeira.com/azul-oferece-30-off-passagens-pontos-reais/": "2026-08-29T14:50:36.165228+00:00",
-    "https://passageirodeprimeira.com/azul-tem-passagens-nacionais-a-partir-de-r-47-ou-de-3-900-pontos-taxas/": "2026-08-29T14:50:36.165246+00:00",
-    "https://passageirodeprimeira.com/azul-viagens-oferece-cupom-de-ate-30-de-desconto-em-reservas-de-hoteis-carros-e-pacotes-4/": "2026-08-29T14:50:36.536848+00:00",
     "https://passageirodeprimeira.com/descontos-para-advogados-veja-os-beneficios-em-passagens-e-aluguel-de-carros": "2026-08-29T18:17:14.406517+00:00",
-    "https://passageirodeprimeira.com/executiva-da-aeromexico-de-sao-paulo-para-toquio-a-partir-de-r-6-982-ou-285-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165208+00:00",
     "https://passageirodeprimeira.com/ganhe-8-de-desconto-em-reservas-com-hoteis-com-5": "2026-08-29T18:17:14.406488+00:00",
-    "https://passageirodeprimeira.com/ganhe-8-de-desconto-em-reservas-com-hoteis-com-5/": "2026-08-29T14:50:36.536836+00:00",
-    "https://passageirodeprimeira.com/gere-o-milheiro-smiles-a-partir-de-r-1581-transferindo-pontos-livelo-dinheiro/": "2026-08-29T14:50:36.536851+00:00",
     "https://passageirodeprimeira.com/hoteis-em-santiago-com-ate-55-de-desconto-8-off-com-nosso-cupom-exclusivo-da-hoteis-com": "2026-08-29T18:17:14.406514+00:00",
-    "https://passageirodeprimeira.com/iberia-oferece-passagens-a-partir-de-e-20-por-trecho/": "2026-08-29T14:50:36.165212+00:00",
-    "https://passageirodeprimeira.com/jetsmart-oferece-passagens-internacionais-a-partir-de-r-318-por-trecho/": "2026-08-29T14:50:36.165230+00:00",
-    "https://passageirodeprimeira.com/l/": "2026-08-29T14:50:36.536839+00:00",
-    "https://passageirodeprimeira.com/latam-oferece-trecho-para-punta-cana-a-a-partir-de-r-833-ou-33-mil-milhas-taxas/": "2026-08-29T14:50:36.536856+00:00",
-    "https://passageirodeprimeira.com/latam-oferece-trechos-para-diversos-destinos-a-partir-de-r-122-ou-4-337-milhas-taxas/": "2026-08-29T14:50:36.165221+00:00",
-    "https://passageirodeprimeira.com/latam-oferece-trechos-para-diversos-destinos-a-partir-de-r-209-ou-6-073-milhas-taxas/": "2026-08-29T14:50:36.165249+00:00",
-    "https://passageirodeprimeira.com/latam-pass-oferece-25-bonus-transferencias-pontos-c6-bank/": "2026-08-29T14:50:36.536849+00:00",
-    "https://passageirodeprimeira.com/latam-pass-oferece-ate-65-de-desconto-na-compra-de-milhas-3/": "2026-08-29T14:50:36.536833+00:00",
-    "https://passageirodeprimeira.com/livelo-oferece-20-de-desconto-em-voos-para-a-colombia/": "2026-08-29T14:50:36.165236+00:00",
     "https://passageirodeprimeira.com/livelo-oferece-30-de-desconto-na-emissao-de-passagens-para-a-islandia-finlandia-e-noruega": "2026-08-29T18:17:14.406505+00:00",
-    "https://passageirodeprimeira.com/livelo-oferece-30-de-desconto-na-emissao-de-passagens-para-a-islandia-finlandia-e-noruega/": "2026-08-29T14:50:36.165183+00:00",
     "https://passageirodeprimeira.com/livelo-oferece-55-de-desconto-na-compra-de-pontos-milheiro-a-partir-de-r-3087": "2026-08-29T18:17:14.406494+00:00",
-    "https://passageirodeprimeira.com/livelo-oferece-55-de-desconto-na-compra-de-pontos-milheiro-a-partir-de-r-3087/": "2026-08-29T14:50:36.536835+00:00",
     "https://passageirodeprimeira.com/mega-promo-latam-trechos-para-diversos-destinos-a-partir-de-r-150-ou-3-391-milhas-taxas": "2026-08-29T18:17:14.406481+00:00",
-    "https://passageirodeprimeira.com/mega-promo-latam-trechos-para-diversos-destinos-a-partir-de-r-150-ou-3-391-milhas-taxas/": "2026-08-29T14:50:36.165202+00:00",
-    "https://passageirodeprimeira.com/muito-barato-voe-para-lisboa-a-partir-de-r-1-074-ou-43-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165206+00:00",
-    "https://passageirodeprimeira.com/muito-bom-domine-o-seats-aero-com-40-off-e-garanta-um-cupom-de-25-off-no-seats-aero-pro/": "2026-08-29T14:50:36.536838+00:00",
-    "https://passageirodeprimeira.com/muito-bom-voe-para-viena-a-partir-de-r-1-423-ou-58-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165218+00:00",
-    "https://passageirodeprimeira.com/oportunidade-genebra-executiva-a-partir-135-milhas-tap-milesgo/": "2026-08-29T14:50:36.165248+00:00",
-    "https://passageirodeprimeira.com/oportunidade-para-gerar-milhas-smiles-a-partir-de-1491-comprando-pontos-livelo/": "2026-08-29T14:50:36.536847+00:00",
     "https://passageirodeprimeira.com/peca-seu-cartao-azul-itau-com-ate-80-000-pontos-bonus-e-anuidade-gratis-na-meta-de-gastos": "2026-08-29T18:17:14.406508+00:00",
-    "https://passageirodeprimeira.com/peca-seu-cartao-azul-itau-com-ate-80-000-pontos-bonus-e-anuidade-gratis-na-meta-de-gastos/": "2026-08-29T14:50:36.536818+00:00",
     "https://passageirodeprimeira.com/peca-seu-cartao-latam-pass-itau-mastercard-platinum-e-ganhe-ate-32-000-milhas-bonus": "2026-08-29T18:17:14.406462+00:00",
-    "https://passageirodeprimeira.com/peca-seu-cartao-latam-pass-itau-mastercard-platinum-e-ganhe-ate-32-000-milhas-bonus/": "2026-08-29T14:50:36.536841+00:00",
     "https://passageirodeprimeira.com/qantas-revela-business-suite-camas-reclinaveis-a321xlr-boeing-787-9": "2026-08-29T18:17:14.406432+00:00",
     "https://passageirodeprimeira.com/receba-22-000-pontos-ao-assinar-o-clube-livelo-classic-milheiro-a-partir-de-r-22": "2026-08-29T18:17:14.406472+00:00",
-    "https://passageirodeprimeira.com/receba-22-000-pontos-ao-assinar-o-clube-livelo-classic-milheiro-a-partir-de-r-22/": "2026-08-29T14:50:36.536840+00:00",
-    "https://passageirodeprimeira.com/receba-24-000-pontos-ao-assinar-o-clube-livelo-classic-milheiro-a-partir-de-r-2020-8/": "2026-08-29T14:50:36.536845+00:00",
     "https://passageirodeprimeira.com/santander-anuncia-visa-infinite-private": "2026-08-29T18:17:14.406468+00:00",
-    "https://passageirodeprimeira.com/smiles-tem-voos-a-partir-de-11-mil-milhas-ou-r-177-taxas/": "2026-08-29T14:50:36.165210+00:00",
-    "https://passageirodeprimeira.com/so-hoje-smiles-oferece-ate-80-de-bonus-nas-transferencias-de-pontos-dos-cartoes-de-credito-5/": "2026-08-29T14:50:36.536844+00:00",
     "https://passageirodeprimeira.com/trecho-cancun-a-partir-72-mil-milhas-smiles-r-1-150-taxas": "2026-08-29T18:17:14.406465+00:00",
-    "https://passageirodeprimeira.com/trecho-cancun-a-partir-72-mil-milhas-smiles-r-1-150-taxas/": "2026-08-29T14:50:36.165204+00:00",
-    "https://passageirodeprimeira.com/trecho-roma-r-1-572-64-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165223+00:00",
-    "https://passageirodeprimeira.com/ultima-semana-abra-sua-conta-nomad-e-seja-isento-de-taxas-na-primeira-conversao/": "2026-08-29T14:50:36.536854+00:00",
     "https://passageirodeprimeira.com/ultimas-horas-para-ganhar-status-gold-ao-transferir-pontos-para-o-all-accor": "2026-08-29T18:17:14.406457+00:00",
-    "https://passageirodeprimeira.com/ultimas-horas-para-ganhar-status-gold-ao-transferir-pontos-para-o-all-accor/": "2026-08-29T14:50:36.536843+00:00",
     "https://passageirodeprimeira.com/veja-como-solicitar-assistencia-especial-na-latam-para-pnae-cadeira-de-rodas-medif-fremec-acompanhante-com-desconto-e-cao-guia": "2026-08-29T18:17:14.406475+00:00",
-    "https://passageirodeprimeira.com/viaje-amsterdam-a-partir-1-224-ou-49-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165214+00:00",
-    "https://passageirodeprimeira.com/viaje-curacao-74-mil-pontos-azul-r-879-taxas/": "2026-08-29T14:50:36.165240+00:00",
     "https://passageirodeprimeira.com/voe-buenos-aires-a-partir-307-ou-12-mil-milhas-latam-pass-taxas": "2026-08-29T18:17:14.406491+00:00",
-    "https://passageirodeprimeira.com/voe-buenos-aires-a-partir-307-ou-12-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165200+00:00",
-    "https://passageirodeprimeira.com/voe-de-brasilia-para-frankfurt-a-partir-de-66-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165224+00:00",
-    "https://passageirodeprimeira.com/voe-lisboa-executiva-r-3-252-132-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165215+00:00",
     "https://passageirodeprimeira.com/voe-para-lima-a-partir-de-r-593-ou-24-mil-milhas-latam-pass-taxas": "2026-08-29T18:17:14.406499+00:00",
-    "https://passageirodeprimeira.com/voe-para-lima-a-partir-de-r-593-ou-24-mil-milhas-latam-pass-taxas/": "2026-08-29T14:50:36.165196+00:00",
-    "https://passageirodeprimeira.com/voe-para-maceio-e-joao-pessoa-com-20-de-desconto-na-livelo/": "2026-08-29T14:50:36.165231+00:00",
-    "https://passageirodeprimeira.com/voe-para-santiago-a-partir-de-r-483-ou-41-mil-pontos-azul-taxas-2/": "2026-08-29T14:50:36.165244+00:00",
-    "https://passageirodeprimeira.com/voe-para-santiago-a-partir-de-r-483-ou-41-mil-pontos-azul-taxas/": "2026-08-29T14:50:36.165243+00:00",
     "https://pontospravoar.com/wp-content/uploads/2025/05/Foto-de-GuilhermeRamos-e1747873152983.avif": "2026-08-29T18:17:15.195816+00:00",
     "https://pontospravoar.com?p=132949": "2026-08-29T18:17:15.195839+00:00",
     "https://pontospravoar.com?p=138019": "2026-08-29T18:17:15.195831+00:00",
@@ -1512,6 +1464,24 @@
     "https://t.me/canalpontospravoar/28140": "2026-09-27T20:22:11.993346+00:00",
     "https://t.me/canalpontospravoar/28141": "2026-09-27T20:22:11.993308+00:00",
     "https://t.me/canalpontospravoar/28142": "2026-09-27T23:23:11.115165+00:00",
+    "https://t.me/canalpontospravoar/28143": "2026-09-28T17:38:05.256635+00:00",
+    "https://t.me/canalpontospravoar/28144": "2026-09-28T17:38:05.800641+00:00",
+    "https://t.me/canalpontospravoar/28145": "2026-09-28T17:38:05.256590+00:00",
+    "https://t.me/canalpontospravoar/28146": "2026-09-28T17:38:06.347215+00:00",
+    "https://t.me/canalpontospravoar/28147": "2026-09-28T17:38:06.926186+00:00",
+    "https://t.me/canalpontospravoar/28148": "2026-09-28T17:38:06.926233+00:00",
+    "https://t.me/canalpontospravoar/28149": "2026-09-28T17:38:05.256608+00:00",
+    "https://t.me/canalpontospravoar/28150": "2026-09-28T17:38:07.480148+00:00",
+    "https://t.me/canalpontospravoar/28151": "2026-09-28T17:38:07.480206+00:00",
+    "https://t.me/canalpontospravoar/28152": "2026-09-28T17:38:05.256610+00:00",
+    "https://t.me/canalpontospravoar/28153": "2026-09-28T17:38:05.256613+00:00",
+    "https://t.me/canalpontospravoar/28154": "2026-09-28T17:38:07.480218+00:00",
+    "https://t.me/canalpontospravoar/28155": "2026-09-28T17:38:07.480228+00:00",
+    "https://t.me/canalpontospravoar/28156": "2026-09-28T17:38:05.256615+00:00",
+    "https://t.me/canalpontospravoar/28157": "2026-09-28T17:38:08.059001+00:00",
+    "https://t.me/canalpontospravoar/28158": "2026-09-28T17:38:11.722288+00:00",
+    "https://t.me/canalpontospravoar/28159": "2026-09-28T17:38:11.722327+00:00",
+    "https://t.me/canalpontospravoar/28160": "2026-09-28T17:38:05.256618+00:00",
     "https://t.me/melhores_cartoes/17927": "2026-08-30T21:00:41.472173+00:00",
     "https://t.me/melhores_cartoes/17928": "2026-08-30T21:00:41.472200+00:00",
     "https://t.me/melhores_cartoes/17929": "2026-08-30T21:00:41.472187+00:00",
@@ -1978,6 +1948,15 @@
     "https://t.me/melhores_cartoes/18390": "2026-09-27T12:26:58.562107+00:00",
     "https://t.me/melhores_cartoes/18391": "2026-09-27T12:26:58.562126+00:00",
     "https://t.me/melhores_cartoes/18392": "2026-09-27T17:16:48.234457+00:00",
+    "https://t.me/melhores_cartoes/18393": "2026-09-28T17:38:22.075013+00:00",
+    "https://t.me/melhores_cartoes/18394": "2026-09-28T17:38:22.075052+00:00",
+    "https://t.me/melhores_cartoes/18395": "2026-09-28T17:38:22.075030+00:00",
+    "https://t.me/melhores_cartoes/18396": "2026-09-28T17:38:22.075033+00:00",
+    "https://t.me/melhores_cartoes/18397": "2026-09-28T17:38:22.075071+00:00",
+    "https://t.me/melhores_cartoes/18398": "2026-09-28T17:38:22.075034+00:00",
+    "https://t.me/melhores_cartoes/18399": "2026-09-28T17:38:22.075036+00:00",
+    "https://t.me/melhores_cartoes/18400": "2026-09-28T17:38:22.698846+00:00",
+    "https://t.me/melhores_cartoes/18401": "2026-09-28T17:38:22.698885+00:00",
     "https://t.me/melhoresdestinos/19181": "2026-08-29T18:50:26.866744+00:00",
     "https://t.me/melhoresdestinos/19182": "2026-08-29T18:50:27.448742+00:00",
     "https://t.me/melhoresdestinos/19183": "2026-08-29T19:28:28.932294+00:00",
@@ -2370,6 +2349,14 @@
     "https://t.me/melhoresdestinos/19570": "2026-09-26T16:18:41.905082+00:00",
     "https://t.me/melhoresdestinos/19571": "2026-09-26T16:18:41.905138+00:00",
     "https://t.me/melhoresdestinos/19572": "2026-09-27T20:22:04.276986+00:00",
+    "https://t.me/melhoresdestinos/19573": "2026-09-28T17:37:27.816711+00:00",
+    "https://t.me/melhoresdestinos/19574": "2026-09-28T17:37:28.446897+00:00",
+    "https://t.me/melhoresdestinos/19575": "2026-09-28T17:37:28.446935+00:00",
+    "https://t.me/melhoresdestinos/19576": "2026-09-28T17:37:27.816675+00:00",
+    "https://t.me/melhoresdestinos/19577": "2026-09-28T17:37:27.816694+00:00",
+    "https://t.me/melhoresdestinos/19578": "2026-09-28T17:37:27.816697+00:00",
+    "https://t.me/melhoresdestinos/19579": "2026-09-28T17:37:27.816699+00:00",
+    "https://t.me/melhoresdestinos/19580": "2026-09-28T17:37:29.013988+00:00",
     "https://t.me/milhas_sem_segredo/7583": "2026-08-29T19:29:01.745976+00:00",
     "https://t.me/milhas_sem_segredo/7584": "2026-08-29T19:29:01.745994+00:00",
     "https://t.me/milhas_sem_segredo/7585": "2026-08-29T19:29:01.745997+00:00",
@@ -2828,18 +2815,20 @@
     "https://t.me/passageirodeprimeira/28862": "2026-09-27T20:22:08.654703+00:00",
     "https://t.me/passageirodeprimeira/28863": "2026-09-27T20:22:08.654706+00:00",
     "https://t.me/passageirodeprimeira/28864": "2026-09-27T20:22:08.654707+00:00",
+    "https://t.me/passageirodeprimeira/28865": "2026-09-28T17:37:44.499943+00:00",
+    "https://t.me/passageirodeprimeira/28866": "2026-09-28T17:37:44.499904+00:00",
+    "https://t.me/passageirodeprimeira/28867": "2026-09-28T17:37:44.499922+00:00",
+    "https://t.me/passageirodeprimeira/28868": "2026-09-28T17:37:44.499925+00:00",
+    "https://t.me/passageirodeprimeira/28869": "2026-09-28T17:37:44.499961+00:00",
+    "https://t.me/passageirodeprimeira/28870": "2026-09-28T17:37:44.499927+00:00",
+    "https://t.me/passageirodeprimeira/28871": "2026-09-28T17:37:44.499968+00:00",
+    "https://t.me/passageirodeprimeira/28872": "2026-09-28T17:37:44.499974+00:00",
+    "https://t.me/passageirodeprimeira/28873": "2026-09-28T17:37:44.499979+00:00",
+    "https://t.me/passageirodeprimeira/28874": "2026-09-28T17:37:44.499929+00:00",
+    "https://t.me/passageirodeprimeira/28875": "2026-09-28T17:37:44.499985+00:00",
     "https://www.instagram.com/tuliocrfaria": "2026-08-29T18:17:16.210931+00:00",
     "https://www.livelo.com.br/product/LIVClubeLivelo": "2026-08-29T18:17:16.210939+00:00",
     "https://www.livelo.com.br/shopping/colecoes/via-all": "2026-08-29T18:17:16.210917+00:00",
-    "https://www.melhorescartoes.com.br/bonus-cartoes-credito-latam-pass-nov24.html": "2026-08-29T14:50:36.615866+00:00",
-    "https://www.melhorescartoes.com.br/bonus-transferencia-aniversario-caixa-jan25.html": "2026-08-29T14:50:36.615856+00:00",
-    "https://www.melhorescartoes.com.br/clube-smiles-adesao-black-friday.html": "2026-08-29T14:50:36.615874+00:00",
-    "https://www.melhorescartoes.com.br/prorrogado-bonus-livelo-azul-out24.html": "2026-08-29T14:50:36.615868+00:00",
-    "https://www.melhorescartoes.com.br/resgate-passagens-azul-europa-jan24.html": "2026-08-29T14:50:36.615872+00:00",
-    "https://www.melhorescartoes.com.br/resgate-voo-latam-pass-los-angeles-jun23.html": "2026-08-29T14:50:36.615875+00:00",
-    "https://www.melhoresdestinos.com.br/oferta-compra-milhas-smiles-pagol-set24.html": "2026-08-29T14:50:36.615870+00:00",
-    "https://www.melhoresdestinos.com.br/prorrogado-milhas-smiles-desconto-bonus-pagol-dez24.html": "2026-08-29T14:50:36.615865+00:00",
-    "https://www.melhoresdestinos.com.br/prorrogado-oferta-pagol-milhas-smiles-set24.html": "2026-08-29T14:50:36.615869+00:00",
     "https://www.meliuz.com.br/desconto/cupom-accor-hoteis": "2026-08-29T18:17:16.210870+00:00",
     "https://www.smiles.com.br/portal/campanhas/bancos-ate-80pc-milhas-bonus-08-2026": "2026-08-29T18:17:16.210937+00:00",
     "https://x.gd/TctSJ": "2026-08-29T18:17:15.195823+00:00",
@@ -3435,6 +3424,10 @@
       [
         "2026-09-28T08:39:34.764157+00:00",
         1063
+      ],
+      [
+        "2026-09-28T17:39:29.591627+00:00",
+        1202
       ]
     ],
     "GRU-AEP-2026-11": [
@@ -3981,6 +3974,10 @@
       [
         "2026-09-28T08:39:35.196946+00:00",
         1166
+      ],
+      [
+        "2026-09-28T17:39:29.956895+00:00",
+        1114
       ]
     ],
     "GRU-AEP-2026-12": [
@@ -4547,6 +4544,10 @@
       [
         "2026-09-28T08:39:35.622127+00:00",
         1483
+      ],
+      [
+        "2026-09-28T17:39:30.483994+00:00",
+        1811
       ]
     ],
     "GRU-AEP-2027-01": [
@@ -5097,6 +5098,10 @@
       [
         "2026-09-28T08:39:35.987296+00:00",
         943
+      ],
+      [
+        "2026-09-28T17:39:31.033267+00:00",
+        943
       ]
     ],
     "GRU-AEP-2027-02": [
@@ -5603,6 +5608,10 @@
       [
         "2026-09-28T08:39:36.326518+00:00",
         969
+      ],
+      [
+        "2026-09-28T17:39:31.463825+00:00",
+        943
       ]
     ],
     "GRU-AEP-2027-03": [
@@ -6100,6 +6109,10 @@
       ],
       [
         "2026-09-28T08:39:36.721256+00:00",
+        969
+      ],
+      [
+        "2026-09-28T17:39:32.027947+00:00",
         969
       ]
     ],
@@ -6685,6 +6698,10 @@
       [
         "2026-09-28T08:38:59.795566+00:00",
         4483
+      ],
+      [
+        "2026-09-28T17:38:48.640588+00:00",
+        4483
       ]
     ],
     "GRU-AMS-2026-11": [
@@ -7223,6 +7240,10 @@
       [
         "2026-09-28T08:39:00.275510+00:00",
         5197
+      ],
+      [
+        "2026-09-28T17:38:49.016866+00:00",
+        5202
       ]
     ],
     "GRU-AMS-2026-12": [
@@ -8837,6 +8858,18 @@
       [
         "2026-09-28T08:39:56.583972+00:00",
         7298
+      ],
+      [
+        "2026-09-28T17:38:49.404190+00:00",
+        8148
+      ],
+      [
+        "2026-09-28T17:39:56.535795+00:00",
+        7325
+      ],
+      [
+        "2026-09-28T17:39:57.105636+00:00",
+        7338
       ]
     ],
     "GRU-AMS-2027-01": [
@@ -11451,6 +11484,26 @@
       [
         "2026-09-28T08:39:58.329371+00:00",
         4743
+      ],
+      [
+        "2026-09-28T17:38:49.831747+00:00",
+        5461
+      ],
+      [
+        "2026-09-28T17:39:57.751800+00:00",
+        8415
+      ],
+      [
+        "2026-09-28T17:39:58.347857+00:00",
+        7505
+      ],
+      [
+        "2026-09-28T17:39:58.727586+00:00",
+        5549
+      ],
+      [
+        "2026-09-28T17:39:59.374392+00:00",
+        5342
       ]
     ],
     "GRU-AMS-2027-02": [
@@ -11948,6 +12001,10 @@
       ],
       [
         "2026-09-28T08:39:01.687754+00:00",
+        4722
+      ],
+      [
+        "2026-09-28T17:38:50.360947+00:00",
         4722
       ]
     ],
@@ -12447,6 +12504,10 @@
       [
         "2026-09-28T08:39:02.019027+00:00",
         5758
+      ],
+      [
+        "2026-09-28T17:38:50.930942+00:00",
+        5715
       ]
     ],
     "GRU-ASU-2026-09": [
@@ -13022,6 +13083,10 @@
       ],
       [
         "2026-09-28T08:39:30.305536+00:00",
+        1532
+      ],
+      [
+        "2026-09-28T17:39:24.081611+00:00",
         1532
       ]
     ],
@@ -14095,6 +14160,10 @@
       [
         "2026-09-28T08:39:31.018987+00:00",
         1681
+      ],
+      [
+        "2026-09-28T17:39:25.050462+00:00",
+        1724
       ]
     ],
     "GRU-ASU-2027-01": [
@@ -14625,6 +14694,10 @@
       [
         "2026-09-28T08:39:31.359871+00:00",
         1317
+      ],
+      [
+        "2026-09-28T17:39:25.561249+00:00",
+        1317
       ]
     ],
     "GRU-ASU-2027-02": [
@@ -15098,6 +15171,10 @@
       ],
       [
         "2026-09-28T08:39:31.775058+00:00",
+        1179
+      ],
+      [
+        "2026-09-28T17:39:25.938860+00:00",
         1179
       ]
     ],
@@ -15592,6 +15669,10 @@
       ],
       [
         "2026-09-28T08:39:32.144136+00:00",
+        1231
+      ],
+      [
+        "2026-09-28T17:39:26.337718+00:00",
         1231
       ]
     ],
@@ -16153,6 +16234,10 @@
       [
         "2026-09-28T08:38:48.939473+00:00",
         4189
+      ],
+      [
+        "2026-09-28T17:38:33.451223+00:00",
+        4189
       ]
     ],
     "GRU-BCN-2026-11": [
@@ -16611,6 +16696,10 @@
       [
         "2026-09-28T08:38:49.369570+00:00",
         4645
+      ],
+      [
+        "2026-09-28T17:38:34.055034+00:00",
+        4549
       ]
     ],
     "GRU-BCN-2026-12": [
@@ -18168,6 +18257,18 @@
       ],
       [
         "2026-09-28T08:39:45.423693+00:00",
+        6841
+      ],
+      [
+        "2026-09-28T17:38:34.498714+00:00",
+        8018
+      ],
+      [
+        "2026-09-28T17:39:43.916116+00:00",
+        7350
+      ],
+      [
+        "2026-09-28T17:39:44.614959+00:00",
         6841
       ]
     ],
@@ -20787,6 +20888,22 @@
       [
         "2026-09-28T08:39:47.341075+00:00",
         4100
+      ],
+      [
+        "2026-09-28T17:39:45.262423+00:00",
+        8060
+      ],
+      [
+        "2026-09-28T17:39:45.645638+00:00",
+        6804
+      ],
+      [
+        "2026-09-28T17:39:46.085198+00:00",
+        4775
+      ],
+      [
+        "2026-09-28T17:39:46.634090+00:00",
+        4595
       ]
     ],
     "GRU-BCN-2027-02": [
@@ -21289,6 +21406,10 @@
       [
         "2026-09-28T08:38:50.640511+00:00",
         3835
+      ],
+      [
+        "2026-09-28T17:38:35.521587+00:00",
+        3835
       ]
     ],
     "GRU-BCN-2027-03": [
@@ -21787,6 +21908,10 @@
       [
         "2026-09-28T08:38:51.087207+00:00",
         5131
+      ],
+      [
+        "2026-09-28T17:38:36.064250+00:00",
+        5094
       ]
     ],
     "GRU-BER-2026-12": [
@@ -22857,6 +22982,14 @@
       [
         "2026-09-28T08:40:16.643027+00:00",
         7740
+      ],
+      [
+        "2026-09-28T17:40:19.165531+00:00",
+        7697
+      ],
+      [
+        "2026-09-28T17:40:19.843172+00:00",
+        7914
       ]
     ],
     "GRU-BER-2027-01": [
@@ -24959,6 +25092,22 @@
       [
         "2026-09-28T08:40:18.499700+00:00",
         5971
+      ],
+      [
+        "2026-09-28T17:40:20.504490+00:00",
+        9297
+      ],
+      [
+        "2026-09-28T17:40:21.084057+00:00",
+        6538
+      ],
+      [
+        "2026-09-28T17:40:21.759849+00:00",
+        6559
+      ],
+      [
+        "2026-09-28T17:40:22.290459+00:00",
+        5971
       ]
     ],
     "GRU-BOG-2026-09": [
@@ -25547,6 +25696,10 @@
       [
         "2026-09-28T08:39:25.605891+00:00",
         1598
+      ],
+      [
+        "2026-09-28T17:39:18.064951+00:00",
+        1598
       ]
     ],
     "GRU-BOG-2026-11": [
@@ -26080,6 +26233,10 @@
       ],
       [
         "2026-09-28T08:39:26.008830+00:00",
+        1838
+      ],
+      [
+        "2026-09-28T17:39:18.622272+00:00",
         1838
       ]
     ],
@@ -26651,6 +26808,10 @@
       [
         "2026-09-28T08:39:26.425017+00:00",
         2250
+      ],
+      [
+        "2026-09-28T17:39:19.155574+00:00",
+        2151
       ]
     ],
     "GRU-BOG-2027-01": [
@@ -27213,6 +27374,10 @@
       [
         "2026-09-28T08:39:26.810183+00:00",
         1838
+      ],
+      [
+        "2026-09-28T17:39:19.704053+00:00",
+        1838
       ]
     ],
     "GRU-BOG-2027-02": [
@@ -27719,6 +27884,10 @@
       [
         "2026-09-28T08:39:27.274111+00:00",
         1838
+      ],
+      [
+        "2026-09-28T17:39:20.120088+00:00",
+        1838
       ]
     ],
     "GRU-BOG-2027-03": [
@@ -28224,6 +28393,10 @@
       ],
       [
         "2026-09-28T08:39:27.699028+00:00",
+        1838
+      ],
+      [
+        "2026-09-28T17:39:20.748421+00:00",
         1838
       ]
     ],
@@ -28797,6 +28970,10 @@
       [
         "2026-09-28T08:39:15.859634+00:00",
         4576
+      ],
+      [
+        "2026-09-28T17:39:05.872703+00:00",
+        4576
       ]
     ],
     "GRU-BRU-2026-11": [
@@ -29319,6 +29496,10 @@
       [
         "2026-09-28T08:39:16.376132+00:00",
         4589
+      ],
+      [
+        "2026-09-28T17:39:06.267075+00:00",
+        5266
       ]
     ],
     "GRU-BRU-2026-12": [
@@ -30909,6 +31090,18 @@
       [
         "2026-09-28T08:40:13.343368+00:00",
         6839
+      ],
+      [
+        "2026-09-28T17:39:06.855408+00:00",
+        7558
+      ],
+      [
+        "2026-09-28T17:40:15.708135+00:00",
+        7948
+      ],
+      [
+        "2026-09-28T17:40:16.300601+00:00",
+        6877
       ]
     ],
     "GRU-BRU-2027-01": [
@@ -33575,6 +33768,26 @@
       [
         "2026-09-28T08:40:15.580860+00:00",
         5163
+      ],
+      [
+        "2026-09-28T17:39:07.549842+00:00",
+        5331
+      ],
+      [
+        "2026-09-28T17:40:16.697050+00:00",
+        8066
+      ],
+      [
+        "2026-09-28T17:40:17.256663+00:00",
+        7047
+      ],
+      [
+        "2026-09-28T17:40:17.874855+00:00",
+        5560
+      ],
+      [
+        "2026-09-28T17:40:18.414563+00:00",
+        5051
       ]
     ],
     "GRU-BRU-2027-02": [
@@ -34064,6 +34277,10 @@
       ],
       [
         "2026-09-28T08:39:17.666165+00:00",
+        5037
+      ],
+      [
+        "2026-09-28T17:39:07.981941+00:00",
         5037
       ]
     ],
@@ -34555,6 +34772,10 @@
       [
         "2026-09-28T08:39:18.143393+00:00",
         5522
+      ],
+      [
+        "2026-09-28T17:39:08.570554+00:00",
+        5138
       ]
     ],
     "GRU-CDG-2026-09": [
@@ -35131,6 +35352,10 @@
       [
         "2026-09-28T08:38:51.605795+00:00",
         4163
+      ],
+      [
+        "2026-09-28T17:38:36.494814+00:00",
+        4163
       ]
     ],
     "GRU-CDG-2026-11": [
@@ -35661,6 +35886,10 @@
       [
         "2026-09-28T08:38:51.969902+00:00",
         5260
+      ],
+      [
+        "2026-09-28T17:38:36.929689+00:00",
+        4521
       ]
     ],
     "GRU-CDG-2026-12": [
@@ -37243,6 +37472,18 @@
       [
         "2026-09-28T08:39:48.304072+00:00",
         6112
+      ],
+      [
+        "2026-09-28T17:38:37.523140+00:00",
+        7828
+      ],
+      [
+        "2026-09-28T17:39:47.190278+00:00",
+        7308
+      ],
+      [
+        "2026-09-28T17:39:47.732538+00:00",
+        7667
       ]
     ],
     "GRU-CDG-2027-01": [
@@ -39909,6 +40150,26 @@
       [
         "2026-09-28T08:39:50.246212+00:00",
         5504
+      ],
+      [
+        "2026-09-28T17:38:38.075793+00:00",
+        5868
+      ],
+      [
+        "2026-09-28T17:39:48.245589+00:00",
+        8863
+      ],
+      [
+        "2026-09-28T17:39:48.684438+00:00",
+        7412
+      ],
+      [
+        "2026-09-28T17:39:49.198039+00:00",
+        5918
+      ],
+      [
+        "2026-09-28T17:39:49.683864+00:00",
+        5323
       ]
     ],
     "GRU-CDG-2027-02": [
@@ -40415,6 +40676,10 @@
       [
         "2026-09-28T08:38:53.308755+00:00",
         5125
+      ],
+      [
+        "2026-09-28T17:38:41.276644+00:00",
+        5020
       ]
     ],
     "GRU-CDG-2027-03": [
@@ -40909,6 +41174,10 @@
       [
         "2026-09-28T08:38:53.748123+00:00",
         5532
+      ],
+      [
+        "2026-09-28T17:38:42.356938+00:00",
+        5244
       ]
     ],
     "GRU-DUB-2026-09": [
@@ -41473,6 +41742,10 @@
       [
         "2026-09-28T08:39:13.270558+00:00",
         5191
+      ],
+      [
+        "2026-09-28T17:39:03.147913+00:00",
+        5191
       ]
     ],
     "GRU-DUB-2026-11": [
@@ -41999,6 +42272,10 @@
       [
         "2026-09-28T08:39:13.701351+00:00",
         5191
+      ],
+      [
+        "2026-09-28T17:39:03.640090+00:00",
+        5261
       ]
     ],
     "GRU-DUB-2026-12": [
@@ -43605,6 +43882,18 @@
       [
         "2026-09-28T08:40:10.379339+00:00",
         7360
+      ],
+      [
+        "2026-09-28T17:39:04.037808+00:00",
+        7989
+      ],
+      [
+        "2026-09-28T17:40:12.851995+00:00",
+        7927
+      ],
+      [
+        "2026-09-28T17:40:13.269888+00:00",
+        7226
       ]
     ],
     "GRU-DUB-2027-01": [
@@ -46271,6 +46560,26 @@
       [
         "2026-09-28T08:40:12.321332+00:00",
         5191
+      ],
+      [
+        "2026-09-28T17:39:04.561800+00:00",
+        5515
+      ],
+      [
+        "2026-09-28T17:40:13.629777+00:00",
+        8586
+      ],
+      [
+        "2026-09-28T17:40:14.058061+00:00",
+        7365
+      ],
+      [
+        "2026-09-28T17:40:14.601324+00:00",
+        6413
+      ],
+      [
+        "2026-09-28T17:40:15.196171+00:00",
+        5191
       ]
     ],
     "GRU-DUB-2027-02": [
@@ -46760,6 +47069,10 @@
       ],
       [
         "2026-09-28T08:39:14.958876+00:00",
+        4830
+      ],
+      [
+        "2026-09-28T17:39:04.989470+00:00",
         4830
       ]
     ],
@@ -47258,6 +47571,10 @@
       ],
       [
         "2026-09-28T08:39:15.410211+00:00",
+        5360
+      ],
+      [
+        "2026-09-28T17:39:05.499227+00:00",
         5360
       ]
     ],
@@ -47847,6 +48164,10 @@
       [
         "2026-09-28T08:39:18.523627+00:00",
         1063
+      ],
+      [
+        "2026-09-28T17:39:09.010716+00:00",
+        1727
       ]
     ],
     "GRU-EZE-2026-11": [
@@ -48384,6 +48705,10 @@
       ],
       [
         "2026-09-28T08:39:18.892298+00:00",
+        995
+      ],
+      [
+        "2026-09-28T17:39:09.512509+00:00",
         995
       ]
     ],
@@ -48943,6 +49268,10 @@
       [
         "2026-09-28T08:39:19.190902+00:00",
         1811
+      ],
+      [
+        "2026-09-28T17:39:10.021753+00:00",
+        973
       ]
     ],
     "GRU-EZE-2027-01": [
@@ -49497,6 +49826,10 @@
       [
         "2026-09-28T08:39:19.563012+00:00",
         1259
+      ],
+      [
+        "2026-09-28T17:39:10.361315+00:00",
+        1259
       ]
     ],
     "GRU-EZE-2027-02": [
@@ -50003,6 +50336,10 @@
       [
         "2026-09-28T08:39:19.995721+00:00",
         973
+      ],
+      [
+        "2026-09-28T17:39:10.735476+00:00",
+        973
       ]
     ],
     "GRU-EZE-2027-03": [
@@ -50505,6 +50842,10 @@
       [
         "2026-09-28T08:39:20.351238+00:00",
         1514
+      ],
+      [
+        "2026-09-28T17:39:11.156808+00:00",
+        1514
       ]
     ],
     "GRU-FCO-2026-09": [
@@ -50956,6 +51297,10 @@
       ],
       [
         "2026-09-28T08:38:54.295537+00:00",
+        4190
+      ],
+      [
+        "2026-09-28T17:38:42.762391+00:00",
         4190
       ]
     ],
@@ -52869,6 +53214,14 @@
       [
         "2026-09-28T08:39:51.214949+00:00",
         7738
+      ],
+      [
+        "2026-09-28T17:39:50.113792+00:00",
+        7650
+      ],
+      [
+        "2026-09-28T17:39:50.589646+00:00",
+        7316
       ]
     ],
     "GRU-FCO-2027-01": [
@@ -55359,6 +55712,26 @@
       [
         "2026-09-28T08:39:53.087504+00:00",
         4713
+      ],
+      [
+        "2026-09-28T17:38:44.349754+00:00",
+        4243
+      ],
+      [
+        "2026-09-28T17:39:51.146322+00:00",
+        8623
+      ],
+      [
+        "2026-09-28T17:39:51.634321+00:00",
+        7185
+      ],
+      [
+        "2026-09-28T17:39:52.212844+00:00",
+        5087
+      ],
+      [
+        "2026-09-28T17:39:52.789037+00:00",
+        4713
       ]
     ],
     "GRU-FCO-2027-02": [
@@ -55741,6 +56114,10 @@
       [
         "2026-09-28T08:38:56.140907+00:00",
         4243
+      ],
+      [
+        "2026-09-28T17:38:44.776203+00:00",
+        4243
       ]
     ],
     "GRU-FCO-2027-03": [
@@ -56122,6 +56499,10 @@
       ],
       [
         "2026-09-28T08:38:56.674603+00:00",
+        4949
+      ],
+      [
+        "2026-09-28T17:38:45.146208+00:00",
         4949
       ]
     ],
@@ -56703,6 +57084,10 @@
       [
         "2026-09-28T08:39:02.497026+00:00",
         5215
+      ],
+      [
+        "2026-09-28T17:38:51.541164+00:00",
+        5303
       ]
     ],
     "GRU-FRA-2026-11": [
@@ -57241,6 +57626,10 @@
       [
         "2026-09-28T08:39:03.001432+00:00",
         4976
+      ],
+      [
+        "2026-09-28T17:38:51.968596+00:00",
+        5121
       ]
     ],
     "GRU-FRA-2026-12": [
@@ -59891,6 +60280,26 @@
       [
         "2026-09-28T08:40:22.222908+00:00",
         8373
+      ],
+      [
+        "2026-09-28T17:38:52.518652+00:00",
+        8264
+      ],
+      [
+        "2026-09-28T17:39:59.976056+00:00",
+        8416
+      ],
+      [
+        "2026-09-28T17:40:00.652657+00:00",
+        7641
+      ],
+      [
+        "2026-09-28T17:40:26.309488+00:00",
+        6789
+      ],
+      [
+        "2026-09-28T17:40:26.651867+00:00",
+        8378
       ]
     ],
     "GRU-FRA-2027-01": [
@@ -64621,6 +65030,42 @@
       [
         "2026-09-28T08:40:24.064311+00:00",
         5487
+      ],
+      [
+        "2026-09-28T17:38:53.080357+00:00",
+        4921
+      ],
+      [
+        "2026-09-28T17:40:01.099389+00:00",
+        8436
+      ],
+      [
+        "2026-09-28T17:40:01.884334+00:00",
+        7866
+      ],
+      [
+        "2026-09-28T17:40:02.349568+00:00",
+        5733
+      ],
+      [
+        "2026-09-28T17:40:02.954133+00:00",
+        4921
+      ],
+      [
+        "2026-09-28T17:40:27.193878+00:00",
+        8916
+      ],
+      [
+        "2026-09-28T17:40:27.784028+00:00",
+        7212
+      ],
+      [
+        "2026-09-28T17:40:28.372492+00:00",
+        5733
+      ],
+      [
+        "2026-09-28T17:40:28.995207+00:00",
+        5487
       ]
     ],
     "GRU-FRA-2027-02": [
@@ -65123,6 +65568,10 @@
       [
         "2026-09-28T08:39:04.420841+00:00",
         5126
+      ],
+      [
+        "2026-09-28T17:38:53.564066+00:00",
+        5126
       ]
     ],
     "GRU-FRA-2027-03": [
@@ -65617,6 +66066,10 @@
       [
         "2026-09-28T08:39:04.818544+00:00",
         5729
+      ],
+      [
+        "2026-09-28T17:38:54.152838+00:00",
+        6062
       ]
     ],
     "GRU-LHR-2026-09": [
@@ -66566,6 +67019,10 @@
       ],
       [
         "2026-09-28T08:38:57.558909+00:00",
+        5202
+      ],
+      [
+        "2026-09-28T17:38:46.209575+00:00",
         5202
       ]
     ],
@@ -68069,6 +68526,18 @@
       [
         "2026-09-28T08:39:53.971420+00:00",
         7162
+      ],
+      [
+        "2026-09-28T17:38:46.685300+00:00",
+        8386
+      ],
+      [
+        "2026-09-28T17:39:53.370754+00:00",
+        7993
+      ],
+      [
+        "2026-09-28T17:39:53.911439+00:00",
+        7587
       ]
     ],
     "GRU-LHR-2027-01": [
@@ -70647,6 +71116,26 @@
       [
         "2026-09-28T08:39:55.529759+00:00",
         5041
+      ],
+      [
+        "2026-09-28T17:38:47.116720+00:00",
+        5248
+      ],
+      [
+        "2026-09-28T17:39:54.461692+00:00",
+        8701
+      ],
+      [
+        "2026-09-28T17:39:55.029113+00:00",
+        7596
+      ],
+      [
+        "2026-09-28T17:39:55.430840+00:00",
+        5850
+      ],
+      [
+        "2026-09-28T17:39:56.001805+00:00",
+        5248
       ]
     ],
     "GRU-LHR-2027-02": [
@@ -71057,6 +71546,10 @@
       [
         "2026-09-28T08:38:58.876789+00:00",
         5046
+      ],
+      [
+        "2026-09-28T17:38:47.523184+00:00",
+        4756
       ]
     ],
     "GRU-LHR-2027-03": [
@@ -71483,6 +71976,10 @@
       [
         "2026-09-28T08:38:59.348943+00:00",
         5372
+      ],
+      [
+        "2026-09-28T17:38:48.065082+00:00",
+        5402
       ]
     ],
     "GRU-LIM-2026-09": [
@@ -72043,6 +72540,10 @@
       [
         "2026-09-28T08:39:23.112298+00:00",
         1239
+      ],
+      [
+        "2026-09-28T17:39:14.593857+00:00",
+        1239
       ]
     ],
     "GRU-LIM-2026-11": [
@@ -72588,6 +73089,10 @@
       ],
       [
         "2026-09-28T08:39:23.552835+00:00",
+        1239
+      ],
+      [
+        "2026-09-28T17:39:15.208071+00:00",
         1239
       ]
     ],
@@ -73155,6 +73660,10 @@
       [
         "2026-09-28T08:39:23.993406+00:00",
         2083
+      ],
+      [
+        "2026-09-28T17:39:15.665642+00:00",
+        2118
       ]
     ],
     "GRU-LIM-2027-01": [
@@ -73701,6 +74210,10 @@
       [
         "2026-09-28T08:39:24.381526+00:00",
         1239
+      ],
+      [
+        "2026-09-28T17:39:16.217212+00:00",
+        1239
       ]
     ],
     "GRU-LIM-2027-02": [
@@ -74207,6 +74720,10 @@
       [
         "2026-09-28T08:39:24.697800+00:00",
         1239
+      ],
+      [
+        "2026-09-28T17:39:16.943020+00:00",
+        1239
       ]
     ],
     "GRU-LIM-2027-03": [
@@ -74708,6 +75225,10 @@
       ],
       [
         "2026-09-28T08:39:25.160887+00:00",
+        1245
+      ],
+      [
+        "2026-09-28T17:39:17.513425+00:00",
         1245
       ]
     ],
@@ -75281,6 +75802,10 @@
       [
         "2026-09-28T08:38:40.995493+00:00",
         4780
+      ],
+      [
+        "2026-09-28T17:38:24.569314+00:00",
+        4780
       ]
     ],
     "GRU-LIS-2026-11": [
@@ -75811,6 +76336,10 @@
       [
         "2026-09-28T08:38:41.467816+00:00",
         4648
+      ],
+      [
+        "2026-09-28T17:38:24.973929+00:00",
+        4753
       ]
     ],
     "GRU-LIS-2026-12": [
@@ -77420,6 +77949,18 @@
       ],
       [
         "2026-09-28T08:39:37.557955+00:00",
+        6382
+      ],
+      [
+        "2026-09-28T17:38:25.454276+00:00",
+        6642
+      ],
+      [
+        "2026-09-28T17:39:32.438430+00:00",
+        7479
+      ],
+      [
+        "2026-09-28T17:39:32.804349+00:00",
         6382
       ]
     ],
@@ -80111,6 +80652,26 @@
       [
         "2026-09-28T08:39:39.238240+00:00",
         4892
+      ],
+      [
+        "2026-09-28T17:38:25.955909+00:00",
+        4192
+      ],
+      [
+        "2026-09-28T17:39:33.297322+00:00",
+        7830
+      ],
+      [
+        "2026-09-28T17:39:33.752800+00:00",
+        7154
+      ],
+      [
+        "2026-09-28T17:39:34.256114+00:00",
+        5447
+      ],
+      [
+        "2026-09-28T17:39:34.627583+00:00",
+        4816
       ]
     ],
     "GRU-LIS-2027-02": [
@@ -80613,6 +81174,10 @@
       [
         "2026-09-28T08:38:42.900549+00:00",
         4415
+      ],
+      [
+        "2026-09-28T17:38:26.327259+00:00",
+        4415
       ]
     ],
     "GRU-LIS-2027-03": [
@@ -81091,6 +81656,10 @@
       [
         "2026-09-28T08:38:43.430219+00:00",
         5246
+      ],
+      [
+        "2026-09-28T17:38:26.823914+00:00",
+        5074
       ]
     ],
     "GRU-MAD-2026-09": [
@@ -81659,6 +82228,10 @@
       [
         "2026-09-28T08:38:46.316484+00:00",
         4115
+      ],
+      [
+        "2026-09-28T17:38:30.288331+00:00",
+        4115
       ]
     ],
     "GRU-MAD-2026-11": [
@@ -82189,6 +82762,10 @@
       [
         "2026-09-28T08:38:46.698987+00:00",
         4530
+      ],
+      [
+        "2026-09-28T17:38:31.016227+00:00",
+        4412
       ]
     ],
     "GRU-MAD-2026-12": [
@@ -83783,6 +84360,18 @@
       [
         "2026-09-28T08:39:42.842404+00:00",
         6749
+      ],
+      [
+        "2026-09-28T17:38:31.463797+00:00",
+        7644
+      ],
+      [
+        "2026-09-28T17:39:38.158400+00:00",
+        7324
+      ],
+      [
+        "2026-09-28T17:39:41.467428+00:00",
+        6786
       ]
     ],
     "GRU-MAD-2027-01": [
@@ -86449,6 +87038,26 @@
       [
         "2026-09-28T08:39:44.517695+00:00",
         4527
+      ],
+      [
+        "2026-09-28T17:38:31.970096+00:00",
+        4605
+      ],
+      [
+        "2026-09-28T17:39:41.839353+00:00",
+        7555
+      ],
+      [
+        "2026-09-28T17:39:42.250606+00:00",
+        6638
+      ],
+      [
+        "2026-09-28T17:39:42.608038+00:00",
+        4765
+      ],
+      [
+        "2026-09-28T17:39:43.201569+00:00",
+        4527
       ]
     ],
     "GRU-MAD-2027-02": [
@@ -86947,6 +87556,10 @@
       [
         "2026-09-28T08:38:48.079292+00:00",
         3711
+      ],
+      [
+        "2026-09-28T17:38:32.391102+00:00",
+        3711
       ]
     ],
     "GRU-MAD-2027-03": [
@@ -87444,6 +88057,10 @@
       ],
       [
         "2026-09-28T08:38:48.408597+00:00",
+        4389
+      ],
+      [
+        "2026-09-28T17:38:32.956219+00:00",
         4389
       ]
     ],
@@ -88013,6 +88630,10 @@
       [
         "2026-09-28T08:39:08.032317+00:00",
         5705
+      ],
+      [
+        "2026-09-28T17:38:57.160492+00:00",
+        5705
       ]
     ],
     "GRU-MUC-2026-11": [
@@ -88531,6 +89152,10 @@
       [
         "2026-09-28T08:39:08.489925+00:00",
         5062
+      ],
+      [
+        "2026-09-28T17:38:57.615020+00:00",
+        5626
       ]
     ],
     "GRU-MUC-2026-12": [
@@ -91188,6 +91813,26 @@
       ],
       [
         "2026-09-28T08:40:19.375006+00:00",
+        8654
+      ],
+      [
+        "2026-09-28T17:38:58.192711+00:00",
+        7910
+      ],
+      [
+        "2026-09-28T17:40:06.708800+00:00",
+        8361
+      ],
+      [
+        "2026-09-28T17:40:07.284265+00:00",
+        7327
+      ],
+      [
+        "2026-09-28T17:40:22.673282+00:00",
+        7609
+      ],
+      [
+        "2026-09-28T17:40:23.543218+00:00",
         8654
       ]
     ],
@@ -95971,6 +96616,42 @@
       [
         "2026-09-28T08:40:21.310202+00:00",
         6191
+      ],
+      [
+        "2026-09-28T17:38:58.819368+00:00",
+        5649
+      ],
+      [
+        "2026-09-28T17:40:07.713267+00:00",
+        9453
+      ],
+      [
+        "2026-09-28T17:40:08.150515+00:00",
+        8227
+      ],
+      [
+        "2026-09-28T17:40:08.642603+00:00",
+        5925
+      ],
+      [
+        "2026-09-28T17:40:09.105130+00:00",
+        5291
+      ],
+      [
+        "2026-09-28T17:40:24.104464+00:00",
+        10260
+      ],
+      [
+        "2026-09-28T17:40:24.662945+00:00",
+        7384
+      ],
+      [
+        "2026-09-28T17:40:25.211085+00:00",
+        6086
+      ],
+      [
+        "2026-09-28T17:40:25.759564+00:00",
+        5834
       ]
     ],
     "GRU-MUC-2027-02": [
@@ -96481,6 +97162,10 @@
       [
         "2026-09-28T08:39:09.865030+00:00",
         5663
+      ],
+      [
+        "2026-09-28T17:38:59.327262+00:00",
+        5258
       ]
     ],
     "GRU-MUC-2027-03": [
@@ -96967,6 +97652,10 @@
       [
         "2026-09-28T08:39:10.292583+00:00",
         5262
+      ],
+      [
+        "2026-09-28T17:38:59.861530+00:00",
+        5834
       ]
     ],
     "GRU-MVD-2026-09": [
@@ -97547,6 +98236,10 @@
       [
         "2026-09-28T08:39:28.072092+00:00",
         1501
+      ],
+      [
+        "2026-09-28T17:39:21.240592+00:00",
+        1501
       ]
     ],
     "GRU-MVD-2026-11": [
@@ -98092,6 +98785,10 @@
       ],
       [
         "2026-09-28T08:39:28.445530+00:00",
+        1481
+      ],
+      [
+        "2026-09-28T17:39:21.645429+00:00",
         1481
       ]
     ],
@@ -98654,6 +99351,10 @@
       ],
       [
         "2026-09-28T08:39:28.780412+00:00",
+        1683
+      ],
+      [
+        "2026-09-28T17:39:22.150509+00:00",
         1683
       ]
     ],
@@ -99221,6 +99922,10 @@
       [
         "2026-09-28T08:39:29.089642+00:00",
         1034
+      ],
+      [
+        "2026-09-28T17:39:22.640101+00:00",
+        1034
       ]
     ],
     "GRU-MVD-2027-02": [
@@ -99735,6 +100440,10 @@
       [
         "2026-09-28T08:39:29.553770+00:00",
         961
+      ],
+      [
+        "2026-09-28T17:39:22.987925+00:00",
+        961
       ]
     ],
     "GRU-MVD-2027-03": [
@@ -100229,6 +100938,10 @@
       [
         "2026-09-28T08:39:29.963749+00:00",
         1112
+      ],
+      [
+        "2026-09-28T17:39:23.536072+00:00",
+        1112
       ]
     ],
     "GRU-MXP-2026-09": [
@@ -100713,6 +101426,10 @@
       [
         "2026-09-28T08:39:05.318422+00:00",
         4131
+      ],
+      [
+        "2026-09-28T17:38:54.559918+00:00",
+        4131
       ]
     ],
     "GRU-MXP-2026-11": [
@@ -101163,6 +101880,10 @@
       [
         "2026-09-28T08:39:05.727541+00:00",
         5096
+      ],
+      [
+        "2026-09-28T17:38:54.960119+00:00",
+        4939
       ]
     ],
     "GRU-MXP-2026-12": [
@@ -102725,6 +103446,14 @@
       [
         "2026-09-28T08:40:02.163019+00:00",
         6419
+      ],
+      [
+        "2026-09-28T17:40:03.614633+00:00",
+        7142
+      ],
+      [
+        "2026-09-28T17:40:04.146406+00:00",
+        7071
       ]
     ],
     "GRU-MXP-2027-01": [
@@ -105315,6 +106044,26 @@
       [
         "2026-09-28T08:40:03.726968+00:00",
         4398
+      ],
+      [
+        "2026-09-28T17:38:55.772280+00:00",
+        4398
+      ],
+      [
+        "2026-09-28T17:40:04.546900+00:00",
+        8253
+      ],
+      [
+        "2026-09-28T17:40:05.060258+00:00",
+        7126
+      ],
+      [
+        "2026-09-28T17:40:05.672919+00:00",
+        5670
+      ],
+      [
+        "2026-09-28T17:40:06.277925+00:00",
+        4398
       ]
     ],
     "GRU-MXP-2027-02": [
@@ -105728,6 +106477,10 @@
       ],
       [
         "2026-09-28T08:39:07.068687+00:00",
+        4478
+      ],
+      [
+        "2026-09-28T17:38:56.277653+00:00",
         4478
       ]
     ],
@@ -106166,6 +106919,10 @@
       ],
       [
         "2026-09-28T08:39:07.513709+00:00",
+        4890
+      ],
+      [
+        "2026-09-28T17:38:56.626349+00:00",
         4890
       ]
     ],
@@ -106691,6 +107448,10 @@
       [
         "2026-09-28T08:38:43.863911+00:00",
         5028
+      ],
+      [
+        "2026-09-28T17:38:27.360111+00:00",
+        4826
       ]
     ],
     "GRU-OPO-2026-11": [
@@ -107189,6 +107950,10 @@
       [
         "2026-09-28T08:38:44.207365+00:00",
         5260
+      ],
+      [
+        "2026-09-28T17:38:27.870953+00:00",
+        5393
       ]
     ],
     "GRU-OPO-2026-12": [
@@ -108798,6 +109563,18 @@
       ],
       [
         "2026-09-28T08:39:40.148444+00:00",
+        6325
+      ],
+      [
+        "2026-09-28T17:38:28.363105+00:00",
+        6585
+      ],
+      [
+        "2026-09-28T17:39:35.157233+00:00",
+        7615
+      ],
+      [
+        "2026-09-28T17:39:35.698997+00:00",
         6325
       ]
     ],
@@ -111401,6 +112178,26 @@
       [
         "2026-09-28T08:39:41.944480+00:00",
         4940
+      ],
+      [
+        "2026-09-28T17:38:28.875093+00:00",
+        4852
+      ],
+      [
+        "2026-09-28T17:39:36.255595+00:00",
+        7969
+      ],
+      [
+        "2026-09-28T17:39:36.731449+00:00",
+        7201
+      ],
+      [
+        "2026-09-28T17:39:37.209253+00:00",
+        5736
+      ],
+      [
+        "2026-09-28T17:39:37.618708+00:00",
+        4852
       ]
     ],
     "GRU-OPO-2027-02": [
@@ -111866,6 +112663,10 @@
       ],
       [
         "2026-09-28T08:38:45.430453+00:00",
+        4856
+      ],
+      [
+        "2026-09-28T17:38:29.245577+00:00",
         4856
       ]
     ],
@@ -112344,6 +113145,10 @@
       ],
       [
         "2026-09-28T08:38:45.954808+00:00",
+        4852
+      ],
+      [
+        "2026-09-28T17:38:29.651580+00:00",
         4852
       ]
     ],
@@ -112929,6 +113734,10 @@
       [
         "2026-09-28T08:39:32.484697+00:00",
         1245
+      ],
+      [
+        "2026-09-28T17:39:26.718513+00:00",
+        1245
       ]
     ],
     "GRU-PTY-2026-11": [
@@ -113479,6 +114288,10 @@
       [
         "2026-09-28T08:39:32.939568+00:00",
         3367
+      ],
+      [
+        "2026-09-28T17:39:27.224955+00:00",
+        3102
       ]
     ],
     "GRU-PTY-2026-12": [
@@ -114041,6 +114854,10 @@
       [
         "2026-09-28T08:39:33.319639+00:00",
         3928
+      ],
+      [
+        "2026-09-28T17:39:27.686411+00:00",
+        3219
       ]
     ],
     "GRU-PTY-2027-01": [
@@ -114599,6 +115416,10 @@
       [
         "2026-09-28T08:39:33.650916+00:00",
         3367
+      ],
+      [
+        "2026-09-28T17:39:28.359829+00:00",
+        3367
       ]
     ],
     "GRU-PTY-2027-02": [
@@ -115109,6 +115930,10 @@
       [
         "2026-09-28T08:39:34.057152+00:00",
         3367
+      ],
+      [
+        "2026-09-28T17:39:28.794553+00:00",
+        3367
       ]
     ],
     "GRU-PTY-2027-03": [
@@ -115614,6 +116439,10 @@
       ],
       [
         "2026-09-28T08:39:34.440652+00:00",
+        1760
+      ],
+      [
+        "2026-09-28T17:39:29.198491+00:00",
         1760
       ]
     ],
@@ -116199,6 +117028,10 @@
       [
         "2026-09-28T08:39:20.688189+00:00",
         1031
+      ],
+      [
+        "2026-09-28T17:39:11.708883+00:00",
+        1031
       ]
     ],
     "GRU-SCL-2026-11": [
@@ -116724,6 +117557,10 @@
       ],
       [
         "2026-09-28T08:39:21.039964+00:00",
+        1031
+      ],
+      [
+        "2026-09-28T17:39:12.264627+00:00",
         1031
       ]
     ],
@@ -117291,6 +118128,10 @@
       [
         "2026-09-28T08:39:21.509693+00:00",
         1368
+      ],
+      [
+        "2026-09-28T17:39:12.618680+00:00",
+        1485
       ]
     ],
     "GRU-SCL-2027-01": [
@@ -117841,6 +118682,10 @@
       [
         "2026-09-28T08:39:21.939154+00:00",
         981
+      ],
+      [
+        "2026-09-28T17:39:12.971047+00:00",
+        981
       ]
     ],
     "GRU-SCL-2027-02": [
@@ -118343,6 +119188,10 @@
       [
         "2026-09-28T08:39:22.355834+00:00",
         981
+      ],
+      [
+        "2026-09-28T17:39:13.582385+00:00",
+        981
       ]
     ],
     "GRU-SCL-2027-03": [
@@ -118844,6 +119693,10 @@
       ],
       [
         "2026-09-28T08:39:22.764713+00:00",
+        1031
+      ],
+      [
+        "2026-09-28T17:39:14.027692+00:00",
         1031
       ]
     ],
@@ -119413,6 +120266,10 @@
       [
         "2026-09-28T08:39:10.708327+00:00",
         4470
+      ],
+      [
+        "2026-09-28T17:39:00.408008+00:00",
+        4470
       ]
     ],
     "GRU-ZRH-2026-11": [
@@ -119946,6 +120803,10 @@
       ],
       [
         "2026-09-28T08:39:11.091126+00:00",
+        5600
+      ],
+      [
+        "2026-09-28T17:39:00.930130+00:00",
         5600
       ]
     ],
@@ -121561,6 +122422,18 @@
       [
         "2026-09-28T08:40:07.563743+00:00",
         7284
+      ],
+      [
+        "2026-09-28T17:39:01.289889+00:00",
+        7808
+      ],
+      [
+        "2026-09-28T17:40:09.656231+00:00",
+        7739
+      ],
+      [
+        "2026-09-28T17:40:10.228620+00:00",
+        7347
       ]
     ],
     "GRU-ZRH-2027-01": [
@@ -124231,6 +125104,26 @@
       [
         "2026-09-28T08:40:09.466707+00:00",
         5257
+      ],
+      [
+        "2026-09-28T17:39:01.882577+00:00",
+        5209
+      ],
+      [
+        "2026-09-28T17:40:10.687399+00:00",
+        8767
+      ],
+      [
+        "2026-09-28T17:40:11.275157+00:00",
+        7117
+      ],
+      [
+        "2026-09-28T17:40:11.653240+00:00",
+        5668
+      ],
+      [
+        "2026-09-28T17:40:12.287697+00:00",
+        5257
       ]
     ],
     "GRU-ZRH-2027-02": [
@@ -124725,6 +125618,10 @@
       [
         "2026-09-28T08:39:12.482096+00:00",
         4678
+      ],
+      [
+        "2026-09-28T17:39:02.417145+00:00",
+        4733
       ]
     ],
     "GRU-ZRH-2027-03": [
@@ -125227,6 +126124,10 @@
       [
         "2026-09-28T08:39:12.848792+00:00",
         5928
+      ],
+      [
+        "2026-09-28T17:39:02.760447+00:00",
+        5826
       ]
     ]
   },
