@@ -190,7 +190,12 @@ class GoogleFlightsSource:
             # Ordenar por preco privilegia sempre os mesmos destinos baratos; e o
             # preco a pagar por um corte que nao depende de historico.
             da_rota.sort(key=lambda d: d.preco_brl)
-            deals.extend(da_rota[: self.limite_por_rota])
+            # Um por destino: sem a data na chave, seis datas do mesmo destino
+            # sao a mesma noticia. Fica a mais barata, que vem primeiro.
+            por_destino = {}
+            for deal in da_rota:
+                por_destino.setdefault((deal.origem, deal.destino), deal)
+            deals.extend(list(por_destino.values())[: self.limite_por_rota])
         if self.falhas:
             # Scraper que emudece parece "nenhum deal hoje". Sem esta linha o
             # bloqueio do Google passaria semanas despercebido.
@@ -246,7 +251,14 @@ class GoogleFlightsSource:
         # QUALQUER preco diferente como novidade -- inclusive uma alta. Medido:
         # GRU-AMS 29/10 alertado a R$ 4330 e realertado a R$ 4450 dez horas
         # depois. Preco igual tambem nao repete: nao e menor.
-        trecho = f"gf:{origem}-{destino}-{dia}-{volta or ''}"
+        #
+        # A data fica fora do trecho: rota sem janela anda a data todo dia, e o
+        # mesmo preco realertava. Medido de 30/09 a 08/10/2026: GRU-SCL a R$ 765
+        # alertado 5 vezes. A rota entra, para o fundo do config nao calar o
+        # alerta pessoal do mesmo destino; a duracao tambem, 12 e 15 dias sao
+        # viagens diferentes.
+        dias = (date.fromisoformat(volta) - date.fromisoformat(dia)).days if volta else ""
+        trecho = f"gf:{origem}-{destino}-{dias}-{rota.get('nome', '')}"
         alertados = [
             int(sufixo)
             for chave in self._vistas(f"{trecho}:")

@@ -109,7 +109,7 @@ def test_mesmo_preco_nao_realerta(monkeypatch):
     monkeypatch.setattr(
         "milhasalerta.sources.google_flights.datas_amostradas", lambda n, **k: ["X"]
     )
-    ja_alertado = {"gf:GRU-LIS-X-:2000"}
+    ja_alertado = alertado(2000, rota=ROTA_TETO, destino="LIS")
     s = fonte(ROTA_TETO, {"LIS": [2000]}, amostras=1, vistos=ja_alertado)
     assert s.fetch() == []
 
@@ -218,8 +218,9 @@ def test_rota_bem_calibrada_nao_e_afetada():
 ROTA_UM = [{"nome": "Um", "origens": ["GRU"], "destinos": ["AMS"], "max_preco_brl": 5000}]
 
 
-def alertado(preco: int) -> set:
-    return {f"gf:GRU-AMS-{datas_amostradas(1)[0]}-:{preco}"}
+def alertado(preco: int, rota=ROTA_UM, destino="AMS") -> set:
+    """Chaves que a fonte gravaria ao alertar este preco -- sem fixar o formato."""
+    return {d.dedup_key for d in fonte(rota, {destino: [preco]}, amostras=1).fetch()}
 
 
 def test_nao_realerta_quando_o_preco_sobe():
@@ -248,12 +249,58 @@ def test_trecho_nunca_alertado_passa():
     assert [d.preco_brl for d in s.fetch()] == [4900]
 
 
-def test_nao_confunde_trechos_com_prefixo_parecido():
-    """AMS-2026-01-01 nao pode herdar o piso de AMS-2026-01-01x."""
-    dia = datas_amostradas(1)[0]
-    s = fonte(ROTA_UM, {"AMS": [4900]}, amostras=1,
-              vistos={f"gf:GRU-AMS-{dia}-2026-12-31:4000"})
+def test_nao_confunde_rotas_com_prefixo_parecido():
+    """A rota "Um" nao pode herdar o piso da rota "Um 2"."""
+    outra = [{**ROTA_UM[0], "nome": "Um 2"}]
+    s = fonte(ROTA_UM, {"AMS": [4900]}, amostras=1, vistos=alertado(4000, rota=outra))
     assert [d.preco_brl for d in s.fetch()] == [4900]
+
+
+# --- a data nao faz o trecho ser novo -----------------------------------------
+# Rota sem janela amostra "hoje + 30 dias": a data anda todo dia e, com ela na
+# chave, o mesmo preco virava alerta novo. Medido de 30/09 a 08/10/2026:
+# GRU-SCL a R$ 765 alertado 5 vezes, GRU-LIM a R$ 774 alertado 4.
+
+def _datas(monkeypatch, dias):
+    monkeypatch.setattr(
+        "milhasalerta.sources.google_flights.datas_amostradas", lambda n, **k: dias
+    )
+
+
+def test_mesmo_preco_em_outra_data_nao_realerta(monkeypatch):
+    _datas(monkeypatch, ["2027-01-05"])
+    ja_alertado = alertado(765, destino="AMS")
+    _datas(monkeypatch, ["2027-01-06"])
+    assert fonte(ROTA_UM, {"AMS": [765]}, amostras=1, vistos=ja_alertado).fetch() == []
+
+
+def test_outra_data_mais_barata_realerta(monkeypatch):
+    _datas(monkeypatch, ["2027-01-05"])
+    ja_alertado = alertado(765, destino="AMS")
+    _datas(monkeypatch, ["2027-01-06"])
+    s = fonte(ROTA_UM, {"AMS": [700]}, amostras=1, vistos=ja_alertado)
+    assert [d.preco_brl for d in s.fetch()] == [700]
+
+
+def test_uma_rota_nao_silencia_outra():
+    """A vigilancia de fundo alertar FRA nao pode calar o alerta pessoal de FRA."""
+    fundo = [{**ROTA_UM[0], "nome": "Europa ida e volta"}]
+    pessoal = [{**ROTA_UM[0], "nome": "Alemanha em janeiro"}]
+    s = fonte(pessoal, {"AMS": [4500]}, amostras=1, vistos=alertado(4000, rota=fundo))
+    assert [d.preco_brl for d in s.fetch()] == [4500]
+
+
+def test_duracao_diferente_e_trecho_diferente():
+    doze = [{**ROTA_UM[0], "ida_e_volta": True, "dias_de_viagem": 12}]
+    quinze = [{**doze[0], "dias_de_viagem": 15}]
+    s = fonte(quinze, {"AMS": [4500]}, amostras=1, vistos=alertado(4000, rota=doze))
+    assert [d.preco_brl for d in s.fetch()] == [4500]
+
+
+def test_um_alerta_por_destino_na_rodada():
+    """Seis datas do mesmo destino abaixo do teto sao uma noticia, nao seis."""
+    s = fonte(ROTA_UM, {"AMS": [4000]}, amostras=6, limite_por_rota=3)
+    assert len(s.fetch()) == 1
 
 
 # --- cotacao de uma rota na criacao do alerta ---------------------------------
